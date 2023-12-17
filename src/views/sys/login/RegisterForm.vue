@@ -14,7 +14,7 @@
         <Input
           size="large"
           v-model:value="formData.mobile"
-          :placeholder="t('sys.login.mobile')"
+          :placeholder="t('sys.login.email')"
           class="fix-auto-fill"
         />
       </FormItem>
@@ -97,8 +97,8 @@
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER);
 
   async function handleRegister() {
-    const data = await validForm();
-    if (!data) return;
-    console.log(data);
+    const flag = await validForm();
+    if (!flag) return;
+    console.log(flag);
   }
 </script>

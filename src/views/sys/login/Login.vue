@@ -142,6 +142,7 @@
       background-repeat: no-repeat;
       background-position: 100%;
       background-size: auto 100%;
+
       /* stylelint-disable-next-line media-query-no-invalid */
       @media (max-width: @screen-xl) {
         display: none;
@@ -194,18 +195,22 @@
 
     input:not([type='checkbox']) {
       min-width: 360px;
+
       /* stylelint-disable-next-line media-query-no-invalid */
       @media (max-width: @screen-xl) {
         min-width: 320px;
       }
+
       /* stylelint-disable-next-line media-query-no-invalid */
       @media (max-width: @screen-lg) {
         min-width: 260px;
       }
+
       /* stylelint-disable-next-line media-query-no-invalid */
       @media (max-width: @screen-md) {
         min-width: 240px;
       }
+
       /* stylelint-disable-next-line media-query-no-invalid */
       @media (max-width: @screen-sm) {
         min-width: 160px;

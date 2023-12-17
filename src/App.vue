@@ -21,8 +21,6 @@
 
   const { isDark, darkTheme } = useDarkModeTheme();
 
-  const a = 'h'
-
   const themeConfig = computed(() =>
     Object.assign(
       {
