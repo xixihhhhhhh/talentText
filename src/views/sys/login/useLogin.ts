@@ -3,6 +3,7 @@ import type {
   RuleObject,
   NamePath,
   Rule as ValidationRule,
+  RuleType,
 } from 'ant-design-vue/lib/form/interface';
 import { ref, computed, unref, Ref } from 'vue';
 import { useI18n } from '@/hooks/web/useI18n';
@@ -53,6 +54,7 @@ export function useFormValid<T extends Object = any>(formRef: Ref<FormInstance>)
 export function useFormRules(formData?: Recordable) {
   const { t } = useI18n();
 
+  const getEamilFormRule = computed(() => createTypeRule(t('sys.login.emailPlaceholder'), 'email'));
   const getAccountFormRule = computed(() => createRule(t('sys.login.accountPlaceholder')));
   const getPasswordFormRule = computed(() => createRule(t('sys.login.passwordPlaceholder')));
   const getSmsFormRule = computed(() => createRule(t('sys.login.smsPlaceholder')));
@@ -75,6 +77,7 @@ export function useFormRules(formData?: Recordable) {
   };
 
   const getFormRules = computed((): { [k: string]: ValidationRule | ValidationRule[] } => {
+    const emailFormRule = unref(getEamilFormRule);
     const accountFormRule = unref(getAccountFormRule);
     const passwordFormRule = unref(getPasswordFormRule);
     const smsFormRule = unref(getSmsFormRule);
@@ -89,6 +92,7 @@ export function useFormRules(formData?: Recordable) {
       case LoginStateEnum.REGISTER:
         return {
           account: accountFormRule,
+          email: emailFormRule,
           password: passwordFormRule,
           confirmPassword: [
             { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
@@ -111,8 +115,8 @@ export function useFormRules(formData?: Recordable) {
       // login form rules
       default:
         return {
-          account: accountFormRule,
-          password: passwordFormRule,
+          email: emailFormRule,
+          userPassword: passwordFormRule,
         };
     }
   });
@@ -124,6 +128,17 @@ function createRule(message: string): ValidationRule[] {
     {
       required: true,
       message,
+      trigger: 'change',
+    },
+  ];
+}
+
+function createTypeRule(message: string, type: RuleType): ValidationRule[] {
+  return [
+    {
+      required: true,
+      message,
+      type,
       trigger: 'change',
     },
   ];

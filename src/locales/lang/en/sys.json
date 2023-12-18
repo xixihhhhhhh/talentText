@@ -77,6 +77,7 @@
     "loginSuccessTitle": "Login successful",
     "loginSuccessDesc": "Welcome back",
     "accountPlaceholder": "Please input username",
+    "emailPlaceholder": "Please input email",
     "passwordPlaceholder": "Please input password",
     "smsPlaceholder": "Please input sms code",
     "mobilePlaceholder": "Please input mobile",

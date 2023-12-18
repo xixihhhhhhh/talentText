@@ -10,22 +10,22 @@
           :placeholder="t('sys.login.userName')"
         />
       </FormItem>
-      <FormItem name="mobile" class="enter-x">
+      <FormItem name="email" class="enter-x">
         <Input
           size="large"
-          v-model:value="formData.mobile"
+          v-model:value="formData.email"
           :placeholder="t('sys.login.email')"
           class="fix-auto-fill"
         />
       </FormItem>
-      <FormItem name="sms" class="enter-x">
+      <!-- <FormItem name="sms" class="enter-x">
         <CountdownInput
           size="large"
           class="fix-auto-fill"
           v-model:value="formData.sms"
           :placeholder="t('sys.login.smsCode')"
         />
-      </FormItem>
+      </FormItem> -->
       <FormItem name="password" class="enter-x">
         <StrengthMeter
           size="large"
@@ -70,7 +70,7 @@
   import LoginFormTitle from './LoginFormTitle.vue';
   import { Form, Input, Button, Checkbox } from 'ant-design-vue';
   import { StrengthMeter } from '@/components/StrengthMeter';
-  import { CountdownInput } from '@/components/CountDown';
+  // import { CountdownInput } from '@/components/CountDown';
   import { useI18n } from '@/hooks/web/useI18n';
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
 
@@ -86,8 +86,8 @@
     account: '',
     password: '',
     confirmPassword: '',
-    mobile: '',
-    sms: '',
+    email: '',
+    // sms: '',
     policy: false,
   });
 

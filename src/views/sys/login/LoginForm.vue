@@ -8,19 +8,19 @@
     v-show="getShow"
     @keypress.enter="handleLogin"
   >
-    <FormItem name="account" class="enter-x">
+    <FormItem name="email" class="enter-x">
       <Input
         size="large"
-        v-model:value="formData.account"
-        :placeholder="t('sys.login.userName')"
+        v-model:value="formData.email"
+        :placeholder="t('sys.login.email')"
         class="fix-auto-fill"
       />
     </FormItem>
-    <FormItem name="password" class="enter-x">
+    <FormItem name="userPassword" class="enter-x">
       <InputPassword
         size="large"
         visibilityToggle
-        v-model:value="formData.password"
+        v-model:value="formData.userPassword"
         :placeholder="t('sys.login.password')"
       />
     </FormItem>
@@ -119,8 +119,8 @@
   const rememberMe = ref(false);
 
   const formData = reactive({
-    account: 'vben',
-    password: '123456',
+    email: 'vben',
+    userPassword: '123456',
   });
 
   const { validForm } = useFormValid(formRef);
@@ -135,8 +135,8 @@
     try {
       loading.value = true;
       const userInfo = await userStore.login({
-        password: data.password,
-        username: data.account,
+        userPassword: data.userPassword,
+        email: data.email,
         mode: 'none', //不要默认的错误提示
       });
       if (userInfo) {
