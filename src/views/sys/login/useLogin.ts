@@ -55,7 +55,7 @@ export function useFormRules(formData?: Recordable) {
   const { t } = useI18n();
 
   const getEamilFormRule = computed(() => createTypeRule(t('sys.login.emailPlaceholder'), 'email'));
-  const getAccountFormRule = computed(() => createRule(t('sys.login.accountPlaceholder')));
+  const getusernameFormRule = computed(() => createRule(t('sys.login.usernamePlaceholder')));
   const getPasswordFormRule = computed(() => createRule(t('sys.login.passwordPlaceholder')));
   const getSmsFormRule = computed(() => createRule(t('sys.login.smsPlaceholder')));
   const getMobileFormRule = computed(() => createRule(t('sys.login.mobilePlaceholder')));
@@ -78,7 +78,7 @@ export function useFormRules(formData?: Recordable) {
 
   const getFormRules = computed((): { [k: string]: ValidationRule | ValidationRule[] } => {
     const emailFormRule = unref(getEamilFormRule);
-    const accountFormRule = unref(getAccountFormRule);
+    const usernameFormRule = unref(getusernameFormRule);
     const passwordFormRule = unref(getPasswordFormRule);
     const smsFormRule = unref(getSmsFormRule);
     const mobileFormRule = unref(getMobileFormRule);
@@ -91,11 +91,11 @@ export function useFormRules(formData?: Recordable) {
       // register form rules
       case LoginStateEnum.REGISTER:
         return {
-          account: accountFormRule,
+          username: usernameFormRule,
           email: emailFormRule,
-          password: passwordFormRule,
-          confirmPassword: [
-            { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
+          userPassword: passwordFormRule,
+          checkPassword: [
+            { validator: validateConfirmPassword(formData?.userPassword), trigger: 'change' },
           ],
           policy: [{ validator: validatePolicy, trigger: 'change' }],
           ...mobileRule,
@@ -104,7 +104,7 @@ export function useFormRules(formData?: Recordable) {
       // reset password form rules
       case LoginStateEnum.RESET_PASSWORD:
         return {
-          account: accountFormRule,
+          account: usernameFormRule,
           ...mobileRule,
         };
 
