@@ -1,4 +1,6 @@
 {
   "login": "Login",
-  "errorLogList": "Error Log"
+  "errorLogList": "Error Log",
+  "quesList": "quesList",
+  "result": "result"
 }

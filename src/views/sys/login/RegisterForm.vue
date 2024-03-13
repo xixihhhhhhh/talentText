@@ -2,11 +2,11 @@
   <div v-if="getShow">
     <LoginFormTitle class="enter-x" />
     <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef">
-      <FormItem name="username" class="enter-x">
+      <FormItem name="name" class="enter-x">
         <Input
           class="fix-auto-fill"
           size="large"
-          v-model:value="formData.username"
+          v-model:value="formData.name"
           :placeholder="t('sys.login.userName')"
         />
       </FormItem>
@@ -26,10 +26,10 @@
           :placeholder="t('sys.login.smsCode')"
         />
       </FormItem> -->
-      <FormItem name="userPassword" class="enter-x">
+      <FormItem name="password" class="enter-x">
         <StrengthMeter
           size="large"
-          v-model:value="formData.userPassword"
+          v-model:value="formData.password"
           :placeholder="t('sys.login.password')"
         />
       </FormItem>
@@ -89,12 +89,12 @@
   const loading = ref(false);
 
   const formData = reactive({
-    username: 'hhh',
-    userPassword: '123',
+    name: 'user',
+    password: '123',
     checkPassword: '123',
-    email: '2047803816@qq.com',
+    email: '20478048816@qq.com',
     // sms: '',
-    policy: false,
+    policy: true,
   });
 
   const { getFormRules } = useFormRules(formData);
@@ -108,20 +108,20 @@
     try {
       loading.value = true;
       const userInfo = await userStore.register({
-        username: data.username,
+        name: data.name,
         email: data.email,
-        userPassword: data.userPassword,
-        checkPassword: data.checkPassword,
+        password: data.password,
         mode: 'none', //不要默认的错误提示
       });
       if (userInfo) {
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
-          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
+          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.name}`,
           duration: 3,
         });
       }
     } catch (error) {
+      console.log(error, 'error');
       createErrorModal({
         title: t('sys.api.errorTip'),
         content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),

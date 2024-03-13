@@ -3,14 +3,13 @@
  */
 export interface LoginParams {
   email: string;
-  userPassword: string;
+  password: string;
 }
 
 export interface RegisterParams {
-  username: string;
+  name: string;
   email: string;
-  userPassword: string;
-  checkPassword: string;
+  password: string;
 }
 
 export interface RoleInfo {
@@ -24,14 +23,16 @@ export interface RoleInfo {
 export interface LoginResultModel {
   userId: string | number;
   token: string;
-  roles: RoleInfo[];
+  roles: [];
+  success: boolean;
 }
 
 /**
  * @description: Get user information return value
  */
 export interface GetUserInfoModel {
-  roles: RoleInfo[];
+  name: string;
+  roles: [];
   // 用户id
   userId: string | number;
   // 用户名
@@ -42,4 +43,9 @@ export interface GetUserInfoModel {
   avatar: string;
   // 介绍
   desc?: string;
+}
+
+export interface getUsersNumberModel {
+  totalNum: number;
+  curMonthNum: number;
 }

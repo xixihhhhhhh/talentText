@@ -2,5 +2,10 @@
   "dashboard": "Dashboard",
   "about": "About",
   "workbench": "Workbench",
-  "analysis": "Analysis"
+  "analysis": "Analysis",
+  "writequestionnaire": "questionnaire",
+  "evaluation": "evaluation",
+  "questionaire": "questionaire",
+  "personal": "personal",
+  "personalCenter": "personalCenter"
 }

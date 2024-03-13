@@ -16,11 +16,11 @@
         class="fix-auto-fill"
       />
     </FormItem>
-    <FormItem name="userPassword" class="enter-x">
+    <FormItem name="password" class="enter-x">
       <InputPassword
         size="large"
         visibilityToggle
-        v-model:value="formData.userPassword"
+        v-model:value="formData.password"
         :placeholder="t('sys.login.password')"
       />
     </FormItem>
@@ -119,8 +119,8 @@
   const rememberMe = ref(false);
 
   const formData = reactive({
-    email: '2047803816@qq.com',
-    userPassword: '123',
+    email: '20478048816@qq.com',
+    password: '123',
   });
 
   const { validForm } = useFormValid(formRef);
@@ -135,14 +135,14 @@
     try {
       loading.value = true;
       const userInfo = await userStore.login({
-        userPassword: data.userPassword,
+        password: data.password,
         email: data.email,
         mode: 'none', //不要默认的错误提示
       });
       if (userInfo) {
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
-          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
+          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.name}`,
           duration: 3,
         });
       }

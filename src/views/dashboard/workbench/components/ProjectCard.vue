@@ -1,10 +1,15 @@
 <template>
-  <Card title="项目" v-bind="$attrs">
+  <Card title="岗位" v-bind="$attrs">
     <template #extra>
-      <a-button type="link" size="small">更多</a-button>
+      <a-button type="link" size="small" @click="routerGo('/questionaire/quesList')">更多</a-button>
     </template>
 
-    <CardGrid v-for="item in groupItems" :key="item.title" class="!md:w-1/3 !w-full">
+    <CardGrid
+      v-for="item in groupItems"
+      :key="item.title"
+      class="!md:w-1/3 !w-full cursor-pointer"
+      @click="routerGo('/questionaire/writequestionnaire')"
+    >
       <span class="flex">
         <Icon :icon="item.icon" :color="item.color" size="30" />
         <span class="text-lg ml-4">{{ item.title }}</span>
@@ -21,4 +26,10 @@
   import { Card, CardGrid } from 'ant-design-vue';
   import Icon from '@/components/Icon/Icon.vue';
   import { groupItems } from './data';
+  import { useRouter } from 'vue-router';
+
+  const router = useRouter();
+  function routerGo(route: string) {
+    router.push(route);
+  }
 </script>

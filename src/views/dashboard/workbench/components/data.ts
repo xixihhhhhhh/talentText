@@ -11,13 +11,14 @@ interface NavItem {
   title: string;
   icon: string;
   color: string;
+  route: string;
 }
 
-interface DynamicInfoItem {
+export interface DynamicInfoItem {
   avatar: string;
   name: string;
   date: string;
-  desc: string;
+  content: string;
 }
 
 export const navItems: NavItem[] = [
@@ -25,40 +26,46 @@ export const navItems: NavItem[] = [
     title: '首页',
     icon: 'ion:home-outline',
     color: '#1fdaca',
+    route: '/dashboard/index',
   },
   {
-    title: '仪表盘',
+    title: '分析页',
     icon: 'ion:grid-outline',
     color: '#bf0c2c',
+    route: '/dashboard/analysis',
   },
   {
-    title: '组件',
+    title: '填报问卷',
     icon: 'ion:layers-outline',
     color: '#e18525',
+    route: '/questionaire/writequestionnaire',
   },
   {
-    title: '系统管理',
+    title: '评测页',
     icon: 'ion:settings-outline',
     color: '#3fb27f',
+    route: '/questionaire/evaluation',
   },
   {
     title: '权限管理',
     icon: 'ion:key-outline',
     color: '#4daf1bc9',
+    route: '/questionaire/quesList',
   },
   {
-    title: '图表',
+    title: '个人页',
     icon: 'ion:bar-chart-outline',
     color: '#00d8ff',
+    route: '/questionaire/quesList',
   },
 ];
 
-export const dynamicInfoItems: DynamicInfoItem[] = [
+export const dynamicInfoItems = [
   {
     avatar: 'dynamic-avatar-1|svg',
     name: '威廉',
     date: '刚刚',
-    desc: `在 <a>开源组</a> 创建了项目 <a>Vue</a>`,
+    content: `在 <a>开源组</a> 创建了项目 <a>Vue</a>`,
   },
   {
     avatar: 'dynamic-avatar-2|svg',
@@ -106,28 +113,28 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
 
 export const groupItems: GroupItem[] = [
   {
-    title: 'Github',
-    icon: 'carbon:logo-github',
+    title: '营销管理',
+    icon: 'nimbus:marketing',
     color: '',
     desc: '不要等待机会，而要创造机会。',
-    group: '开源组',
-    date: '2021-04-01',
+    group: '营销管理',
+    date: '2024-04-01',
   },
   {
-    title: 'Vue',
-    icon: 'ion:logo-vue',
+    title: '物流管理',
+    icon: 'la:car-side',
     color: '#3fb27f',
     desc: '现在的你决定将来的你。',
-    group: '算法组',
-    date: '2021-04-01',
+    group: '物流管理',
+    date: '2024-04-01',
   },
   {
-    title: 'Html5',
-    icon: 'ion:logo-html5',
+    title: '整顿规范',
+    icon: 'icon-park:ruler',
     color: '#e18525',
     desc: '没有什么才能比努力更重要。',
-    group: '上班摸鱼',
-    date: '2021-04-01',
+    group: '整顿规范',
+    date: '2024-04-01',
   },
   {
     title: 'Angular',
@@ -135,7 +142,7 @@ export const groupItems: GroupItem[] = [
     color: '#bf0c2c',
     desc: '热情和欲望可以突破一切难关。',
     group: 'UI',
-    date: '2021-04-01',
+    date: '2024-04-01',
   },
   {
     title: 'React',
@@ -143,7 +150,7 @@ export const groupItems: GroupItem[] = [
     color: '#00d8ff',
     desc: '健康的身体是实现目标的基石。',
     group: '技术牛',
-    date: '2021-04-01',
+    date: '2024-04-01',
   },
   {
     title: 'Js',
@@ -151,6 +158,6 @@ export const groupItems: GroupItem[] = [
     color: '#EBD94E',
     desc: '路是走出来的，而不是空想出来的。',
     group: '架构组',
-    date: '2021-04-01',
+    date: '2024-04-01',
   },
 ];

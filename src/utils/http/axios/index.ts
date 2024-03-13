@@ -52,7 +52,7 @@ const transform: AxiosTransform = {
     }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
     const { code, result, message } = data;
-
+    console.log(data, 'data');
     // 这里逻辑可以根据项目进行修改
     const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS;
     if (hasSuccess) {
@@ -78,6 +78,10 @@ const transform: AxiosTransform = {
         timeoutMsg = t('sys.api.timeoutMessage');
         const userStore = useUserStoreWithOut();
         userStore.logout(true);
+        break;
+      case ResultEnum.ERROR:
+        timeoutMsg = message;
+        console.log(timeoutMsg, 'timeoutMsg');
         break;
       default:
         if (message) {
@@ -211,12 +215,14 @@ const transform: AxiosTransform = {
     checkStatus(error?.response?.status, msg, errorMessageMode);
 
     // 添加自动重试机制 保险起见 只针对GET请求
-    const retryRequest = new AxiosRetry();
-    const { isOpenRetry } = config.requestOptions.retryRequest;
-    config.method?.toUpperCase() === RequestEnum.GET &&
-      isOpenRetry &&
-      // @ts-ignore
-      retryRequest.retry(axiosInstance, error);
+    const retryRequest = config?.requestOptions?.retryRequest;
+    if (retryRequest && config.method?.toUpperCase() === RequestEnum.GET) {
+      const { isOpenRetry } = retryRequest;
+      if (isOpenRetry) {
+        const retryRequestInstance = new AxiosRetry();
+        retryRequestInstance.retry(axiosInstance, error);
+      }
+    }
     return Promise.reject(error);
   },
 };

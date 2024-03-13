@@ -7,7 +7,7 @@ import { PageEnum } from '@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '@/utils/auth';
 import { GetUserInfoModel, LoginParams, RegisterParams } from '@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi, registerApi } from '@/api/sys/user';
+import { doLogout, getUserInfo, loginApi, registerApi, resetPasswordApi } from '@/api/sys/user';
 import { useI18n } from '@/hooks/web/useI18n';
 import { useMessage } from '@/hooks/web/useMessage';
 import { router } from '@/router';
@@ -92,6 +92,7 @@ export const useUserStore = defineStore({
         const { goHome = true, mode, ...loginParams } = params;
         const data = await loginApi(loginParams, mode);
         const { token } = data;
+        console.log(token, 'data');
 
         // save token
         this.setToken(token);
@@ -110,8 +111,8 @@ export const useUserStore = defineStore({
       },
     ): Promise<GetUserInfoModel | null> {
       try {
-        const { goHome = true, mode, ...loginParams } = params;
-        const data = await registerApi(loginParams, mode);
+        const { goHome = true, mode, ...registerParams } = params;
+        const data = await registerApi(registerParams, mode);
         const { token } = data;
 
         // save token
@@ -121,11 +122,25 @@ export const useUserStore = defineStore({
         return Promise.reject(error);
       }
     },
+    /**
+     * @description: resetPassword
+     */
+    async resetPassword(
+      params: {
+        email: string;
+        password: string;
+      } & {
+        goHome?: boolean;
+        mode?: ErrorMessageMode;
+      },
+    ): Promise<boolean> {
+      const res = await resetPasswordApi(params);
+      return res.success;
+    },
     async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
       if (!this.getToken) return null;
       // get user info
       const userInfo = await this.getUserInfoAction();
-
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {
         this.setSessionTimeout(false);
@@ -148,7 +163,7 @@ export const useUserStore = defineStore({
       const userInfo = await getUserInfo();
       const { roles = [] } = userInfo;
       if (isArray(roles)) {
-        const roleList = roles.map((item) => item.value) as RoleEnum[];
+        const roleList = roles.map((item) => item) as RoleEnum[];
         this.setRoleList(roleList);
       } else {
         userInfo.roles = [];

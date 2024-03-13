@@ -1,6 +1,11 @@
 {
   "dashboard": "Dashboard",
+  "writequestionnaire": "填报问卷",
   "about": "关于",
-  "workbench": "工作台",
-  "analysis": "分析页"
+  "workbench": "首页",
+  "analysis": "分析页",
+  "evaluation": "评测分析",
+  "questionaire": "问卷",
+  "personal": "个人",
+  "personalCenter": "个人中心"
 }

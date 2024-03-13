@@ -1,4 +1,6 @@
 {
   "login": "登录",
-  "errorLogList": "错误日志列表"
+  "errorLogList": "错误日志列表",
+  "quesList": "问卷列表",
+  "result": "结果"
 }
