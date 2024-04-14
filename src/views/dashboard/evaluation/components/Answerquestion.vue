@@ -4,26 +4,24 @@
   <PageWrapper>
     <BasicForm @register="register" @submit="handleSubmit" v-if="showSubmit" class="-enter-x" />
     <template v-else>
-      <div class="flex items-center justify-center mt-4 mb-4 -enter-x">
-        <div class="md:text-lg text-md">第{{ curNum }}题</div>
+      <div v-if="curQuestionType === 'typeThree'">
+        <div class="text-5" v-for="item in questionTitleThree" :key="item">{{ item }}</div>
       </div>
-      <div class="text-lg">
-        {{ curQuestionTitle }}
-      </div>
+      <div v-else> {{ curNum }}、 {{ curQuestionTitle }} </div>
       <RadioGroup v-model:value="selectValue" class="text-base ml-4">
-        <Radio :value="item.value" class="flex mt-4" v-for="item in curQues" :key="item.option">{{
+        <Radio :value="item.value" class="flex mt-2" v-for="item in curQues" :key="item.option">{{
           item.option
         }}</Radio>
       </RadioGroup>
-      <div class="text-center mt-40">
+      <div class="text-center mt-5">
         <a-button type="primary" class="mr-4" @click="back">返回</a-button>
         <a-button type="primary" class="mr-4" :disabled="curNum === 1" @click="handleLastQues"
           >上一题</a-button
         >
-        <a-button type="primary" class="mr-4" :disabled="nextDisable" @click="handleNextQues"
+        <a-button type="primary" class="mr-4" v-if="!nextDisable" @click="handleNextQues"
           >下一题</a-button
         >
-        <a-button type="primary" class="mr-4 mt-4" v-show="showSubmitButton" @click="handleEvaluate"
+        <a-button type="primary" class="mr-4" v-show="showSubmitButton" @click="handleEvaluate"
           >评测</a-button
         >
       </div>
@@ -31,55 +29,91 @@
   </PageWrapper>
   <Modal @register="register2" />
 </template>
+
 <script lang="ts" setup>
-  import { ref, watch } from 'vue';
+  import { ref, watch, computed } from 'vue';
   import { PageWrapper } from '@/components/Page';
   import { BasicForm, useForm } from '@/components/Form';
   import { getQuesApi } from '@/api/sys/question';
   import { useMessage } from '@/hooks/web/useMessage';
   import { RadioGroup, Radio } from 'ant-design-vue';
-  import { schemas, Option, convertToOptionArray, answer } from './data';
+  import { schemas, Option, convertToOptionArray, answer, splitString, getScore } from './data';
   import Modal from './modal.vue';
   import { useModal } from '@/components/Modal';
+  import { useQuestionStore } from '@/store/modules/question';
+  import { data } from './test';
+
   // import { addEvaluateListApi } from '@/api/sys/evaluateLists';
-
+  const questionStore = useQuestionStore();
   const [register2, { openModal }] = useModal();
-
   const { createMessage } = useMessage();
-
   const [register] = useForm({
     labelWidth: 120,
     schemas,
-    actionColOptions: { span: 24 },
+    actionColOptions: { span: 24, style: { textAlign: 'center' } },
     submitButtonOptions: { text: '开始评测' },
+    showResetButton: false,
   });
 
-  let questionNum = 0;
-  let quesData;
-  async function handleSubmit(values: any) {
-    const res = await getQuesApi(values);
-    questionNum = res.questionNum;
-    quesData = res.quesData;
-    curNum.value = 1;
-    showSubmit.value = false;
+  const showSubmit = ref(true);
+  const showSubmitButton = ref(false);
+  const curNum = ref(0);
+  let questionTypeOne: object[] = [];
+  let questionTypeTwo: object[] = [];
+  let questionTypeThree: object[] = [];
+  let allquesData: object[] = [];
+  const flag = true;
+  async function handleSubmit() {
+    if (flag) {
+      const res = await getQuesApi();
+      questionTypeOne = res.questionTypeOne;
+      questionTypeTwo = res.questionTypeTwo;
+      questionTypeThree = res.questionTypeThree;
+      allquesData = [...questionTypeOne, ...questionTypeTwo, ...questionTypeThree];
+      curNum.value = 1;
+      showSubmit.value = false;
+    } else {
+      getScore(data);
+      openModal();
+    }
   }
 
-  const showSubmit = ref(true);
+  const questionNum = computed(() => {
+    return allquesData.length;
+  });
 
-  const showSubmitButton = ref(false);
+  const curQuestion: any = computed(() => {
+    // @ts-ignore
+    return allquesData[curNum.value - 1];
+  });
 
-  const curNum = ref(0);
+  const curQuestionType = computed(() => {
+    console.log(curQuestion.value.quesData.questionType);
+    return curQuestion.value.quesData.questionType;
+  });
 
-  const curQuestionTitle = ref('');
+  const questionTitleThree = computed(() => {
+    // @ts-ignore
+    const questionName = curQuestion.value.quesData.questionName;
+    console.log(questionName);
+    return splitString(questionName, curNum.value);
+  });
+
+  const curQuestionTitle = computed(() => {
+    // @ts-ignore
+    const questionName = curQuestion.value.quesData.questionName;
+    return questionName;
+  });
+
   const nextDisable = ref(false);
 
   const curQues = ref<Option[]>([]);
   watch(curNum, (newVal) => {
     nextDisable.value = false;
     showSubmitButton.value = false;
-    curQuestionTitle.value = quesData[curNum.value - 1].questionName;
-    curQues.value = convertToOptionArray(quesData[curNum.value - 1]);
-    if (newVal === questionNum) {
+    // @ts-ignore
+    curQues.value = convertToOptionArray(curQuestion.value.quesData);
+    if (newVal === questionNum.value) {
       nextDisable.value = true;
       showSubmitButton.value = true;
     }
@@ -90,6 +124,9 @@
 
   function handleLastQues() {
     let curAnsObj: answer = {
+      careerField: curQuestion.value.careerField,
+      careerAdvantages: curQuestion.value.careerAdvantages,
+      competency: curQuestion.value.competency,
       value: selectValue.value,
       score: Number(selectValue.value[1]),
     };
@@ -105,7 +142,27 @@
         duration: 3,
       });
     } else {
+      if (curQuestionTitle.value.includes('我通常做事情时')) {
+        answerArr.value[106] = {
+          careerField: 'transaction',
+          careerAdvantages: 'controlled',
+          competency: 'plan',
+          value: selectValue.value,
+          score: Number(selectValue.value[1]),
+        };
+      } else if (curQuestionTitle.value.includes('我更习惯通过')) {
+        answerArr.value[107] = {
+          careerField: 'service',
+          careerAdvantages: 'humanistic',
+          competency: 'teamwork',
+          value: selectValue.value,
+          score: Number(selectValue.value[1]),
+        };
+      }
       let curAnsObj: answer = {
+        careerField: curQuestion.value.careerField,
+        careerAdvantages: curQuestion.value.careerAdvantages,
+        competency: curQuestion.value.competency,
         value: selectValue.value,
         score: Number(selectValue.value[1]),
       };
@@ -122,8 +179,6 @@
     selectValue.value = '';
   }
 
-  const allScore = ref<number>(0);
-
   function handleEvaluate() {
     if (selectValue.value === '') {
       createMessage.error({
@@ -131,15 +186,33 @@
         duration: 3,
       });
     } else {
+      if (curQuestionTitle.value.includes('我通常做事情时')) {
+        answerArr.value[106] = {
+          careerField: 'transaction',
+          careerAdvantages: 'controlled',
+          competency: 'plan',
+          value: selectValue.value,
+          score: Number(selectValue.value[1]),
+        };
+      } else if (curQuestionTitle.value.includes('我更习惯通过')) {
+        answerArr.value[107] = {
+          careerField: 'service',
+          careerAdvantages: 'humanistic',
+          competency: 'teamwork',
+          value: selectValue.value,
+          score: Number(selectValue.value[1]),
+        };
+      }
       let curAnsObj: answer = {
+        careerField: curQuestion.value.careerField,
+        careerAdvantages: curQuestion.value.careerAdvantages,
+        competency: curQuestion.value.competency,
         value: selectValue.value,
         score: Number(selectValue.value[1]),
       };
       answerArr.value[curNum.value - 1] = curAnsObj;
-      allScore.value = answerArr.value.reduce(
-        (accumulator, currentItem) => accumulator + currentItem.score,
-        0,
-      );
+      questionStore.setQuestionAns(answerArr.value);
+      getScore(answerArr.value);
       // const { success } = addEvaluateListApi({});
       openModal();
     }

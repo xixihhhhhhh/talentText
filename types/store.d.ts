@@ -58,3 +58,10 @@ export interface TableSetting {
   columns: Recordable<Nullable<Array<ColumnOptionsType>>>;
   showRowSelection: Nullable<boolean>;
 }
+
+export interface Question {
+  id: number;
+  question: string;
+  answer: string;
+  score: number;
+}

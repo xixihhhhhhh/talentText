@@ -22,7 +22,6 @@ const steps: AppRouteModule = {
       meta: {
         title: t('routes.demo.steps.page'),
         icon: 'whh:paintroll',
-        hideMenu: true,
       },
     },
   ],

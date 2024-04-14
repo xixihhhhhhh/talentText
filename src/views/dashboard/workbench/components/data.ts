@@ -38,25 +38,25 @@ export const navItems: NavItem[] = [
     title: '填报问卷',
     icon: 'ion:layers-outline',
     color: '#e18525',
-    route: '/questionaire/writequestionnaire',
+    route: '/questionnaire/writequestionnaire',
   },
   {
     title: '评测页',
     icon: 'ion:settings-outline',
     color: '#3fb27f',
-    route: '/questionaire/evaluation',
+    route: '/questionnaire/evaluation',
   },
   {
     title: '权限管理',
     icon: 'ion:key-outline',
     color: '#4daf1bc9',
-    route: '/questionaire/quesList',
+    route: '/questionnaire/quesList',
   },
   {
     title: '个人页',
     icon: 'ion:bar-chart-outline',
     color: '#00d8ff',
-    route: '/questionaire/quesList',
+    route: '/questionnaire/quesList',
   },
 ];
 

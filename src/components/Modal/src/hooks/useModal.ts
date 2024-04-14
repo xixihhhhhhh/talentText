@@ -139,6 +139,7 @@ export const useModalInner = (callbackFn?: Fn): UseModalInnerReturnType => {
         getInstance()?.setModalProps({ loading });
       },
       getOpen: computed((): boolean => {
+        console.log(openData[~~unref(uidRef)]);
         return openData[~~unref(uidRef)];
       }),
 

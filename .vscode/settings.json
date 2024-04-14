@@ -104,6 +104,7 @@
   "i18n-ally.displayLanguage": "zh-CN",
   "i18n-ally.enabledFrameworks": ["vue", "react"],
   "cSpell.words": [
+    "allques",
     "antd",
     "antv",
     "brotli",
@@ -116,6 +117,7 @@
     "esno",
     "iconify",
     "INTLIFY",
+    "Leidatu",
     "lintstagedrc",
     "logicflow",
     "mockjs",

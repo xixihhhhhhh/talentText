@@ -15,8 +15,9 @@ export interface addQuestionnaireResultModel {
 }
 
 export interface getQuestionnaireResultModel {
-  questionNum: number;
-  quesData: Array<object>;
+  questionTypeOne: Array<object>;
+  questionTypeTwo: Array<object>;
+  questionTypeThree: Array<object>;
 }
 
 export interface getQuestionnaireParams {

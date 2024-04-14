@@ -22,7 +22,7 @@
 <script lang="ts" setup>
   import { List, Card, Row, Col } from 'ant-design-vue';
   import demoImg from '@/assets/images/demo.png';
-  import { projectList } from './data';
+  import { projectList } from '../data';
 
   const ListItem = List.Item;
 

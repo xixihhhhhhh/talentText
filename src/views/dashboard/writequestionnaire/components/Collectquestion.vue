@@ -30,10 +30,10 @@
   const { notification } = useMessage();
 
   const submitData = ref<any>({});
-  let quesTotal = 0;
+  let quesTotal = 3;
   function handleSubmit(values: any) {
-    quesTotal = values.questionNum;
     showSubmit.value = false;
+    console.log(values, 'values');
     submitData.value = { ...values };
   }
 
@@ -42,7 +42,7 @@
   const [register] = useForm({
     labelWidth: 120,
     schemas,
-    actionColOptions: { span: 24 },
+    actionColOptions: { span: 24, style: { textAlign: 'center' } },
     submitButtonOptions: { text: '确认' },
   });
 
@@ -53,7 +53,7 @@
   const [registerOption, { resetFields, validate, setFieldsValue }] = useForm({
     labelWidth: 120,
     schemas: optionSchema,
-    actionColOptions: { span: 24 },
+    actionColOptions: { span: 24, style: { textAlign: 'center' } },
     submitButtonOptions: { text: '提交' },
     showSubmitButton,
   });
@@ -71,6 +71,9 @@
         description: `添加提示`,
         duration: 1,
       });
+      optionData = [];
+      submitData.value = {};
+      curNum.value = 1;
       showSubmit.value = true;
     } else {
       notification.error({
@@ -100,7 +103,7 @@
     const data = await validate();
     optionData[curNum.value - 1] = data;
     curNum.value = curNum.value + 1;
-    resetFields();
+    optionData[curNum.value - 1] ? setFieldsValue(optionData[curNum.value - 1]) : resetFields();
   }
 
   function back() {

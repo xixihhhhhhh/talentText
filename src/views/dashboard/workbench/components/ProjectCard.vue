@@ -1,14 +1,16 @@
 <template>
   <Card title="岗位" v-bind="$attrs">
     <template #extra>
-      <a-button type="link" size="small" @click="routerGo('/questionaire/quesList')">更多</a-button>
+      <a-button type="link" size="small" @click="routerGo('/questionnaire/quesList')"
+        >更多</a-button
+      >
     </template>
 
     <CardGrid
       v-for="item in groupItems"
       :key="item.title"
       class="!md:w-1/3 !w-full cursor-pointer"
-      @click="routerGo('/questionaire/writequestionnaire')"
+      @click="routerGo('/questionnaire/writequestionnaire')"
     >
       <span class="flex">
         <Icon :icon="item.icon" :color="item.color" size="30" />

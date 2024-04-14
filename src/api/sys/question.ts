@@ -2,7 +2,6 @@ import { defHttp } from '@/utils/http/axios';
 import {
   addQuestionnaireParams,
   addQuestionnaireResultModel,
-  getQuestionnaireParams,
   getQuestionnaireResultModel,
 } from './model/questionModel';
 
@@ -27,11 +26,10 @@ export function addQuesApi(params: addQuestionnaireParams, mode: ErrorMessageMod
   );
 }
 
-export function getQuesApi(params: getQuestionnaireParams, mode: ErrorMessageMode = 'modal') {
+export function getQuesApi(mode: ErrorMessageMode = 'modal') {
   return defHttp.post<getQuestionnaireResultModel>(
     {
       url: Api.getQuestionnaire,
-      params,
     },
     {
       errorMessageMode: mode,
