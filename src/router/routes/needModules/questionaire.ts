@@ -35,14 +35,6 @@ const questionnaire: AppRouteModule = {
       },
     },
     {
-      path: 'quesList',
-      name: 'quesList',
-      component: () => import('@/views/dashboard/quesList/index.vue'),
-      meta: {
-        title: t('routes.basic.quesList'),
-      },
-    },
-    {
       path: 'result',
       name: 'result',
       component: () => import('@/views/dashboard/result/index.vue'),
