@@ -5,21 +5,23 @@
     <BasicForm @register="register" @submit="handleSubmit" v-if="showSubmit" class="-enter-x" />
     <template v-else>
       <div v-if="curQuestionType === 'typeThree'">
-        <div class="text-5" v-for="item in questionTitleThree" :key="item">{{ item }}</div>
+        <div v-for="item in questionTitleThree" :key="item">{{ item }}</div>
       </div>
-      <div v-else> {{ curNum }}、 {{ curQuestionTitle }} </div>
+      <div> {{ curQuestionTitle }} </div>
       <RadioGroup v-model:value="selectValue" class="text-base ml-4">
-        <Radio :value="item.value" class="flex mt-2" v-for="item in curQues" :key="item.option">{{
-          item.option
-        }}</Radio>
+        <Radio
+          :value="item.value"
+          class="flex mt-2"
+          v-for="item in curQues"
+          :key="item.option"
+          @click="handleNextQues(item)"
+          >{{ item.option.slice(2) }}</Radio
+        >
       </RadioGroup>
       <div class="text-center mt-5">
         <a-button type="primary" class="mr-4" @click="back">返回</a-button>
         <a-button type="primary" class="mr-4" :disabled="curNum === 1" @click="handleLastQues"
           >上一题</a-button
-        >
-        <a-button type="primary" class="mr-4" v-if="!nextDisable" @click="handleNextQues"
-          >下一题</a-button
         >
         <a-button type="primary" class="mr-4" v-show="showSubmitButton" @click="handleEvaluate"
           >评测</a-button
@@ -88,7 +90,6 @@
   });
 
   const curQuestionType = computed(() => {
-    console.log(curQuestion.value.quesData.questionType);
     return curQuestion.value.quesData.questionType;
   });
 
@@ -123,6 +124,30 @@
   const answerArr = ref<answer[]>([]);
 
   function handleLastQues() {
+    selectValue.value = answerArr.value[curNum.value - 2].value;
+    curNum.value = curNum.value - 1;
+  }
+
+  async function handleNextQues(item: any) {
+    selectValue.value = '';
+    if (curQuestionTitle.value.includes('我通常做事情时')) {
+      answerArr.value[106] = {
+        careerField: 'transaction',
+        careerAdvantages: 'controlled',
+        competency: 'plan',
+        value: selectValue.value,
+        score: Number(selectValue.value[1]),
+      };
+    } else if (curQuestionTitle.value.includes('我更习惯通过')) {
+      answerArr.value[107] = {
+        careerField: 'service',
+        careerAdvantages: 'humanistic',
+        competency: 'teamwork',
+        value: selectValue.value,
+        score: Number(selectValue.value[1]),
+      };
+    }
+    selectValue.value = item.value;
     let curAnsObj: answer = {
       careerField: curQuestion.value.careerField,
       careerAdvantages: curQuestion.value.careerAdvantages,
@@ -131,45 +156,8 @@
       score: Number(selectValue.value[1]),
     };
     answerArr.value[curNum.value - 1] = curAnsObj;
-    selectValue.value = answerArr.value[curNum.value - 2].value;
-    curNum.value = curNum.value - 1;
-  }
-
-  async function handleNextQues() {
-    if (selectValue.value === '') {
-      createMessage.error({
-        content: '请回答选择题',
-        duration: 3,
-      });
-    } else {
-      if (curQuestionTitle.value.includes('我通常做事情时')) {
-        answerArr.value[106] = {
-          careerField: 'transaction',
-          careerAdvantages: 'controlled',
-          competency: 'plan',
-          value: selectValue.value,
-          score: Number(selectValue.value[1]),
-        };
-      } else if (curQuestionTitle.value.includes('我更习惯通过')) {
-        answerArr.value[107] = {
-          careerField: 'service',
-          careerAdvantages: 'humanistic',
-          competency: 'teamwork',
-          value: selectValue.value,
-          score: Number(selectValue.value[1]),
-        };
-      }
-      let curAnsObj: answer = {
-        careerField: curQuestion.value.careerField,
-        careerAdvantages: curQuestion.value.careerAdvantages,
-        competency: curQuestion.value.competency,
-        value: selectValue.value,
-        score: Number(selectValue.value[1]),
-      };
-      answerArr.value[curNum.value - 1] = curAnsObj;
-      selectValue.value = answerArr.value[curNum.value]?.value || '';
-      curNum.value = curNum.value + 1;
-    }
+    selectValue.value = answerArr.value[curNum.value]?.value || '';
+    curNum.value = curNum.value + 1;
   }
 
   function back() {
