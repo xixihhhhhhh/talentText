@@ -1,6 +1,11 @@
 <template>
   <PageWrapper>
-    <BasicForm @register="register" @submit="handleSubmit" v-if="showSubmit" class="-enter-x" />
+    <BasicForm
+      @register="register"
+      @submit="handleSubmit"
+      v-if="showSubmit"
+      class="-enter-x mt-10"
+    />
     <template v-else>
       <div class="flex items-center justify-center mt-4 mb-4 -enter-x">
         <div class="md:text-lg text-md">第{{ curNum }}题</div>

@@ -11,7 +11,22 @@ export interface Option {
   value: string;
 }
 
+export interface questions {
+  careerField: string;
+  careerAdvantages: string;
+  competency: string;
+  quesData: object;
+}
+
 export interface answer {
+  careerField: string;
+  careerAdvantages: string;
+  competency: string;
+  score: number;
+  value: string;
+}
+
+export interface question {
   careerField: string;
   careerAdvantages: string;
   competency: string;
@@ -87,8 +102,8 @@ export function convertToOptionArray(data: OptionsData): Option[] {
   }, []);
 }
 
-export function splitString(str, curNum: number) {
-  const result: string[] = [];
+export function splitString(str) {
+  let result: string[] = [];
   const indexA = str.indexOf('A');
   const indexB = str.indexOf('B');
 
@@ -98,11 +113,13 @@ export function splitString(str, curNum: number) {
     result.push('B' + str.substring(indexB + 1));
   }
 
-  return result
-    .filter((item) => Boolean(item))
-    .map((item, index) => {
-      return index === 0 ? curNum + '、' + item : item;
-    });
+  result = result.filter((item) => Boolean(item));
+
+  if (result.length === 3) {
+    return { title: result[0], option: result.slice(1) };
+  } else {
+    return { title: '', option: result };
+  }
 }
 
 const careerAdvantagesMap = {
@@ -250,4 +267,13 @@ export function getScore(answerArr: answer[]) {
   // @ts-ignore
   options.series[1].data = careerData;
   questionStore.setLeidatu(options);
+}
+
+export function convertToTwoDimensionalArray(arr, chunkSize) {
+  const result = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    // @ts-ignore
+    result.push(arr.slice(i, i + chunkSize));
+  }
+  return result;
 }

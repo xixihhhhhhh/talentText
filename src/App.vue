@@ -1,6 +1,6 @@
 <template>
   <ConfigProvider :locale="getAntdLocale" :theme="themeConfig">
-    <AppProvider>
+    <AppProvider class="m-0!">
       <RouterView />
     </AppProvider>
   </ConfigProvider>

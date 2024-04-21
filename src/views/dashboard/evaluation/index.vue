@@ -1,13 +1,11 @@
 <template>
   <PageWrapper>
-    <template #headerContent> <WorkbenchHeader msg="进行评价测试" /> </template>
-    <Answerquestion />
+    <answerQuestion />
   </PageWrapper>
 </template>
 <script lang="ts" setup>
   import { PageWrapper } from '@/components/Page';
-  import WorkbenchHeader from '../writequestionnaire/components/WorkbenchHeader.vue';
-  import Answerquestion from './components/Answerquestion.vue';
+  import answerQuestion from './components/answerQuestion.vue';
 
   // const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 </script>
