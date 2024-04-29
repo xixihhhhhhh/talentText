@@ -149,7 +149,7 @@
   let questionTypeTwo: object[] = [];
   let questionTypeThree = ref<object[]>([]);
   let allquesData: object[] = [];
-  const flag = false;
+  const flag = true;
   const curNumTypeThree = ref(1);
   async function handleSubmit() {
     if (flag) {
