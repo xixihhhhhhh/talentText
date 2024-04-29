@@ -188,20 +188,20 @@ export function getScore(answerArr: answer[]) {
     },
     series: [
       {
-        name: 'Area Mode',
+        name: '职业优势',
         type: 'pie',
         radius: [0, '80%'],
         center: ['50%', '50%'],
         roseType: 'area',
         label: {
           position: 'inner',
-          fontSize: 14,
+          fontSize: 12,
         },
       },
       {
-        name: 'Access From',
+        name: '职业领域',
         type: 'pie',
-        radius: ['90%', '100%'],
+        radius: ['80%', '100%'],
         labelLine: {
           length: 1,
         },
@@ -231,7 +231,6 @@ export function getScore(answerArr: answer[]) {
       englishName: 'humanistic',
     },
     { value: 16, name: '服务', itemStyle: { color: '#9be3d4' }, englishName: 'serve' },
-    { value: 0, name: '服2务', itemStyle: { color: '#9be3d4' }, englishName: 'affairs1' },
     {
       value: 16,
       name: '交际',

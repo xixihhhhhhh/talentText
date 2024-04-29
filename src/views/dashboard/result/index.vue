@@ -70,45 +70,44 @@
     <Card class="w-full mt-2">
       <div class="font-bold text-lg border-b-grey border-b-2">优势领域说明</div>
       <div class="mt-4"
-        ><Avatar :src="userinfo.avatar" /> {{ userinfo.name }} 在
-        <span class="font-bold" style="color: #7c68d1">{{ fieldMap[getMaxField()] }}</span>
-        <span class="text-3"
-          >领域能够更好地发挥其优势，TA比较具备协调和关系维护的能力，与人建立良好的关系，在与人交流时能够将自己,
-          的意愿传达到位，也乐干接受他人的意见，希望大家能够达成一定共识，在关系维护、客户服务相关的工作方面较有天赋。</span
-        ></div
+        ><Avatar :src="userInfo.avatar" /> {{ userInfo.name }} 在
+        <span class="font-bold" :style="{ color: activeColor }"
+          >{{ fieldMap[getMaxField()] }}
+        </span>
+        <span class="text-3">&nbsp;{{ coreAreas[getMaxField()] }}</span></div
       >
     </Card>
     <Card class="w-full mt-2">
       <div class="font-bold text-lg border-b-grey border-b-2">职业优势前三</div>
       <div class="flex items-center mt-1">
-        <Icon icon="openmoji:1st-place-medal" :size="40" />
+        <Icon icon="twemoji:1st-place-medal" :size="30" />
         <span class="font-bold text-lg"
           >{{ getTopThreeScores().topThreeKeys[0] }}:
           {{ getTopThreeScores().topThree[0].toFixed(2) }}</span
         >
       </div>
       <p class="text-3 indent">
-        换位思考能力强，协调矛盾、避免冲突、促进人与人之间的和谐共处，有意识地为他人服务
+        {{ getTopThreeScores().shuoming[0] }}
       </p>
       <div class="flex items-center mt-1">
-        <Icon icon="openmoji:2nd-place-medal" :size="40" />
+        <Icon icon="twemoji:2nd-place-medal" :size="30" />
         <span class="font-bold text-lg"
           >{{ getTopThreeScores().topThreeKeys[1] }}:
           {{ getTopThreeScores().topThree[1].toFixed(2) }}</span
         >
       </div>
       <p class="text-3 indent">
-        换位思考能力强，协调矛盾、避免冲突、促进人与人之间的和谐共处，有意识地为他人服务
+        {{ getTopThreeScores().shuoming[1] }}
       </p>
       <div class="flex items-center mt-1">
-        <Icon icon="openmoji:3rd-place-medal" :size="40" />
+        <Icon icon="twemoji:3rd-place-medal" :size="30" />
         <span class="font-bold text-lg"
           >{{ getTopThreeScores().topThreeKeys[2] }}:
           {{ getTopThreeScores().topThree[2].toFixed(2) }}</span
         >
       </div>
       <p class="text-3 indent">
-        换位思考能力强，协调矛盾、避免冲突、促进人与人之间的和谐共处，有意识地为他人服务
+        {{ getTopThreeScores().shuoming[2] }}
       </p>
     </Card>
     <Card class="w-full mt-2">
@@ -119,18 +118,21 @@
         :pagination="{
           defaultPageSize: 5,
         }"
-        :scroll="{ x: 15, y: 300 }"
+        :scroll="{ x: 15, y: 800 }"
       >
-        <template #bodyCell="{ column, record, index }">
-          <template v-if="column.key === 'index'">
-            {{ index + 1 }}
-          </template>
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'index'"> {{ record.index + 1 }} </template>
           <template v-if="column.key === 'ability'">
             <div class="font-bold">{{ advantageMap[record.ability][0] }}</div>
             <div>( {{ advantageMap[record.ability][1] }} )</div>
           </template>
           <template v-if="column.key === 'pronounced'">
-            <Progress :percent="record.pronounced" size="small" />
+            <div class="flex items-center">
+              <Progress :percent="record.pronounced" :size="[10, 20]" />
+            </div>
+          </template>
+          <template v-if="column.key === 'define'">
+            {{ competencyDefinition[record.key] }}
           </template>
         </template>
       </Table>
@@ -138,7 +140,7 @@
     <Card class="w-full mt-2">
       <div class="font-bold text-lg border-b-grey border-b-2"
         >管理建议
-        <span class="text-2 color-gray"
+        <span class="text-3 color-gray"
           >通过以下建议可以发挥受测者的优势，有助于大大地提升其工作成效</span
         >
       </div>
@@ -149,16 +151,13 @@
           color="#7C68D1"
           class="relative top-1"
         />
-        <span class="text-2.5"
-          >当工作需要给予他人服务与支持时，他能够主动提供真诚的服务，努力提高他人的满意度和幸福感;但需注意他可能
-          不懂回绝要求而负担过重。</span
-        >
+        <span class="">{{ competencyDefinition[managementAdvice[i - 1]] }}</span>
       </div>
     </Card>
     <Card class="w-full mt-2">
       <div class="font-bold text-lg border-b-grey border-b-2"
         >职业推荐
-        <span class="text-2 color-gray"
+        <span class="text-3 color-gray"
           >只为辅助您理解优势职业方向，并非作为判定胜任岗位与否的唯一标准</span
         >
       </div>
@@ -168,20 +167,17 @@
             <div class="flex flex-col py-3 px-1">
               <div
                 class="chat-bubble relative px-2 bg-#7c68d1 rounded-md flex justify-center items-center color-white"
+                :style="{ backgroundColor: activeColor }"
                 >优势明显</div
               >
-              <div class="text-center text-3">的职业方向</div>
+              <div class="text-center">的职业方向</div>
             </div>
           </div>
           <div class="flex flex-col">
-            <div class="font-bold">关系维护与服务支持方面</div>
-            <div class="text-2.5 indent-2"
-              >例如:健康护理、客户服务、后勤服务、情感咨询、儿童教育等</div
-            >
-            <div class="font-bold">关系维护与服务支持方面</div>
-            <div class="text-2.5 indent-2"
-              >例如:健康护理、客户服务、后勤服务、情感咨询、儿童教育等</div
-            >
+            <div class="font-bold">{{ gongzuofangmian[getTopTwo()[0]] }}方面</div>
+            <div class="indent-2">例如:{{ gongzuogangwei[getTopTwo()[0]] }}</div>
+            <div class="font-bold">{{ gongzuofangmian[getTopTwo()[1]] }}方面</div>
+            <div class="indent-2">例如:{{ gongzuogangwei[getTopTwo()[1]] }}</div>
           </div>
         </div>
       </div>
@@ -197,14 +193,10 @@
             </div>
           </div>
           <div class="flex flex-col">
-            <div class="font-bold">关系维护与服务支持方面</div>
-            <div class="text-2.5 indent-2"
-              >例如:健康护理、客户服务、后勤服务、情感咨询、儿童教育等</div
-            >
-            <div class="font-bold">关系维护与服务支持方面</div>
-            <div class="text-2.5 indent-2"
-              >例如:健康护理、客户服务、后勤服务、情感咨询、儿童教育等</div
-            >
+            <div class="font-bold">{{ gongzuofangmian[getEndTwo()[0]] }}方面</div>
+            <div class="indent-2">例如:{{ gongzuogangwei[getEndTwo()[1]] }}</div>
+            <div class="font-bold">{{ gongzuofangmian[getEndTwo()[1]] }}方面</div>
+            <div class="indent-2">例如:{{ gongzuogangwei[getEndTwo()[1]] }}</div>
           </div>
         </div>
       </div>
@@ -212,12 +204,19 @@
     <Card class="w-full mt-2">
       <div class="font-bold text-lg border-b-grey border-b-2"
         >搭配建议
-        <span class="text-2 color-gray"
+        <span class="text-3 color-gray"
           >通过以下搭配建议可以管控受测者的劣势，有助于搭建合作互补的完美团队</span
         >
       </div>
       <div class="indent-4">
-        TA 的弱势在于 <span class="text-red">影响、发明、开拓</span>
+        TA 的弱势在于
+        <span :style="{ color: activeColor }">{{
+          dapeijianyi[getEndThree()[0]] +
+          '、' +
+          dapeijianyi[getEndThree()[1]] +
+          '、' +
+          dapeijianyi[getEndThree()[2]]
+        }}</span>
         方面，如果TA的工作职责范围涉及到这些方面相关的内容，就需要和这些方面比较强的工作搭档进行优势互补，以便相应提高工作成效。
       </div>
     </Card>
@@ -231,6 +230,7 @@
     </div> -->
   </PageWrapper>
 </template>
+
 <script lang="ts" setup>
   import { ref, computed, onMounted } from 'vue';
   import { Card, Avatar, Table, Progress } from 'ant-design-vue';
@@ -243,11 +243,21 @@
   import { addCommentParams } from '@/api/sys/model/commentModel';
   import { useQuestionStore } from '@/store/modules/question';
   import Icon from '@/components/Icon/Icon.vue';
-  import { careerAdvantagesMap, columns, advantageMap } from './data';
+  import {
+    careerAdvantagesMap,
+    columns,
+    advantageMap,
+    coreAreas,
+    competencyDefinition,
+    careerAdvantageMap,
+    gongzuofangmian,
+    gongzuogangwei,
+    dapeijianyi,
+  } from './data';
 
   const questionStore = useQuestionStore();
   const userStore = useUserStore();
-  const userinfo = computed(() => userStore.getUserInfo);
+  const userInfo = computed(() => userStore.getUserInfo);
   const careerFieldObj = computed(() => {
     return questionStore.careerFieldObj;
   });
@@ -261,25 +271,49 @@
   });
 
   const dataSource = ref<any[]>([]);
+
+  const managementAdvice = ref<any[]>([]);
+
   onMounted(() => {
     competencyObj.value.forEach((item, index) => {
-      console.log(parseFloat(item[1] as string), 'parseFloat(item[1] as string)');
       dataSource.value.push({
         key: item[0],
         index,
         ability: item[0],
         pronounced: parseFloat(item[1] as string),
-        define: '能够细心留意他人的需求，乐于为他人提供真诚的帮助和鼓励',
       });
     });
+    for (let i = 0; i < 6; i++) {
+      managementAdvice.value.push(competencyObj.value[i][0]);
+    }
   });
+
+  function getTopTwo() {
+    const topTwo = careerAdvantagesObj.value.slice(0, 2).map((score) => score[0]);
+    return topTwo;
+  }
+
+  function getEndTwo() {
+    const endTwo = careerAdvantagesObj.value.slice(-2).map((score) => score[0]);
+    return endTwo;
+  }
+
+  function getEndThree() {
+    const endThree = careerAdvantagesObj.value.slice(-3).map((score) => score[0]);
+    console.log(endThree);
+    return endThree;
+  }
+
   function getTopThreeScores() {
     // @ts-ignore
     const topThree = careerAdvantagesObj.value.slice(0, 3).map((score) => parseFloat(score[1]));
     const topThreeKeys = careerAdvantagesObj.value
       .slice(0, 3)
       .map((score) => careerAdvantagesMap[score[0]]);
-    return { topThree, topThreeKeys };
+    const shuoming = careerAdvantagesObj.value
+      .slice(0, 3)
+      .map((score) => careerAdvantageMap[score[0]]);
+    return { topThree, topThreeKeys, shuoming };
   }
 
   const allScore =
@@ -311,8 +345,8 @@
       return;
     }
     data.content = content.value;
-    data.avatar = userinfo.value.avatar;
-    data.name = userinfo.value.name;
+    data.avatar = userInfo.value.avatar;
+    data.name = userInfo.value.name;
     const { success } = await addCommentApi(data);
     if (success) {
       content.value = '';

@@ -42,7 +42,6 @@ export const useQuestionStore = defineStore({
       this.competencyObj = sort(competencyObj);
       this.careerAdvantagesObj = sort(careerAdvantagesObj);
       this.careerFieldObj = careerFieldObj;
-      console.log(careerAdvantagesObj, 'careerAdvantagesObj');
     },
   },
 });

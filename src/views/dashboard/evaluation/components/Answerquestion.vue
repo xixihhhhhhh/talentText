@@ -2,9 +2,18 @@
 
 <template>
   <PageWrapper>
-    <div :class="['mt-4', 'py-5', 'px-2', { 'bg-blue': !showSubmit }]" style="min-height: 80vh">
-      <BasicForm @register="register" @submit="handleSubmit" v-if="showSubmit" class="-enter-x" />
-      <div v-else class="px-2 pt-4 border-radius-lg" style="border-radius: 10px">
+    <div
+      v-if="!showResult"
+      :class="['py-5', 'px-2', { 'bg-blue': !showSubmit }]"
+      style="min-height: 80vh"
+    >
+      <BasicForm
+        @register="register"
+        @submit="handleSubmit"
+        v-if="showSubmit"
+        class="mt-10 -enter-x"
+      />
+      <div v-else class="px-2 pt-4 border-radius-lg" style="border-radius: 10px" ref="pdfDom">
         <div v-if="isTypeThree" class="text-20px font-600">
           <div v-for="(question, questionIndex) in curQuestionTypeThree" :key="question">
             <div class="bg-#fff my-4 pt-2">
@@ -98,8 +107,8 @@
         </div>
       </div>
     </div>
+    <div v-else><Result /></div>
   </PageWrapper>
-  <Modal @register="register2" />
 </template>
 
 <script lang="ts" setup>
@@ -108,6 +117,7 @@
   import { BasicForm, useForm } from '@/components/Form';
   import { getQuesApi } from '@/api/sys/question';
   import { useMessage } from '@/hooks/web/useMessage';
+  import Result from '@/views/dashboard/result/index.vue';
   import {
     schemas,
     Option,
@@ -117,14 +127,12 @@
     getScore,
     convertToTwoDimensionalArray,
   } from './data';
-  import Modal from './modal.vue';
-  import { useModal } from '@/components/Modal';
   import { useQuestionStore } from '@/store/modules/question';
   import { data } from './test';
 
+  const pdfDom = ref(null);
   // import { addEvaluateListApi } from '@/api/sys/evaluateLists';
   const questionStore = useQuestionStore();
-  const [register2, { openModal }] = useModal();
   const { createMessage } = useMessage();
   const [register] = useForm({
     labelWidth: 120,
@@ -154,7 +162,12 @@
       showSubmit.value = false;
     } else {
       getScore(data);
-      openModal();
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(true);
+        }, 0);
+      });
+      showResult.value = true;
     }
   }
 
@@ -210,7 +223,7 @@
   }
 
   async function handleNextQues(item: any) {
-    selectValue.value = '';
+    selectValue.value = item.value;
     let curAnsObj: answer = {
       careerField: curQuestion.value.careerField,
       careerAdvantages: curQuestion.value.careerAdvantages,
@@ -219,6 +232,11 @@
       score: Number(item.value[1]),
     };
     answerArr.value[curNum.value - 1] = curAnsObj;
+    (await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(1);
+      }, 200);
+    })) as unknown as Promise<void>;
     selectValue.value = answerArr.value[curNum.value]?.value || '';
     if (curNum.value === allquesData.length) {
       isTypeThree.value = true;
@@ -263,7 +281,7 @@
     }
   }
 
-  function handleNextQuesThree(item: any, question: any, index: number) {
+  async function handleNextQuesThree(item: any, question: any, index: number) {
     if (index === 0) {
       selectValueOne.value = item.value;
     } else if (index === 1) {
@@ -304,6 +322,11 @@
       if (curNumTypeThree.value === questionTypeThree.value.length) {
         return;
       }
+      (await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(1);
+        }, 200);
+      })) as unknown as Promise<void>;
       curNumTypeThree.value += 1;
       selectValueOne.value = '';
       selectValueTwo.value = '';
@@ -334,8 +357,13 @@
     selectValue.value = '';
   }
 
+  const showResult = ref(false);
   function handleEvaluate() {
-    if (selectValueOne.value === '') {
+    if (
+      selectValueOne.value === '' ||
+      selectValueTwo.value === '' ||
+      selectValueThree.value === ''
+    ) {
       createMessage.error({
         content: '请回答选择题',
         duration: 3,
@@ -347,7 +375,7 @@
       questionStore.setQuestionAns(answerArr.value);
       getScore(answerArr.value);
       // const { success } = addEvaluateListApi({});
-      openModal();
+      showResult.value = true;
     }
   }
 </script>

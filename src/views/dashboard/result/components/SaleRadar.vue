@@ -17,7 +17,7 @@
     },
     height: {
       type: String as PropType<string>,
-      default: '200px',
+      default: '400px',
     },
     options: {
       type: Object as PropType<EChartsOption>,
@@ -33,7 +33,6 @@
       if (props.loading) {
         return;
       }
-      console.log(props.options, 'props.options');
       props.options && setOptions(props.options);
     },
     { immediate: true },
