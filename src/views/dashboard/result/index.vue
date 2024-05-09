@@ -1,7 +1,11 @@
 <template>
   <PageWrapper :class="prefixCls" title="结果分析">
-    <div class="w-full enter-y mt-4 flex justify-center">
-      <SaleRadar :loading="loading" :options="questionStore.leidatu" class="w-full enter-y" />
+    <div class="w-full">
+      <Leidatu
+        :loading="loading"
+        :options="questionStore.leidatu.series[0].data"
+        class="w-full enter-y"
+      />
     </div>
     <Card class="w-full mt-5">
       <div class="font-bold text-lg">职业领域</div>
@@ -67,51 +71,51 @@
       </div>
       <template #tabBarExtraContent></template>
     </Card>
-    <Card class="w-full mt-2">
+    <Card class="w-full mt-2" :class="textSize">
       <div class="font-bold text-lg border-b-grey border-b-2">优势领域说明</div>
-      <div class="mt-4"
-        ><Avatar :src="userInfo.avatar" /> {{ userInfo.name }} 在
-        <span class="font-bold" :style="{ color: activeColor }"
+      <div class="mt-4">
+        <Avatar :src="userInfo.avatar" /> {{ userInfo.name }} 在
+        <span class="font-bold text-4" :style="{ color: activeColor }"
           >{{ fieldMap[getMaxField()] }}
         </span>
-        <span class="text-3">&nbsp;{{ coreAreas[getMaxField()] }}</span></div
-      >
+        <span>&nbsp;{{ coreAreas[getMaxField()] }}</span>
+      </div>
     </Card>
-    <Card class="w-full mt-2">
+    <Card class="w-full mt-2" :class="textSize">
       <div class="font-bold text-lg border-b-grey border-b-2">职业优势前三</div>
       <div class="flex items-center mt-1">
         <Icon icon="twemoji:1st-place-medal" :size="30" />
-        <span class="font-bold text-lg"
+        <span class="font-bold"
           >{{ getTopThreeScores().topThreeKeys[0] }}:
           {{ getTopThreeScores().topThree[0].toFixed(2) }}</span
         >
       </div>
-      <p class="text-3 indent">
+      <p class="indent">
         {{ getTopThreeScores().shuoming[0] }}
       </p>
       <div class="flex items-center mt-1">
         <Icon icon="twemoji:2nd-place-medal" :size="30" />
-        <span class="font-bold text-lg"
+        <span class="font-bold"
           >{{ getTopThreeScores().topThreeKeys[1] }}:
           {{ getTopThreeScores().topThree[1].toFixed(2) }}</span
         >
       </div>
-      <p class="text-3 indent">
+      <p class="indent">
         {{ getTopThreeScores().shuoming[1] }}
       </p>
       <div class="flex items-center mt-1">
         <Icon icon="twemoji:3rd-place-medal" :size="30" />
-        <span class="font-bold text-lg"
+        <span class="font-bold"
           >{{ getTopThreeScores().topThreeKeys[2] }}:
           {{ getTopThreeScores().topThree[2].toFixed(2) }}</span
         >
       </div>
-      <p class="text-3 indent">
+      <p class="indent">
         {{ getTopThreeScores().shuoming[2] }}
       </p>
     </Card>
     <Card class="w-full mt-2">
-      <div class="font-bold text-lg border-b-grey border-b-2">胜任力分析</div>
+      <div class="font-bold border-b-grey border-b-2">胜任力分析</div>
       <Table
         :dataSource="dataSource"
         :columns="columns"
@@ -137,24 +141,24 @@
         </template>
       </Table>
     </Card>
-    <Card class="w-full mt-2">
+    <Card class="w-full mt-2" :class="textSize">
       <div class="font-bold text-lg border-b-grey border-b-2"
         >管理建议
         <span class="text-3 color-gray"
           >通过以下建议可以发挥受测者的优势，有助于大大地提升其工作成效</span
         >
       </div>
-      <div v-for="i in 6" :key="i">
+      <div v-for="i in 6" :key="i" :style="{ padding: '1rem 0  0 0' }">
         <Icon
           icon="material-symbols-light:circle"
           :size="20"
-          color="#7C68D1"
-          class="relative top-1"
+          :color="activeColor"
+          class="relative top-0.5"
         />
-        <span class="">{{ competencyDefinition[managementAdvice[i - 1]] }}</span>
+        <span class="line-height-loose">{{ guanlijianyi[managementAdvice[i - 1]] }}</span>
       </div>
     </Card>
-    <Card class="w-full mt-2">
+    <Card class="w-full mt-2" :class="textSize">
       <div class="font-bold text-lg border-b-grey border-b-2"
         >职业推荐
         <span class="text-3 color-gray"
@@ -166,7 +170,7 @@
           <div class="w-40% bg-#f7f7f7 border-r-#e6e6e6 border-r-2 flex-shrink-0">
             <div class="flex flex-col py-3 px-1">
               <div
-                class="chat-bubble relative px-2 bg-#7c68d1 rounded-md flex justify-center items-center color-white"
+                class="chat-bubble relative px-2 rounded-md flex justify-center items-center color-white"
                 :style="{ backgroundColor: activeColor }"
                 >优势明显</div
               >
@@ -187,8 +191,9 @@
             <div class="flex flex-col py-3 px-1">
               <div
                 class="chat-bubble relative px-2 bg-gray rounded-md flex justify-center items-center color-white"
-                >优势不明显</div
               >
+                优势不明显
+              </div>
               <div class="text-center text-3">的职业方向</div>
             </div>
           </div>
@@ -201,7 +206,7 @@
         </div>
       </div>
     </Card>
-    <Card class="w-full mt-2">
+    <Card class="w-full mt-2" :class="textSize">
       <div class="font-bold text-lg border-b-grey border-b-2"
         >搭配建议
         <span class="text-3 color-gray"
@@ -235,7 +240,8 @@
   import { ref, computed, onMounted } from 'vue';
   import { Card, Avatar, Table, Progress } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
-  import SaleRadar from './components/SaleRadar.vue';
+  // import SaleRadar from './components/SaleRadar.vue';
+  import Leidatu from './components/Leidatu.vue';
   import { addCommentApi } from '@/api/sys/comment';
   import { useUserStore } from '@/store/modules/user';
   import { useMessage } from '@/hooks/web/useMessage';
@@ -253,7 +259,11 @@
     gongzuofangmian,
     gongzuogangwei,
     dapeijianyi,
+    guanlijianyi,
   } from './data';
+
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const textSize = isMobile ? 'text-3' : 'text-5';
 
   const questionStore = useQuestionStore();
   const userStore = useUserStore();

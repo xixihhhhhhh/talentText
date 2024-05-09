@@ -21,11 +21,11 @@
                 questionTitleThree(question).title
               }}</div>
               <div :class="['parent', 'text-14px']">
-                <div :class="['trapezoid1', 'trapezoid']">{{
-                  questionTitleThree(question).option[0].replace(/\n/g, '')
-                }}</div>
+                <div :class="['trapezoid1', 'trapezoid']"
+                  >{{ handleFenHang(questionTitleThree(question).option[0]) }}
+                </div>
                 <div :class="['trapezoid2', 'trapezoid']">{{
-                  questionTitleThree(question).option[1]
+                  questionTitleThree(question).option[1].replace(/\n/g, '')
                 }}</div>
               </div>
               <div class="flex w-full text-lg mt-4 pb-4">
@@ -56,8 +56,10 @@
               </div>
             </div>
           </div>
-          <div class="text-center mt-5 pb-5">
-            <a-button type="primary" class="mr-4" @click="back">返回</a-button>
+          <div class="text-center mt-5 pb-5 flex justify-around">
+            <Popconfirm @confirm="back" title="确定后答题情况作废"
+              ><a-button type="primary">返回</a-button>
+            </Popconfirm>
             <a-button
               type="primary"
               class="mr-4"
@@ -75,7 +77,10 @@
           </div>
         </div>
         <div class="bg-white pt-2" v-else>
-          <div class="pl-2 text-20px font-600 indent-4">
+          <div v-if="isFenDuan(curQuestionTitle)" class="pl-2 text-20px font-600">
+            <div v-for="item in strings(curQuestionTitle)" :key="item"> {{ item }}</div>
+          </div>
+          <div class="pl-2 text-20px font-600" v-else>
             {{ curQuestionTitle.replace(/[（）]/g, '') }}
           </div>
           <div class="text-lg ml-2 mt-4 pb-4">
@@ -95,11 +100,13 @@
               v-for="item in curQues"
               :key="item"
               @click="handleNextQues(item)"
-              >{{ item.option.slice(2) }}</div
+              >{{ item.option.slice(2).replace('。', '') }}</div
             >
           </div>
-          <div class="text-center mt-5 pb-5">
-            <a-button type="primary" class="mr-4" @click="back">返回</a-button>
+          <div class="text-center mt-5 pb-5 flex justify-around">
+            <Popconfirm @confirm="back" title="确定后答题情况作废"
+              ><a-button type="primary" class="mr-10">返回</a-button>
+            </Popconfirm>
             <a-button type="primary" class="mr-4" :disabled="curNum === 1" @click="handleLastQues"
               >上一题</a-button
             >
@@ -113,6 +120,7 @@
 
 <script lang="ts" setup>
   import { ref, watch, computed } from 'vue';
+  import { Popconfirm } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
   import { BasicForm, useForm } from '@/components/Form';
   import { getQuesApi } from '@/api/sys/question';
@@ -126,6 +134,8 @@
     splitString,
     getScore,
     convertToTwoDimensionalArray,
+    stringArr,
+    handleFenHang,
   } from './data';
   import { useQuestionStore } from '@/store/modules/question';
   import { data } from './test';
@@ -151,6 +161,7 @@
   let allquesData: object[] = [];
   const flag = true;
   const curNumTypeThree = ref(1);
+
   async function handleSubmit() {
     if (flag) {
       const res = await getQuesApi();
@@ -169,6 +180,15 @@
       });
       showResult.value = true;
     }
+  }
+
+  function isFenDuan(str: string) {
+    return str.includes('①');
+  }
+
+  function strings(str: string) {
+    const isChaoShi = str.includes('超市');
+    return isChaoShi ? stringArr.chaoshi : stringArr.changge;
   }
 
   const questionNum = computed(() => {
@@ -349,7 +369,6 @@
     selectValueThree.value = '';
     answerArrThree.value = [];
     twoArray.value = [];
-    answerArrThree.value = [];
     answerArr.value = [];
     showSubmit.value = true;
     curNum.value = 1;
