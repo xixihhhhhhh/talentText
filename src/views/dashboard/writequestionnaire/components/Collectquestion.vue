@@ -35,7 +35,7 @@
   const { notification } = useMessage();
 
   const submitData = ref<any>({});
-  let quesTotal = 3;
+  const max_question_num = 4;
   function handleSubmit(values: any) {
     showSubmit.value = false;
     console.log(values, 'values');
@@ -93,7 +93,7 @@
   watch(curNum, (newVal) => {
     nextDisable.value = false;
     showSubmitButton.value = false;
-    if (newVal === quesTotal) {
+    if (newVal === max_question_num) {
       nextDisable.value = true;
       showSubmitButton.value = true;
     }

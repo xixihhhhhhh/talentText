@@ -14,14 +14,14 @@ enum Api {
   ResetPassword = '/user/resetPassword',
   Logout = '/logout',
   GetUserInfo = '/user/getUserInfo',
+  RelaxAssessment = '/user/relaxAssessment',
+  GetSecondWenjuan = '/user/getSecondWenjuan',
+  ClearSecondWenjuan = '/user/clearSecondWenjuan',
   GetUserNumber = '/user/getAllUsers',
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
 }
 
-/**
- * @description: user login api
- */
 export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
   return defHttp.post<LoginResultModel>(
     {
@@ -34,9 +34,6 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
   );
 }
 
-/**
- * @description: user register api
- */
 export function registerApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
   return defHttp.post<LoginResultModel>(
     {
@@ -49,9 +46,6 @@ export function registerApi(params: LoginParams, mode: ErrorMessageMode = 'modal
   );
 }
 
-/**
- * @description: user reset password api
- */
 export function resetPasswordApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
   return defHttp.post<LoginResultModel>(
     {
@@ -64,11 +58,20 @@ export function resetPasswordApi(params: LoginParams, mode: ErrorMessageMode = '
   );
 }
 
-/**
- * @description: getUserInfo
- */
 export function getUserInfo() {
   return defHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
+}
+
+export function setRelaxAssessment(params: any, mode: ErrorMessageMode = 'modal') {
+  return defHttp.post({ url: Api.RelaxAssessment, params }, { errorMessageMode: mode });
+}
+
+export function getSecondWenjuan(params: any, mode: ErrorMessageMode = 'modal') {
+  return defHttp.post({ url: Api.GetSecondWenjuan, params }, { errorMessageMode: mode });
+}
+
+export function clearSecondWenjuan(params: any, mode: ErrorMessageMode = 'modal') {
+  return defHttp.post({ url: Api.ClearSecondWenjuan, params }, { errorMessageMode: mode });
 }
 
 export function getUsersNumber() {

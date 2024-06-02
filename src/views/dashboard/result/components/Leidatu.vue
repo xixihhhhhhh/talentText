@@ -1,6 +1,11 @@
 <template>
   <Card title="六维结果雷达图" :loading="loading" class="w-full">
-    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" class="circle">
+    <svg
+      viewBox="0 0 400 400"
+      xmlns="http://www.w3.org/2000/svg"
+      class="circle"
+      :class="circleClass"
+    >
       <circle cx="200" cy="200" r="150" stroke="#658EC6" stroke-width="15" />
       <circle cx="200" cy="200" r="170" stroke="#658EC6" stroke-width="15" />
       <path :d="jiaoji" fill="#F299A3" />
@@ -112,6 +117,8 @@
   import { ref, onMounted } from 'vue';
   import { Card } from 'ant-design-vue';
 
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const circleClass = !isMobile ? 'circlePc' : 'circleYidong';
   const props = defineProps({
     loading: Boolean,
     width: {
@@ -192,10 +199,15 @@
 </script>
 
 <style>
-  .circle {
+  .circleYidong {
     width: 100%;
     height: 100%;
     transform: scale(1.3);
+  }
+
+  .circlePc {
+    width: 400px;
+    height: 400px;
   }
 
   .circle text {

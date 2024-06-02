@@ -92,6 +92,7 @@ export const optionSchema: FormSchema[] = [
         { label: '类型三', value: 'typeThree', key: 'typeThree' },
       ],
     },
+    defaultValue: 'typeThree',
     rules: [{ required: true, type: 'string' }],
   },
   {
@@ -106,6 +107,7 @@ export const optionSchema: FormSchema[] = [
     component: 'Input',
     label: '选项A :',
     colProps: { span: 12 },
+    defaultValue: 'A+',
     rules: [{ required: true, type: 'string' }],
   },
   {
@@ -116,6 +118,7 @@ export const optionSchema: FormSchema[] = [
     componentProps: {
       options: fenshu,
     },
+    defaultValue: 1,
     rules: [{ required: true, type: 'number' }],
   },
   {
@@ -123,6 +126,7 @@ export const optionSchema: FormSchema[] = [
     component: 'Input',
     label: '选项B :',
     colProps: { span: 12 },
+    defaultValue: 'A',
     rules: [{ required: true, type: 'string' }],
   },
   {
@@ -133,6 +137,7 @@ export const optionSchema: FormSchema[] = [
     componentProps: {
       options: fenshu,
     },
+    defaultValue: 2,
     rules: [{ required: true, type: 'number' }],
   },
   {
@@ -140,6 +145,7 @@ export const optionSchema: FormSchema[] = [
     component: 'Input',
     label: '选项C :',
     colProps: { span: 12 },
+    defaultValue: '中立',
     rules: [{ required: true, type: 'string' }],
   },
   {
@@ -150,6 +156,7 @@ export const optionSchema: FormSchema[] = [
     componentProps: {
       options: fenshu,
     },
+    defaultValue: 3,
     rules: [{ required: true, type: 'number' }],
   },
   {
@@ -157,6 +164,7 @@ export const optionSchema: FormSchema[] = [
     component: 'Input',
     label: '选项D :',
     colProps: { span: 12 },
+    defaultValue: 'B',
     rules: [{ required: true, type: 'string' }],
   },
   {
@@ -167,12 +175,14 @@ export const optionSchema: FormSchema[] = [
     componentProps: {
       options: fenshu,
     },
+    defaultValue: 4,
     rules: [{ required: true, type: 'number' }],
   },
   {
     field: 'optionE',
     component: 'Input',
     label: '选项E :',
+    defaultValue: 'B+',
     colProps: { span: 12 },
   },
   {
@@ -180,9 +190,28 @@ export const optionSchema: FormSchema[] = [
     component: 'Select',
     label: '选项E分值 :',
     colProps: { span: 6 },
+    defaultValue: 5,
     componentProps: {
       options: fenshu,
     },
+  },
+  {
+    field: 'isRepeat',
+    component: 'Select',
+    label: '是否重复',
+    colProps: { span: 12 },
+    componentProps: {
+      options: [
+        { label: '是', value: 'yes', key: 'yes' },
+        { label: '否', value: 'no', key: 'no' },
+      ],
+    },
+  },
+  {
+    field: 'repeatField',
+    component: 'Input',
+    label: '重复字段',
+    colProps: { span: 6 },
   },
 ];
 

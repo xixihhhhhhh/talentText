@@ -31,6 +31,9 @@ export interface LoginResultModel {
  * @description: Get user information return value
  */
 export interface GetUserInfoModel {
+  secondWenJuanQuestion: object[];
+  firstWenJuanAnswer: any;
+  hasUnFinish: boolean;
   name: string;
   roles: [];
   // 用户id

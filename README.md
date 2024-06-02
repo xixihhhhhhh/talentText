@@ -1,179 +1,53 @@
-<div align="center"> <a href="https://github.com/anncwb/vue-vben-admin"> <img alt="VbenAdmin Logo" width="200" height="200" src="https://anncwb.github.io/anncwb/images/logo.png"> </a> <br> <br>
+# 多维度人才测评系统设计与实现
 
-[![license](https://img.shields.io/github/license/anncwb/vue-vben-admin.svg)](LICENSE)
+## 项目简介
 
-<h1>Vue vben admin</h1>
-</div>
+本项目旨在构建一个高效、易用的多维度人才测评系统，利用现代前端技术 Vue3 与后端框架 Koa2.js 实现前后端分离架构，提升系统的响应速度与可维护性。前端界面采用 Ant Design of Vue3 组件库，确保了 UI 的一致性和用户体验的优化。
 
-**English** | [中文](./README.zh-CN.md)
+## 技术栈
 
-## Introduction
+- **前端**：Vue3 + Ant Design of Vue3
+- **后端**：Koa2.js
+- **数据库**：MySQL
+- **状态管理**：pinia
 
-Vue Vben Admin is a free and open source middle and back-end template. Using the latest `vue3`, `vite4`, `TypeScript` and other mainstream technology development, the out-of-the-box middle and back-end front-end solutions can also be used for learning reference.
+## 功能模块
 
-## Feature
+### 用户系统
 
-- **State of The Art Development**：Use front-end front-end technology development such as Vue3/vite2
-- **TypeScript**: Application-level JavaScript language
-- **Theming**: Configurable themes
-- **International**：Built-in complete internationalization program
-- **Mock Server** Built-in mock data scheme
-- **Authority** Built-in complete dynamic routing permission generation scheme.
-- **Component** Multiple commonly used components are encapsulated twice
+- **登录注册**：实现基础的账户登录及注册功能，确保用户信息安全存储。
+- **第三方登录**：集成微信、QQ、GitHub 等第三方账号登录，提升用户登录便捷性。
 
-## Preview
+### 全局设置与语言切换
 
-- [vue-vben-admin](https://vben.vvbin.cn/) - Full version Chinese site
-- [vue-vben-admin-gh-pages](https://anncwb.github.io/vue-vben-admin/) - Full version of the github site
-- [vben-admin-thin-next](https://vben.vvbin.cn/thin/next/) - Simplified Chinese site
-- [vben-admin-thin-gh-pages](https://anncwb.github.io/vben-admin-thin-next/) -Simplified github site
+- **全局设置**：允许用户自定义界面偏好，如字体大小、主题颜色等。
+- **中英文切换**：系统内置多语言支持，一键切换，满足国际化需求。
 
-Test account: vben/123456
+### 主体功能
 
-<p align="center">
-    <img alt="VbenAdmin Logo" width="100%" src="https://anncwb.github.io/anncwb/images/preview1.png">
-    <img alt="VbenAdmin Logo" width="100%" src="https://anncwb.github.io/anncwb/images/preview2.png">
-    <img alt="VbenAdmin Logo" width="100%" src="https://anncwb.github.io/anncwb/images/preview3.png">
-</p>
+#### 问卷填报
 
-### Use Gitpod
+- **多维度问卷设计**：涵盖四大核心领域，十一个职业优势维度，以及三十六项具体胜任力指标，全面评估个体能力。
+- **智能化引导**：动态问卷流程，根据用户前一题的回答智能推送后续问题，提升填答效率与精准度。
 
-Open the project in Gitpod (free online dev environment for GitHub) and start coding immediately.
+#### 测评分析
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/anncwb/vue-vben-admin)
+- **雷达图展示**：直观展示用户在各领域的综合得分，对比分析强弱项。
+- **Table 表格分析**：详细列出每项胜任力的具体得分与解释，便于用户深入理解自身能力分布。
+- **优势领域说明**：针对用户表现突出的领域，提供专业解读与案例分享，增强用户自我认知。
+- **管理建议**：基于测评结果，系统生成六大个性化管理与提升建议，助力用户制定成长计划。
 
-## Documentation
+## 开发环境与部署
 
-[Document](https://doc.vvbin.cn/)
+- **开发环境配置**：Node.js、Vite、pnpm
+- **部署策略**：Docker 容器化部署/云服务器部署（如阿里云、AWS 等），确保高可用性和可扩展性。
 
-## Preparation
+## 项目启动
 
-- [node](http://nodejs.org/) and [git](https://git-scm.com/) - Project development environment
-- [Vite](https://vitejs.dev/) - Familiar with vite features
-- [Vue3](https://v3.vuejs.org/) - Familiar with Vue basic syntax
-- [TypeScript](https://www.typescriptlang.org/) - Familiar with the basic syntax of `TypeScript`
-- [Es6+](http://es6.ruanyifeng.com/) - Familiar with es6 basic syntax
-- [Vue-Router-Next](https://next.router.vuejs.org/) - Familiar with the basic use of vue-router
-- [Ant-Design-Vue](https://antdv.com/docs/vue/introduce-cn/) - ui basic use
-- [Mock.js](https://github.com/nuysoft/Mock) - mockjs basic syntax
+- **依赖下载（前后端都需要）**：命令行运行 pnpm install
+- **前端项目运行**：命令行运行 pnpm vite
+- **后端项目运行**：命令行运行 nodemon app.js
 
-## Install and use
+## 结语
 
-- Get the project code
-
-```bash
-git clone https://github.com/anncwb/vue-vben-admin.git
-```
-
-- Installation dependencies
-
-```bash
-cd vue-vben-admin
-
-pnpm install
-
-```
-
-- run
-
-```bash
-pnpm serve
-```
-
-- build
-
-```bash
-pnpm build
-```
-
-- docker
-
-### The dockerFile is located in the project root directory and supports differential deployment
-
-#### build image
-
-```bash
-docker build -t vue-vben-admin .
-```
-
-#### Environment variables are dynamically used to achieve differentiated container deployment. Different VG_BASE_URL environment variables point to different back-end service addresses. In the following example, http://localhost:3333 is used as the back-end service address and the container is mapped to port 6666
-
-```bash
-docker run --name vue-vben-admin -d -p 6666:80  -e VG_BASE_URL=http://localhost:3333 vue-vben-admin
-```
-
-Then you can navigate http://localhost:6666
-
-## Change Log
-
-[CHANGELOG](./CHANGELOG.zh_CN.md)
-
-## Project
-
-- [vue-vben-admin](https://github.com/anncwb/vue-vben-admin) - full version
-- [vue-vben-admin-thin-next](https://github.com/anncwb/vben-admin-thin-next) - Simplified version
-
-## How to contribute
-
-You are very welcome to join！[Raise an issue](https://github.com/anncwb/vue-vben-admin/issues/new/choose) Or submit a Pull Request。
-
-**Pull Request:**
-
-1. Fork code!
-2. Create your own branch: `git checkout -b feat/xxxx`
-3. Submit your changes: `git commit -am 'feat(function): add xxxxx'`
-4. Push your branch: `git push origin feat/xxxx`
-5. submit`pull request`
-
-## Git Contribution submission specification
-
-- reference [vue](https://github.com/vuejs/vue/blob/dev/.github/COMMIT_CONVENTION.md) specification ([Angular](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular))
-
-  - `feat` Add new features
-  - `fix` Fix the problem/BUG
-  - `style` The code style is related and does not affect the running result
-  - `perf` Optimization/performance improvement
-  - `refactor` Refactor
-  - `revert` Undo edit
-  - `test` Test related
-  - `docs` Documentation/notes
-  - `chore` Dependency update/scaffolding configuration modification etc.
-  - `workflow` Workflow improvements
-  - `ci` Continuous integration
-  - `types` Type definition file changes
-  - `wip` In development
-
-## Related warehouse
-
-If these plugins are helpful to you, you can give a star support
-
-- [vite-plugin-mock](https://github.com/anncwb/vite-plugin-mock) - Used for local and development environment data mock
-- [vite-plugin-html](https://github.com/anncwb/vite-plugin-html) - Used for html template conversion and compression
-- [vite-plugin-compression](https://github.com/anncwb/vite-plugin-compression) - Used to pack input .gz|.brotil files
-- [vite-plugin-svg-icons](https://github.com/anncwb/vite-plugin-svg-icons) - Used to quickly generate svg sprite
-
-## Browser support
-
-The `Chrome 80+` browser is recommended for local development
-
-Support modern browsers, not IE
-
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
-| :-: | :-: | :-: | :-: | :-: |
-| not support | last 2 versions | last 2 versions | last 2 versions | last 2 versions |
-
-## Maintainer
-
-[@Vben](https://github.com/anncwb) [@Jinmao](https://github.com/jinmao88)
-
-## Thanks
-
-<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo." height="120">
-
-## Star History Chart
-
-[![Star History Chart](https://api.star-history.com/svg?repos=vbenjs/vue-vben-admin&type=Date)](https://star-history.com/#vbenjs/vue-vben-admin&Date)
-
-## License
-
-[MIT © Vben-2020](./LICENSE)
+本项目通过 Vue3 与 Koa2 的结合，以及 Ant Design of Vue3 的美化，不仅实现了多维度人才测评的高效处理，也保证了系统的美观与易用性。无论是企业人力资源管理，还是个人职业发展规划，该系统都能提供有力的数据支持与成长导向，推动人才的全面发展与优化配置。

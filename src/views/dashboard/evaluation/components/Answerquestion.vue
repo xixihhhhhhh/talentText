@@ -7,13 +7,20 @@
       :class="['py-5', 'px-2', { 'bg-blue': !showSubmit }]"
       style="min-height: 80vh"
     >
-      <BasicForm
-        @register="register"
-        @submit="handleSubmit"
+      <div
         v-if="showSubmit"
-        class="mt-10 -enter-x"
-      />
-      <div v-else class="px-2 pt-4 border-radius-lg" style="border-radius: 10px" ref="pdfDom">
+        class="-enter-x flex items-center justify-center"
+        style="min-height: 80vh"
+      >
+        <a-button v-if="!hasUnFinish" type="primary" class="mr-4" @click="handleSubmit"
+          >开始测评</a-button
+        >
+        <div v-else class="-enter-x flex items-center">
+          <a-button type="primary" class="mr-4" @click="resumeAssessment">继续作答</a-button>
+          <a-button type="primary" class="mr-4" @click="againAssessment">重新开始</a-button>
+        </div>
+      </div>
+      <div v-else class="px-2 pt-4 border-radius-lg" style="border-radius: 10px">
         <div v-if="isTypeThree" class="text-20px font-600">
           <div v-for="(question, questionIndex) in curQuestionTypeThree" :key="question">
             <div class="bg-#fff my-4 pt-2">
@@ -33,7 +40,7 @@
                   v-for="item in convertToOptionArrays(question.quesData)"
                   :value="item"
                   :key="item"
-                  @click="handleNextQuesThree(item, question, questionIndex)"
+                  @click="debouncedhandleNextQuesThree(item, question, questionIndex)"
                   style="border-radius: 5px"
                   :class="[
                     'flex',
@@ -63,22 +70,21 @@
             <a-button
               type="primary"
               class="mr-4"
-              :disabled="curNum === 1"
+              :disabled="curNumTypeThree === 1 && currentQuestionnaireIndex === 2"
               @click="handleLastQuesThree"
               >上一题</a-button
             >
             <a-button
               type="primary"
-              class="mr-4"
-              v-show="curNumTypeThree === questionTypeThree.length"
               @click="handleEvaluate"
-              >评测</a-button
+              v-if="currentQuestionnaireIndex === 2 && curNumTypeThree === questionTypeThree.length"
+              >测评结果</a-button
             >
           </div>
         </div>
         <div class="bg-white pt-2" v-else>
           <div v-if="isFenDuan(curQuestionTitle)" class="pl-2 text-20px font-600">
-            <div v-for="item in strings(curQuestionTitle)" :key="item"> {{ item }}</div>
+            <div v-for="item in typeThreeChaoshi(curQuestionTitle)" :key="item"> {{ item }}</div>
           </div>
           <div class="pl-2 text-20px font-600" v-else>
             {{ curQuestionTitle.replace(/[（）]/g, '') }}
@@ -99,7 +105,7 @@
               ]"
               v-for="item in curQues"
               :key="item"
-              @click="handleNextQues(item)"
+              @click="debouncedHandleNextQues(item)"
               >{{ item.option.slice(2).replace('。', '') }}</div
             >
           </div>
@@ -115,43 +121,46 @@
       </div>
     </div>
     <div v-else><Result /></div>
+    <Modal centered title="提示" v-model:open="modalVisible" cancelText="休息" okText="继续">
+      <p class="indent-4"
+        >恭喜您，您已完成第一份问卷，继续完成第二份问卷将获得个人能力评价，您可以选择：</p
+      >
+      <template #footer>
+        <a-button key="back" @click="relaxAssessment">下次再作答</a-button>
+        <a-button key="submit" type="primary" @click="resumeAssessment">继续作答</a-button>
+      </template>
+    </Modal>
   </PageWrapper>
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch, computed } from 'vue';
-  import { Popconfirm } from 'ant-design-vue';
+  import { ref, watch, computed, onMounted } from 'vue';
+  import { Popconfirm, Modal } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
-  import { BasicForm, useForm } from '@/components/Form';
   import { getQuesApi } from '@/api/sys/question';
+  import { setRelaxAssessment, getSecondWenjuan, clearSecondWenjuan } from '@/api/sys/user';
   import { useMessage } from '@/hooks/web/useMessage';
   import Result from '@/views/dashboard/result/index.vue';
   import {
-    schemas,
     Option,
     convertToOptionArray,
     answer,
     splitString,
     getScore,
     convertToTwoDimensionalArray,
-    stringArr,
     handleFenHang,
+    extractAndConvertToLowercase,
   } from './data';
+  import { isFenDuan, stringArr, debounce } from './util';
   import { useQuestionStore } from '@/store/modules/question';
   import { data } from './test';
+  import { useUserStore } from '@/store/modules/user';
 
-  const pdfDom = ref(null);
   // import { addEvaluateListApi } from '@/api/sys/evaluateLists';
   const questionStore = useQuestionStore();
   const { createMessage } = useMessage();
-  const [register] = useForm({
-    labelWidth: 120,
-    schemas,
-    actionColOptions: { span: 24, style: { textAlign: 'center' } },
-    submitButtonOptions: { text: '开始评测' },
-    showResetButton: false,
-  });
 
+  const answerArr = ref<answer[]>([]);
   const showSubmit = ref(true);
   const showSubmitButton = ref(false);
   const curNum = ref(0);
@@ -159,41 +168,119 @@
   let questionTypeTwo: object[] = [];
   let questionTypeThree = ref<object[]>([]);
   let allquesData: object[] = [];
-  const flag = true;
+  const isTest = false;
+  const currentQuestionnaireIndex = ref(1);
   const curNumTypeThree = ref(1);
+  const secondWenJuans = ref<any>();
+  const hasUnFinish = ref(false);
+  const userStore = useUserStore();
+  const modalVisible = ref(false);
+  onMounted(async () => {
+    const email = userStore.getUserInfo.email;
+    const secondWenJuan = await getSecondWenjuan({ email });
+    hasUnFinish.value = !!secondWenJuan.hasUnFinish;
+    if (hasUnFinish.value) {
+      // 如果有未完成的问卷，那么拿到上一次答题的结果即可,并且拿到上一次未完成的题目
+      currentQuestionnaireIndex.value = 2;
+      answerArr.value.push(...secondWenJuan.firstWenJuanAnswer);
+      secondWenJuans.value = secondWenJuan.secondWenJuanQuestion;
+      questionTypeThree.value = convertToTwoDimensionalArray(
+        secondWenJuan.secondWenJuanQuestion,
+        3,
+      );
+    } else {
+      currentQuestionnaireIndex.value = 1;
+    }
+  });
 
   async function handleSubmit() {
-    if (flag) {
-      const res = await getQuesApi();
-      questionTypeOne = res.questionTypeOne;
-      questionTypeTwo = res.questionTypeTwo;
-      questionTypeThree.value = convertToTwoDimensionalArray(res.questionTypeThree, 3);
+    if (!isTest) {
+      const { firstWenJuan, secondWenJuan } = await getQuesApi();
+      secondWenJuans.value = secondWenJuan.questionTypeThree;
+      questionTypeOne = firstWenJuan.questionTypeOne;
+      questionTypeTwo = firstWenJuan.questionTypeTwo;
+      questionTypeThree.value = convertToTwoDimensionalArray(firstWenJuan.questionTypeThree, 3);
       allquesData = [...questionTypeOne, ...questionTypeTwo];
       curNum.value = 1;
       showSubmit.value = false;
     } else {
       getScore(data);
-      await new Promise((resolve) => {
+      await new Promise(() => {
         setTimeout(() => {
-          resolve(true);
+          showResult.value = true;
         }, 0);
       });
+    }
+  }
+
+  const typeThreeAns = ref<answer[]>([]);
+  const answerArrThree = ref([]);
+  // 继续答题
+  function resumeAssessment() {
+    answerArr.value.push(...answerArrThree.value.flat(2));
+    isTypeThree.value = true;
+    currentQuestionnaireIndex.value = 2;
+    questionTypeThree.value = convertToTwoDimensionalArray(secondWenJuans.value, 3);
+    answerArrThree.value = [];
+    selectValueOne.value = '';
+    selectValueTwo.value = '';
+    selectValueThree.value = '';
+    typeThreeAns.value = [];
+    curNumTypeThree.value = 1;
+    showSubmit.value = false;
+    modalVisible.value = false;
+  }
+
+  // 重新开始
+  async function againAssessment() {
+    // 清空用户信息先，调接口，传email
+    const email = userStore.getUserInfo.email;
+    await clearSecondWenjuan({ email });
+    currentQuestionnaireIndex.value = 1;
+    hasUnFinish.value = false;
+    answerArr.value = [];
+  }
+
+  // 下次再作答
+  async function relaxAssessment() {
+    const email = userStore.getUserInfo.email;
+    answerArr.value.push(...answerArrThree.value.flat(2));
+    answerArr.value.push(...fourArray.value);
+    answerArr.value = answerArr.value.filter(Boolean);
+    await setRelaxAssessment({
+      email,
+      firstWenJuanAnswer: answerArr.value,
+      secondWenJuanQuestion: secondWenJuans.value,
+    });
+    answerArrThree.value = [];
+    hasUnFinish.value = true;
+    answerArr.value = [];
+    fourArray.value = [];
+    modalVisible.value = false;
+    showSubmit.value = true;
+  }
+
+  function handleEvaluate() {
+    if (selectValueOne.value === '') {
+      createMessage.error({
+        content: '请回答完选择题',
+        duration: 3,
+      });
+    } else {
+      fourArray.value = fourArray.value.filter(Boolean);
+      answerArr.value.push(...fourArray.value);
+      answerArr.value.push(typeThreeAns.value[0]);
+      answerArr.value.push(...answerArrThree.value.flat(2));
+      questionStore.setQuestionAns(answerArr.value);
+      getScore(answerArr.value);
       showResult.value = true;
     }
   }
 
-  function isFenDuan(str: string) {
-    return str.includes('①');
-  }
-
-  function strings(str: string) {
+  function typeThreeChaoshi(str: string) {
     const isChaoShi = str.includes('超市');
     return isChaoShi ? stringArr.chaoshi : stringArr.changge;
   }
-
-  const questionNum = computed(() => {
-    return allquesData.length;
-  });
 
   const curQuestion: any = computed(() => {
     // @ts-ignore
@@ -223,6 +310,9 @@
   }
 
   const curQues = ref<Option[]>([]);
+  const questionNum = computed(() => {
+    return allquesData.length;
+  });
   watch(curNum, (newVal) => {
     nextDisable.value = false;
     showSubmitButton.value = false;
@@ -235,7 +325,6 @@
   });
 
   const selectValue = ref<string>('');
-  const answerArr = ref<answer[]>([]);
 
   function handleLastQues() {
     selectValue.value = answerArr.value[curNum.value - 2].value;
@@ -252,26 +341,25 @@
       score: Number(item.value[1]),
     };
     answerArr.value[curNum.value - 1] = curAnsObj;
-    (await new Promise((resolve) => {
+    (await new Promise(() => {
       setTimeout(() => {
-        resolve(1);
+        selectValue.value = answerArr.value[curNum.value]?.value || '';
+        if (curNum.value === allquesData.length) {
+          isTypeThree.value = true;
+          if (answerArrThree.value[0]) {
+            typeThreeAns.value = answerArrThree.value[0];
+            selectValueOne.value = typeThreeAns.value[0].value;
+            selectValueTwo.value = typeThreeAns.value[1]?.value || '';
+            selectValueThree.value = typeThreeAns.value[2]?.value || '';
+          }
+          return;
+        }
+        curNum.value += 1;
       }, 200);
     })) as unknown as Promise<void>;
-    selectValue.value = answerArr.value[curNum.value]?.value || '';
-    if (curNum.value === allquesData.length) {
-      isTypeThree.value = true;
-      if (answerArrThree.value[0]) {
-        typeThreeAns.value = answerArrThree.value[0];
-        selectValueOne.value = typeThreeAns.value[0].value;
-        selectValueTwo.value = typeThreeAns.value[1]?.value || '';
-        selectValueThree.value = typeThreeAns.value[2]?.value || '';
-      }
-      return;
-    }
-    curNum.value = curNum.value + 1;
   }
 
-  const typeThreeAns = ref<answer[]>([]);
+  const debouncedHandleNextQues = debounce(handleNextQues, 200);
 
   const selectValueOne = ref('');
   const selectValueTwo = ref('');
@@ -286,8 +374,7 @@
     }
   }
 
-  const answerArrThree = ref([]);
-  const twoArray = ref<answer[]>([]);
+  const fourArray = ref<answer[]>([]);
   function handleLastQuesThree() {
     if (curNumTypeThree.value === 1) {
       selectValue.value = answerArr.value[curNum.value - 1]?.value || '';
@@ -310,23 +397,42 @@
       selectValueThree.value = item.value;
     }
     const quesData = question.quesData;
-    const title = quesData.questionName;
-    if (title.includes('我通常做事情时')) {
-      twoArray.value[0] = {
-        careerField: 'transaction',
-        careerAdvantages: 'controlled',
-        competency: 'plan',
-        value: item.value,
-        score: Number(item.value[1]),
-      };
-    } else if (title.includes('我更习惯通过')) {
-      twoArray.value[1] = {
-        careerField: 'transaction',
-        careerAdvantages: 'controlled',
-        competency: 'plan',
-        value: item.value,
-        score: Number(item.value[1]),
-      };
+    if (quesData.isRepeat) {
+      const oppisteCompetency = extractAndConvertToLowercase(quesData.repeatField);
+      const repeatCompetency = ['teamwork1', 'teamwork2', 'plan', 'norms'];
+      const index = repeatCompetency.indexOf(oppisteCompetency);
+      const fourObj = [
+        {
+          careerField: 'service',
+          careerAdvantages: 'humanistic',
+          competency: 'teamwork',
+          value: item.value,
+          score: Number(item.value[1]),
+        },
+        {
+          careerField: 'service',
+          careerAdvantages: 'humanistic',
+          competency: 'teamwork',
+          value: item.value,
+          score: Number(item.value[1]),
+        },
+        {
+          careerField: 'transaction',
+          careerAdvantages: 'controlled',
+          competency: 'plan',
+          value: item.value,
+          score: Number(item.value[1]),
+        },
+        {
+          careerField: 'transaction',
+          careerAdvantages: 'operable',
+          competency: 'norms',
+          value: item.value,
+          score: Number(item.value[1]),
+        },
+      ];
+      const answerObj = fourObj[index];
+      fourArray.value[index] = answerObj;
     }
     let curAnsObj: answer = {
       careerField: question.careerField,
@@ -336,30 +442,40 @@
       score: Number(item.value[1]),
     };
     typeThreeAns.value[index] = curAnsObj;
+    if (
+      currentQuestionnaireIndex.value === 2 &&
+      curNumTypeThree.value === questionTypeThree.value.length
+    ) {
+      return;
+    }
     if (!!typeThreeAns.value[0] && !!typeThreeAns.value[1] && !!typeThreeAns.value[2]) {
       // @ts-ignore
       answerArrThree.value[curNumTypeThree.value - 1] = typeThreeAns.value;
       if (curNumTypeThree.value === questionTypeThree.value.length) {
+        modalVisible.value = true;
         return;
       }
-      (await new Promise((resolve) => {
+      if (curNumTypeThree.value === questionTypeThree.value.length) {
+        return;
+      }
+      (await new Promise(() => {
         setTimeout(() => {
-          resolve(1);
+          curNumTypeThree.value += 1;
+          selectValueOne.value = '';
+          selectValueTwo.value = '';
+          selectValueThree.value = '';
+          typeThreeAns.value = answerArrThree.value[curNumTypeThree.value - 1] || [];
+          if (typeThreeAns.value.length > 0) {
+            selectValueOne.value = typeThreeAns.value[0].value;
+            selectValueTwo.value = typeThreeAns.value[1].value;
+            selectValueThree.value = typeThreeAns.value[2].value;
+          }
         }, 200);
       })) as unknown as Promise<void>;
-      curNumTypeThree.value += 1;
-      selectValueOne.value = '';
-      selectValueTwo.value = '';
-      selectValueThree.value = '';
-      typeThreeAns.value = answerArrThree.value[curNumTypeThree.value - 1] || [];
-      if (typeThreeAns.value.length > 0) {
-        selectValueOne.value = typeThreeAns.value[0].value;
-        selectValueTwo.value = typeThreeAns.value[1].value;
-        selectValueThree.value = typeThreeAns.value[2].value;
-      }
     }
   }
 
+  const debouncedhandleNextQuesThree = debounce(handleNextQuesThree, 200);
   const isTypeThree = ref(false);
 
   function back() {
@@ -368,7 +484,7 @@
     selectValueTwo.value = '';
     selectValueThree.value = '';
     answerArrThree.value = [];
-    twoArray.value = [];
+    fourArray.value = [];
     answerArr.value = [];
     showSubmit.value = true;
     curNum.value = 1;
@@ -377,26 +493,6 @@
   }
 
   const showResult = ref(false);
-  function handleEvaluate() {
-    if (
-      selectValueOne.value === '' ||
-      selectValueTwo.value === '' ||
-      selectValueThree.value === ''
-    ) {
-      createMessage.error({
-        content: '请回答选择题',
-        duration: 3,
-      });
-    } else {
-      answerArr.value.push(...twoArray.value);
-      // @ts-ignore
-      answerArr.value.push(...answerArrThree.value.flat(2));
-      questionStore.setQuestionAns(answerArr.value);
-      getScore(answerArr.value);
-      // const { success } = addEvaluateListApi({});
-      showResult.value = true;
-    }
-  }
 </script>
 
 <style scoped>

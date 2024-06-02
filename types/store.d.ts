@@ -1,6 +1,14 @@
 import { ErrorTypeEnum } from '@/enums/exceptionEnum';
 import { MenuModeEnum, MenuTypeEnum } from '@/enums/menuEnum';
 
+interface answer {
+  careerField: string;
+  careerAdvantages: string;
+  competency: string;
+  score: number;
+  value: string;
+}
+
 // Lock screen information
 export interface LockInfo {
   // Password required
@@ -35,11 +43,16 @@ export interface ErrorLogInfo {
 }
 
 export interface UserInfo {
+  secondWenJuanQuestion: object[];
+  firstWenJuanAnswer: answer[];
+  halfWenJuan: any;
+  hasUnFinish: boolean;
   userId: string | number;
   username: string;
   name: string;
   realName: string;
   avatar: string;
+  email: string;
   desc?: string;
   homePath?: string;
   roles: [];
