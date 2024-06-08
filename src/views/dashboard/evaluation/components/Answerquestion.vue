@@ -5,11 +5,11 @@
     <div
       v-if="!showResult"
       :class="['py-5', 'px-2', { 'bg-blue': !showSubmit }]"
-      style="min-height: 80vh"
+      style="min-height: 100vh"
     >
       <div
         v-if="showSubmit"
-        class="-enter-x flex items-center justify-center"
+        class="-enter-x flex items-center justify-center rounded-2"
         style="min-height: 80vh"
       >
         <a-button v-if="!hasUnFinish" type="primary" class="mr-4" @click="handleSubmit"
@@ -20,7 +20,8 @@
           <a-button type="primary" class="mr-4" @click="againAssessment">重新开始</a-button>
         </div>
       </div>
-      <div v-else class="px-2 pt-4 border-radius-lg" style="border-radius: 10px">
+      <div v-else class="px-2 rounded-2" style="border-radius: 10px">
+        <progressBar :percent="percent" />
         <div v-if="isTypeThree" class="text-20px font-600">
           <div v-for="(question, questionIndex) in curQuestionTypeThree" :key="question">
             <div class="bg-#fff my-4 pt-2">
@@ -65,11 +66,11 @@
           </div>
           <div class="text-center mt-5 pb-5 flex justify-around">
             <Popconfirm @confirm="back" title="确定后答题情况作废"
-              ><a-button type="primary">返回</a-button>
+              ><a-button :icon="h(LeftSquareOutlined)" type="primary" class="w-25">返回</a-button>
             </Popconfirm>
             <a-button
-              type="primary"
-              class="mr-4"
+              :icon="h(PauseCircleOutlined)"
+              class="w-25"
               :disabled="curNumTypeThree === 1 && currentQuestionnaireIndex === 2"
               @click="handleLastQuesThree"
               >上一题</a-button
@@ -82,7 +83,7 @@
             >
           </div>
         </div>
-        <div class="bg-white pt-2" v-else>
+        <div class="bg-white pt-2 rounded-2" v-else>
           <div v-if="isFenDuan(curQuestionTitle)" class="pl-2 text-20px font-600">
             <div v-for="item in typeThreeChaoshi(curQuestionTitle)" :key="item"> {{ item }}</div>
           </div>
@@ -111,9 +112,13 @@
           </div>
           <div class="text-center mt-5 pb-5 flex justify-around">
             <Popconfirm @confirm="back" title="确定后答题情况作废"
-              ><a-button type="primary" class="mr-10">返回</a-button>
+              ><a-button :icon="h(LeftSquareOutlined)" type="primary" class="w-30">返回</a-button>
             </Popconfirm>
-            <a-button type="primary" class="mr-4" :disabled="curNum === 1" @click="handleLastQues"
+            <a-button
+              :icon="h(PauseCircleOutlined)"
+              class="mr-4 w-30"
+              :disabled="curNum === 1"
+              @click="handleLastQues"
               >上一题</a-button
             >
           </div>
@@ -134,13 +139,15 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch, computed, onMounted } from 'vue';
+  import { ref, watch, computed, onMounted, h } from 'vue';
+  import { LeftSquareOutlined, PauseCircleOutlined } from '@ant-design/icons-vue';
   import { Popconfirm, Modal } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
   import { getQuesApi } from '@/api/sys/question';
   import { setRelaxAssessment, getSecondWenjuan, clearSecondWenjuan } from '@/api/sys/user';
   import { useMessage } from '@/hooks/web/useMessage';
   import Result from '@/views/dashboard/result/index.vue';
+  import progressBar from './progress.vue';
   import {
     Option,
     convertToOptionArray,
@@ -159,7 +166,6 @@
   // import { addEvaluateListApi } from '@/api/sys/evaluateLists';
   const questionStore = useQuestionStore();
   const { createMessage } = useMessage();
-
   const answerArr = ref<answer[]>([]);
   const showSubmit = ref(true);
   const showSubmitButton = ref(false);
@@ -175,6 +181,9 @@
   const hasUnFinish = ref(false);
   const userStore = useUserStore();
   const modalVisible = ref(false);
+  const percent = computed(() => {
+    return Math.round(((curNum.value + (curNumTypeThree.value - 1) * 3) / 70) * 100);
+  });
   onMounted(async () => {
     const email = userStore.getUserInfo.email;
     const secondWenJuan = await getSecondWenjuan({ email });
@@ -226,6 +235,7 @@
     selectValueTwo.value = '';
     selectValueThree.value = '';
     typeThreeAns.value = [];
+    curNum.value = 1;
     curNumTypeThree.value = 1;
     showSubmit.value = false;
     modalVisible.value = false;
@@ -236,6 +246,7 @@
     // 清空用户信息先，调接口，传email
     const email = userStore.getUserInfo.email;
     await clearSecondWenjuan({ email });
+    curNum.value = 1;
     currentQuestionnaireIndex.value = 1;
     hasUnFinish.value = false;
     answerArr.value = [];
@@ -252,6 +263,8 @@
       firstWenJuanAnswer: answerArr.value,
       secondWenJuanQuestion: secondWenJuans.value,
     });
+    curNum.value = 1;
+    curNumTypeThree.value = 1;
     answerArrThree.value = [];
     hasUnFinish.value = true;
     answerArr.value = [];
@@ -470,7 +483,7 @@
             selectValueTwo.value = typeThreeAns.value[1].value;
             selectValueThree.value = typeThreeAns.value[2].value;
           }
-        }, 200);
+        }, 100);
       })) as unknown as Promise<void>;
     }
   }

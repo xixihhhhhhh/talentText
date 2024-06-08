@@ -97,8 +97,6 @@ export function sortObject(obj) {
     // @ts-ignore
     (a, b) => parseFloat(b[1]) - parseFloat(a[1]),
   );
-  // 将排序后的数组转换回对象
-
   return sortedObj;
 }
 
@@ -137,7 +135,7 @@ export const advantageMap = {
   serviceMinded: ['服务意识', '服务型'],
   selfControl: ['情绪自控', '服务型'],
   approachable: ['平易近人', '服务型'],
-  teamwork: ['平易近人', '人文型'],
+  teamwork: ['团队协作', '人文型'],
   employPeople: ['识人用人', '人文型'],
 };
 
