@@ -31,6 +31,8 @@ export interface LoginResultModel {
  * @description: Get user information return value
  */
 export interface GetUserInfoModel {
+  email: string;
+  halfWenJuan: any;
   secondWenJuanQuestion: object[];
   firstWenJuanAnswer: any;
   hasUnFinish: boolean;
