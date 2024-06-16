@@ -158,7 +158,7 @@
     handleFenHang,
     extractAndConvertToLowercase,
   } from './data';
-  import { isFenDuan, stringArr, debounce } from './util';
+  import { isFenDuan, stringArr, debounce, fourRepeatedObj } from './util';
   import { useQuestionStore } from '@/store/modules/question';
   import { data } from './test';
   import { useUserStore } from '@/store/modules/user';
@@ -174,7 +174,6 @@
   let questionTypeTwo: object[] = [];
   let questionTypeThree = ref<object[]>([]);
   let allquesData: object[] = [];
-  const isTest = false;
   const currentQuestionnaireIndex = ref(1);
   const curNumTypeThree = ref(1);
   const secondWenJuans = ref<any>();
@@ -203,6 +202,7 @@
   });
 
   async function handleSubmit() {
+    const isTest = false;
     if (!isTest) {
       const { firstWenJuan, secondWenJuan } = await getQuesApi();
       secondWenJuans.value = secondWenJuan.questionTypeThree;
@@ -296,17 +296,14 @@
   }
 
   const curQuestion: any = computed(() => {
-    // @ts-ignore
     return allquesData[curNum.value - 1];
   });
 
   const curQuestionTypeThree = computed(() => {
-    // @ts-ignore
     return questionTypeThree.value[curNumTypeThree.value - 1];
   });
 
-  const questionTitleThree = function (item: object) {
-    // @ts-ignore
+  const questionTitleThree = function (item: { quesData: any }) {
     return splitString(item.quesData.questionName);
   };
 
@@ -414,37 +411,9 @@
       const oppisteCompetency = extractAndConvertToLowercase(quesData.repeatField);
       const repeatCompetency = ['teamwork1', 'teamwork2', 'plan', 'norms'];
       const index = repeatCompetency.indexOf(oppisteCompetency);
-      const fourObj = [
-        {
-          careerField: 'service',
-          careerAdvantages: 'humanistic',
-          competency: 'teamwork',
-          value: item.value,
-          score: Number(item.value[1]),
-        },
-        {
-          careerField: 'service',
-          careerAdvantages: 'humanistic',
-          competency: 'teamwork',
-          value: item.value,
-          score: Number(item.value[1]),
-        },
-        {
-          careerField: 'transaction',
-          careerAdvantages: 'controlled',
-          competency: 'plan',
-          value: item.value,
-          score: Number(item.value[1]),
-        },
-        {
-          careerField: 'transaction',
-          careerAdvantages: 'operable',
-          competency: 'norms',
-          value: item.value,
-          score: Number(item.value[1]),
-        },
-      ];
-      const answerObj = fourObj[index];
+      const answerObj = fourRepeatedObj[index];
+      answerObj.value = item.value;
+      answerObj.score = Number(item.value[1]);
       fourArray.value[index] = answerObj;
     }
     let curAnsObj: answer = {

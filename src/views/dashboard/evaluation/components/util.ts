@@ -35,3 +35,34 @@ export function debounce<T extends (...args: any[]) => any>(
     }, delay);
   };
 }
+
+export const fourRepeatedObj = [
+  {
+    careerField: 'service',
+    careerAdvantages: 'humanistic',
+    competency: 'teamwork',
+    value: '',
+    score: 1,
+  },
+  {
+    careerField: 'service',
+    careerAdvantages: 'humanistic',
+    competency: 'teamwork',
+    value: '',
+    score: 1,
+  },
+  {
+    careerField: 'transaction',
+    careerAdvantages: 'controlled',
+    competency: 'plan',
+    value: '',
+    score: 1,
+  },
+  {
+    careerField: 'transaction',
+    careerAdvantages: 'operable',
+    competency: 'norms',
+    value: '',
+    score: 1,
+  },
+];

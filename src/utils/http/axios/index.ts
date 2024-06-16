@@ -164,6 +164,7 @@ const transform: AxiosTransform = {
         ? `${options.authenticationScheme} ${token}`
         : token;
     }
+    console.log('🚀 ~ Authorization:', config.headers.Authorization);
     return config;
   },
 
