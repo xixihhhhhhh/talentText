@@ -2,7 +2,7 @@ export function isFenDuan(str: string) {
   return str.includes('①');
 }
 
-export const stringArr = {
+const fenduanStringArr = {
   chaoshi: [
     '以下描述哪些是不合法的：',
     '①超市收银台因为没有零钱，用等价的零食糖果找钱',
@@ -21,6 +21,11 @@ export const stringArr = {
     'c.我们组的同事都知道你会唱歌',
   ],
 };
+
+export function typeThreeChaoshi(str: string) {
+  const isChaoShi = str.includes('超市');
+  return isChaoShi ? fenduanStringArr.chaoshi : fenduanStringArr.changge;
+}
 
 export function debounce<T extends (...args: any[]) => any>(
   func: T,

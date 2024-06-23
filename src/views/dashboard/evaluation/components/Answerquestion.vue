@@ -12,7 +12,7 @@
         class="-enter-x flex items-center justify-center rounded-2"
         style="min-height: 80vh"
       >
-        <a-button v-if="!hasUnFinish" type="primary" class="mr-4" @click="handleSubmit"
+        <a-button v-if="!hasUnFinished" type="primary" class="mr-4" @click="handleSubmit"
           >开始测评</a-button
         >
         <div v-else class="-enter-x flex items-center">
@@ -71,14 +71,16 @@
             <a-button
               :icon="h(PauseCircleOutlined)"
               class="w-25"
-              :disabled="curNumTypeThree === 1 && currentQuestionnaireIndex === 2"
+              :disabled="curIndexTypeThree === 1 && currentQuestionnaireIndex === 2"
               @click="handleLastQuesThree"
               >上一题</a-button
             >
             <a-button
               type="primary"
               @click="handleEvaluate"
-              v-if="currentQuestionnaireIndex === 2 && curNumTypeThree === questionTypeThree.length"
+              v-if="
+                currentQuestionnaireIndex === 2 && curIndexTypeThree === questionTypeThree.length
+              "
               >测评结果</a-button
             >
           </div>
@@ -106,7 +108,7 @@
               ]"
               v-for="item in curQues"
               :key="item"
-              @click="debouncedHandleNextQues(item)"
+              @click="handleNextQues(item)"
               >{{ item.option.slice(2).replace('。', '') }}</div
             >
           </div>
@@ -125,7 +127,9 @@
         </div>
       </div>
     </div>
-    <div v-else><Result /></div>
+    <div v-else>
+      <Result />
+    </div>
     <Modal centered title="提示" v-model:open="modalVisible" cancelText="休息" okText="继续">
       <p class="indent-4"
         >恭喜您，您已完成第一份问卷，继续完成第二份问卷将获得个人能力评价，您可以选择：</p
@@ -158,36 +162,36 @@
     handleFenHang,
     extractAndConvertToLowercase,
   } from './data';
-  import { isFenDuan, stringArr, debounce, fourRepeatedObj } from './util';
+  import { isFenDuan, typeThreeChaoshi, debounce, fourRepeatedObj } from './util';
   import { useQuestionStore } from '@/store/modules/question';
   import { data } from './test';
   import { useUserStore } from '@/store/modules/user';
 
+  const userStore = useUserStore();
   // import { addEvaluateListApi } from '@/api/sys/evaluateLists';
   const questionStore = useQuestionStore();
+
   const { createMessage } = useMessage();
   const answerArr = ref<answer[]>([]);
   const showSubmit = ref(true);
-  const showSubmitButton = ref(false);
   const curNum = ref(0);
   let questionTypeOne: object[] = [];
   let questionTypeTwo: object[] = [];
   let questionTypeThree = ref<object[]>([]);
   let allquesData: object[] = [];
   const currentQuestionnaireIndex = ref(1);
-  const curNumTypeThree = ref(1);
+  const curIndexTypeThree = ref(1);
   const secondWenJuans = ref<any>();
-  const hasUnFinish = ref(false);
-  const userStore = useUserStore();
+  const hasUnFinished = ref(false);
   const modalVisible = ref(false);
   const percent = computed(() => {
-    return Math.round(((curNum.value + (curNumTypeThree.value - 1) * 3) / 70) * 100);
+    return Math.round(((curNum.value + (curIndexTypeThree.value - 1) * 3) / 70) * 100);
   });
   onMounted(async () => {
     const email = userStore.getUserInfo.email;
     const secondWenJuan = await getSecondWenjuan({ email });
-    hasUnFinish.value = !!secondWenJuan.hasUnFinish;
-    if (hasUnFinish.value) {
+    hasUnFinished.value = !!secondWenJuan.hasUnFinished;
+    if (hasUnFinished.value) {
       // 如果有未完成的问卷，那么拿到上一次答题的结果即可,并且拿到上一次未完成的题目
       currentQuestionnaireIndex.value = 2;
       answerArr.value.push(...secondWenJuan.firstWenJuanAnswer);
@@ -236,7 +240,7 @@
     selectValueThree.value = '';
     typeThreeAns.value = [];
     curNum.value = 1;
-    curNumTypeThree.value = 1;
+    curIndexTypeThree.value = 1;
     showSubmit.value = false;
     modalVisible.value = false;
   }
@@ -248,7 +252,7 @@
     await clearSecondWenjuan({ email });
     curNum.value = 1;
     currentQuestionnaireIndex.value = 1;
-    hasUnFinish.value = false;
+    hasUnFinished.value = false;
     answerArr.value = [];
   }
 
@@ -264,9 +268,9 @@
       secondWenJuanQuestion: secondWenJuans.value,
     });
     curNum.value = 1;
-    curNumTypeThree.value = 1;
+    curIndexTypeThree.value = 1;
     answerArrThree.value = [];
-    hasUnFinish.value = true;
+    hasUnFinished.value = true;
     answerArr.value = [];
     fourArray.value = [];
     modalVisible.value = false;
@@ -290,17 +294,12 @@
     }
   }
 
-  function typeThreeChaoshi(str: string) {
-    const isChaoShi = str.includes('超市');
-    return isChaoShi ? stringArr.chaoshi : stringArr.changge;
-  }
-
   const curQuestion: any = computed(() => {
     return allquesData[curNum.value - 1];
   });
 
   const curQuestionTypeThree = computed(() => {
-    return questionTypeThree.value[curNumTypeThree.value - 1];
+    return questionTypeThree.value[curIndexTypeThree.value - 1];
   });
 
   const questionTitleThree = function (item: { quesData: any }) {
@@ -325,12 +324,10 @@
   });
   watch(curNum, (newVal) => {
     nextDisable.value = false;
-    showSubmitButton.value = false;
     // @ts-ignore
     curQues.value = convertToOptionArray(curQuestion.value.quesData);
     if (newVal === questionNum.value) {
       nextDisable.value = true;
-      showSubmitButton.value = true;
     }
   });
 
@@ -341,7 +338,10 @@
     curNum.value = curNum.value - 1;
   }
 
+  let stopRepeatClick = false;
   async function handleNextQues(item: any) {
+    if (stopRepeatClick) return;
+    stopRepeatClick = true;
     selectValue.value = item.value;
     let curAnsObj: answer = {
       careerField: curQuestion.value.careerField,
@@ -365,11 +365,12 @@
           return;
         }
         curNum.value += 1;
+        setTimeout(() => {
+          stopRepeatClick = false;
+        }, 200);
       }, 200);
     })) as unknown as Promise<void>;
   }
-
-  const debouncedHandleNextQues = debounce(handleNextQues, 200);
 
   const selectValueOne = ref('');
   const selectValueTwo = ref('');
@@ -386,12 +387,12 @@
 
   const fourArray = ref<answer[]>([]);
   function handleLastQuesThree() {
-    if (curNumTypeThree.value === 1) {
+    if (curIndexTypeThree.value === 1) {
       selectValue.value = answerArr.value[curNum.value - 1]?.value || '';
       isTypeThree.value = false;
     } else {
-      curNumTypeThree.value = curNumTypeThree.value - 1;
-      typeThreeAns.value = answerArrThree.value[curNumTypeThree.value - 1];
+      curIndexTypeThree.value = curIndexTypeThree.value - 1;
+      typeThreeAns.value = answerArrThree.value[curIndexTypeThree.value - 1];
       selectValueOne.value = typeThreeAns.value[0]?.value || '';
       selectValueTwo.value = typeThreeAns.value[1]?.value || '';
       selectValueThree.value = typeThreeAns.value[2]?.value || '';
@@ -426,27 +427,27 @@
     typeThreeAns.value[index] = curAnsObj;
     if (
       currentQuestionnaireIndex.value === 2 &&
-      curNumTypeThree.value === questionTypeThree.value.length
+      curIndexTypeThree.value === questionTypeThree.value.length
     ) {
       return;
     }
     if (!!typeThreeAns.value[0] && !!typeThreeAns.value[1] && !!typeThreeAns.value[2]) {
       // @ts-ignore
-      answerArrThree.value[curNumTypeThree.value - 1] = typeThreeAns.value;
-      if (curNumTypeThree.value === questionTypeThree.value.length) {
+      answerArrThree.value[curIndexTypeThree.value - 1] = typeThreeAns.value;
+      if (curIndexTypeThree.value === questionTypeThree.value.length) {
         modalVisible.value = true;
         return;
       }
-      if (curNumTypeThree.value === questionTypeThree.value.length) {
+      if (curIndexTypeThree.value === questionTypeThree.value.length) {
         return;
       }
       (await new Promise(() => {
         setTimeout(() => {
-          curNumTypeThree.value += 1;
+          curIndexTypeThree.value += 1;
           selectValueOne.value = '';
           selectValueTwo.value = '';
           selectValueThree.value = '';
-          typeThreeAns.value = answerArrThree.value[curNumTypeThree.value - 1] || [];
+          typeThreeAns.value = answerArrThree.value[curIndexTypeThree.value - 1] || [];
           if (typeThreeAns.value.length > 0) {
             selectValueOne.value = typeThreeAns.value[0].value;
             selectValueTwo.value = typeThreeAns.value[1].value;
@@ -470,7 +471,7 @@
     answerArr.value = [];
     showSubmit.value = true;
     curNum.value = 1;
-    curNumTypeThree.value = 1;
+    curIndexTypeThree.value = 1;
     selectValue.value = '';
   }
 
