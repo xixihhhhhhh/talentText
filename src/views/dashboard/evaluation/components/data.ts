@@ -59,26 +59,6 @@ export function convertToOptionArray(data: OptionsData): Option[] {
   }, []);
 }
 
-export function splitString(str) {
-  let result: string[] = [];
-  const indexA = str.indexOf('A');
-  const indexB = str.indexOf('B');
-
-  if (indexA !== -1 && indexB !== -1) {
-    result.push(str.substring(0, indexA));
-    result.push('A' + str.substring(indexA + 1, indexB));
-    result.push('B' + str.substring(indexB + 1));
-  }
-
-  result = result.filter((item) => Boolean(item));
-
-  if (result.length === 3) {
-    return { title: result[0], option: result.slice(1) };
-  } else {
-    return { title: '', option: result };
-  }
-}
-
 const careerAdvantagesMap = {
   skill: ['flexible', 'message'],
   hatched: ['policy', 'writing', 'holistic', 'risk'],
@@ -275,3 +255,27 @@ export const competencyData = {
     competency: 'norms',
   },
 };
+
+function splitString(str) {
+  let result: string[] = [];
+  const indexA = str.indexOf('A');
+  const indexB = str.indexOf('B');
+
+  if (indexA !== -1 && indexB !== -1) {
+    result.push(str.substring(0, indexA));
+    result.push('A' + str.substring(indexA + 1, indexB));
+    result.push('B' + str.substring(indexB + 1));
+  }
+
+  result = result.filter((item) => Boolean(item));
+
+  if (result.length === 3) {
+    return { title: result[0], option: result.slice(1) };
+  } else {
+    return { title: '', option: result };
+  }
+}
+
+export function questionTitleThree(item: { quesData: any }) {
+  return splitString(item.quesData.questionName);
+}

@@ -1,5 +1,3 @@
-/** 填报问卷页 */
-
 <template>
   <PageWrapper>
     <div
@@ -38,7 +36,7 @@
               </div>
               <div class="flex w-full text-lg mt-4 pb-4">
                 <div
-                  v-for="item in convertToOptionArrays(question.quesData)"
+                  v-for="item in convertToOptionArray(question.quesData)"
                   :value="item"
                   :key="item"
                   @click="debouncedhandleNextQuesThree(item, question, questionIndex)"
@@ -143,7 +141,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch, computed, onMounted, h } from 'vue';
+  import { ref, computed, onMounted, h } from 'vue';
   import { LeftSquareOutlined, PauseCircleOutlined } from '@ant-design/icons-vue';
   import { Popconfirm, Modal } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
@@ -153,10 +151,9 @@
   import Result from '@/views/dashboard/result/index.vue';
   import progressBar from './progress.vue';
   import {
-    Option,
     convertToOptionArray,
     answer,
-    splitString,
+    questionTitleThree,
     getScore,
     convertToTwoDimensionalArray,
     handleFenHang,
@@ -171,22 +168,54 @@
   // import { addEvaluateListApi } from '@/api/sys/evaluateLists';
   const questionStore = useQuestionStore();
 
-  const { createMessage } = useMessage();
-  const answerArr = ref<answer[]>([]);
-  const showSubmit = ref(true);
-  const curNum = ref(0);
   let questionTypeOne: object[] = [];
   let questionTypeTwo: object[] = [];
   let questionTypeThree = ref<object[]>([]);
   let allquesData: object[] = [];
+  let stopRepeatClick = false;
+
+  const { createMessage } = useMessage();
+  const answerArr = ref<answer[]>([]);
+  const showSubmit = ref(true);
+  const curNum = ref(0);
   const currentQuestionnaireIndex = ref(1);
   const curIndexTypeThree = ref(1);
   const secondWenJuans = ref<any>();
   const hasUnFinished = ref(false);
   const modalVisible = ref(false);
+  const showResult = ref(false);
+  const typeThreeAns = ref<answer[]>([]);
+  const answerArrThree = ref([]);
+  const selectValue = ref<string>('');
+  const selectValueOne = ref('');
+  const selectValueTwo = ref('');
+  const selectValueThree = ref('');
+  const fourArray = ref<answer[]>([]);
+  const isTypeThree = ref(false);
+
   const percent = computed(() => {
     return Math.round(((curNum.value + (curIndexTypeThree.value - 1) * 3) / 70) * 100);
   });
+
+  const curQuestion = computed(() => {
+    return allquesData[curNum.value - 1];
+  });
+
+  const curQuestionTypeThree = computed(() => {
+    return questionTypeThree.value[curIndexTypeThree.value - 1];
+  });
+
+  const curQuestionTitle = computed(() => {
+    // @ts-ignore
+    const questionName = curQuestion.value.quesData.questionName;
+    return questionName;
+  });
+
+  const curQues = computed(() => {
+    // @ts-ignore
+    return convertToOptionArray(curQuestion.value.quesData);
+  });
+
   onMounted(async () => {
     const email = userStore.getUserInfo.email;
     const secondWenJuan = await getSecondWenjuan({ email });
@@ -226,8 +255,6 @@
     }
   }
 
-  const typeThreeAns = ref<answer[]>([]);
-  const answerArrThree = ref([]);
   // 继续答题
   function resumeAssessment() {
     answerArr.value.push(...answerArrThree.value.flat(2));
@@ -294,51 +321,11 @@
     }
   }
 
-  const curQuestion: any = computed(() => {
-    return allquesData[curNum.value - 1];
-  });
-
-  const curQuestionTypeThree = computed(() => {
-    return questionTypeThree.value[curIndexTypeThree.value - 1];
-  });
-
-  const questionTitleThree = function (item: { quesData: any }) {
-    return splitString(item.quesData.questionName);
-  };
-
-  const curQuestionTitle = computed(() => {
-    // @ts-ignore
-    const questionName = curQuestion.value.quesData.questionName;
-    return questionName;
-  });
-
-  const nextDisable = ref(false);
-
-  function convertToOptionArrays(quesData: any) {
-    return convertToOptionArray(quesData);
-  }
-
-  const curQues = ref<Option[]>([]);
-  const questionNum = computed(() => {
-    return allquesData.length;
-  });
-  watch(curNum, (newVal) => {
-    nextDisable.value = false;
-    // @ts-ignore
-    curQues.value = convertToOptionArray(curQuestion.value.quesData);
-    if (newVal === questionNum.value) {
-      nextDisable.value = true;
-    }
-  });
-
-  const selectValue = ref<string>('');
-
   function handleLastQues() {
     selectValue.value = answerArr.value[curNum.value - 2].value;
     curNum.value = curNum.value - 1;
   }
 
-  let stopRepeatClick = false;
   async function handleNextQues(item: any) {
     if (stopRepeatClick) return;
     stopRepeatClick = true;
@@ -372,9 +359,6 @@
     })) as unknown as Promise<void>;
   }
 
-  const selectValueOne = ref('');
-  const selectValueTwo = ref('');
-  const selectValueThree = ref('');
   function isChecked(value: string, index: number) {
     if (index === 0) {
       return selectValueOne.value === value;
@@ -385,7 +369,6 @@
     }
   }
 
-  const fourArray = ref<answer[]>([]);
   function handleLastQuesThree() {
     if (curIndexTypeThree.value === 1) {
       selectValue.value = answerArr.value[curNum.value - 1]?.value || '';
@@ -459,7 +442,6 @@
   }
 
   const debouncedhandleNextQuesThree = debounce(handleNextQuesThree, 200);
-  const isTypeThree = ref(false);
 
   function back() {
     isTypeThree.value = false;
@@ -474,8 +456,6 @@
     curIndexTypeThree.value = 1;
     selectValue.value = '';
   }
-
-  const showResult = ref(false);
 </script>
 
 <style scoped>
