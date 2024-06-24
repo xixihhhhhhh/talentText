@@ -1,80 +1,154 @@
 <template>
   <PageWrapper :class="prefixCls" title="结果分析">
-    <div class="w-full">
+    <template v-if="isMobile">
+      <div class="w-full">
+        <Leidatu
+          :loading="loading"
+          :options="questionStore.leidatu.series[0].data"
+          class="w-full enter-y"
+        />
+      </div>
+      <Card class="w-full mt-5">
+        <div class="font-bold text-lg">职业领域</div>
+        <div class="flex justify-around flex-wrap w-full">
+          <Icon
+            icon="wi-thermometer"
+            :size="100"
+            :color="getMaxField() === 'pioneering' ? activeColor : '#999'"
+          />
+          <div>
+            <div class="font-bold">开拓影响 {{ careerFieldObj.pioneering }}</div>
+            <div class="font-bold"
+              >领域占比 {{ percentageFormatter(careerFieldObj.pioneering / allScore) }}</div
+            >
+            <div>沟通说明，开拓冒险</div>
+            <div>快速行动，影响大众</div>
+          </div>
+        </div>
+        <div class="flex justify-around flex-wrap w-full">
+          <Icon
+            icon="wi-thermometer"
+            :size="100"
+            :color="getMaxField() === 'transaction' ? activeColor : '#999'"
+          />
+          <div>
+            <div class="font-bold">事务执行 {{ careerFieldObj.transaction }}</div>
+            <div class="font-bold"
+              >领域占比 {{ percentageFormatter(careerFieldObj.transaction / allScore) }}</div
+            >
+            <div>明确目标，贯彻落实</div>
+            <div>注重现实，遵循指示</div>
+          </div>
+        </div>
+        <div class="flex justify-around flex-wrap w-full">
+          <Icon
+            icon="wi-thermometer"
+            :size="100"
+            :color="getMaxField() === 'service' ? activeColor : '#999'"
+          />
+          <div>
+            <div class="font-bold">服务关系 {{ careerFieldObj.service }}</div>
+            <div class="font-bold"
+              >领域占比 {{ percentageFormatter(careerFieldObj.service / allScore) }}</div
+            >
+            <div>建立关系，和谐融洽</div>
+            <div>协调维护，团队凝聚</div>
+          </div>
+        </div>
+        <div class="flex justify-around flex-wrap w-full">
+          <Icon
+            icon="wi-thermometer"
+            :size="100"
+            :color="getMaxField() === 'research' ? activeColor : '#999'"
+          />
+          <div>
+            <div class="font-bold">研发策划 {{ careerFieldObj.research }}</div>
+            <div class="font-bold"
+              >领域占比 {{ percentageFormatter(careerFieldObj.research / allScore) }}</div
+            >
+            <div>创新思维，出谋划策</div>
+            <div>关注可能，分析信息</div>
+          </div>
+        </div>
+        <template #tabBarExtraContent></template>
+      </Card>
+    </template>
+    <div class="flex" v-else>
       <Leidatu
         :loading="loading"
         :options="questionStore.leidatu.series[0].data"
-        class="w-full enter-y"
+        class="enter-y w-50%"
       />
+      <Card class="flex-1 ml-5">
+        <div>
+          <div class="font-bold text-lg">职业领域</div>
+          <div class="flex justify-around flex-wrap w-full">
+            <Icon
+              icon="wi-thermometer"
+              :size="100"
+              :color="getMaxField() === 'pioneering' ? activeColor : '#999'"
+            />
+            <div>
+              <div class="font-bold">开拓影响 {{ careerFieldObj.pioneering }}</div>
+              <div class="font-bold"
+                >领域占比 {{ percentageFormatter(careerFieldObj.pioneering / allScore) }}</div
+              >
+              <div>沟通说明，开拓冒险</div>
+              <div>快速行动，影响大众</div>
+            </div>
+          </div>
+          <div class="flex justify-around flex-wrap w-full">
+            <Icon
+              icon="wi-thermometer"
+              :size="100"
+              :color="getMaxField() === 'transaction' ? activeColor : '#999'"
+            />
+            <div>
+              <div class="font-bold">事务执行 {{ careerFieldObj.transaction }}</div>
+              <div class="font-bold"
+                >领域占比 {{ percentageFormatter(careerFieldObj.transaction / allScore) }}</div
+              >
+              <div>明确目标，贯彻落实</div>
+              <div>注重现实，遵循指示</div>
+            </div>
+          </div>
+          <div class="flex justify-around flex-wrap w-full">
+            <Icon
+              icon="wi-thermometer"
+              :size="100"
+              :color="getMaxField() === 'service' ? activeColor : '#999'"
+            />
+            <div>
+              <div class="font-bold">服务关系 {{ careerFieldObj.service }}</div>
+              <div class="font-bold"
+                >领域占比 {{ percentageFormatter(careerFieldObj.service / allScore) }}</div
+              >
+              <div>建立关系，和谐融洽</div>
+              <div>协调维护，团队凝聚</div>
+            </div>
+          </div>
+          <div class="flex justify-around flex-wrap w-full">
+            <Icon
+              icon="wi-thermometer"
+              :size="100"
+              :color="getMaxField() === 'research' ? activeColor : '#999'"
+            />
+            <div>
+              <div class="font-bold">研发策划 {{ careerFieldObj.research }}</div>
+              <div class="font-bold"
+                >领域占比 {{ percentageFormatter(careerFieldObj.research / allScore) }}</div
+              >
+              <div>创新思维，出谋划策</div>
+              <div>关注可能，分析信息</div>
+            </div>
+          </div>
+        </div>
+      </Card>
     </div>
-    <Card class="w-full mt-5">
-      <div class="font-bold text-lg">职业领域</div>
-      <div class="flex justify-around flex-wrap w-full">
-        <Icon
-          icon="wi-thermometer"
-          :size="100"
-          :color="getMaxField() === 'pioneering' ? activeColor : '#999'"
-        />
-        <div>
-          <div class="font-bold">开拓影响 {{ careerFieldObj.pioneering }}</div>
-          <div class="font-bold"
-            >领域占比 {{ percentageFormatter(careerFieldObj.pioneering / allScore) }}</div
-          >
-          <div>沟通说明，开拓冒险</div>
-          <div>快速行动，影响大众</div>
-        </div>
-      </div>
-      <div class="flex justify-around flex-wrap w-full">
-        <Icon
-          icon="wi-thermometer"
-          :size="100"
-          :color="getMaxField() === 'transaction' ? activeColor : '#999'"
-        />
-        <div>
-          <div class="font-bold">事务执行 {{ careerFieldObj.transaction }}</div>
-          <div class="font-bold"
-            >领域占比 {{ percentageFormatter(careerFieldObj.transaction / allScore) }}</div
-          >
-          <div>明确目标，贯彻落实</div>
-          <div>注重现实，遵循指示</div>
-        </div>
-      </div>
-      <div class="flex justify-around flex-wrap w-full">
-        <Icon
-          icon="wi-thermometer"
-          :size="100"
-          :color="getMaxField() === 'service' ? activeColor : '#999'"
-        />
-        <div>
-          <div class="font-bold">服务关系 {{ careerFieldObj.service }}</div>
-          <div class="font-bold"
-            >领域占比 {{ percentageFormatter(careerFieldObj.service / allScore) }}</div
-          >
-          <div>建立关系，和谐融洽</div>
-          <div>协调维护，团队凝聚</div>
-        </div>
-      </div>
-      <div class="flex justify-around flex-wrap w-full">
-        <Icon
-          icon="wi-thermometer"
-          :size="100"
-          :color="getMaxField() === 'research' ? activeColor : '#999'"
-        />
-        <div>
-          <div class="font-bold">研发策划 {{ careerFieldObj.research }}</div>
-          <div class="font-bold"
-            >领域占比 {{ percentageFormatter(careerFieldObj.research / allScore) }}</div
-          >
-          <div>创新思维，出谋划策</div>
-          <div>关注可能，分析信息</div>
-        </div>
-      </div>
-      <template #tabBarExtraContent></template>
-    </Card>
     <Card class="w-full mt-2" :class="textSize">
       <div class="font-bold text-lg border-b-grey border-b-2">优势领域说明</div>
       <div class="mt-4">
-        <Avatar :src="userInfo.avatar" /> {{ userInfo.name }} 在
+        <Avatar :src="avatar" /> {{ userInfo.name }} 在
         <span class="font-bold text-4" :style="{ color: activeColor }"
           >{{ fieldMap[getMaxField()] }}
         </span>
@@ -131,7 +205,7 @@
             <div>( {{ advantageMap[record.ability][1] }} )</div>
           </template>
           <template v-if="column.key === 'pronounced'">
-            <div class="flex items-center">
+            <div class="flex items-center w-full">
               <progressBar :percent="record.pronounced" class="w-10" />
             </div>
           </template>
@@ -231,17 +305,13 @@
 <script lang="ts" setup>
   import { ref, computed, onMounted } from 'vue';
   import { Card, Avatar, Table } from 'ant-design-vue';
-  import { PageWrapper } from '@/components/Page';
-  // import SaleRadar from './components/SaleRadar.vue';
-  import Leidatu from './components/Leidatu.vue';
-  import { addCommentApi } from '@/api/sys/comment';
-  import { useUserStore } from '@/store/modules/user';
-  import { useMessage } from '@/hooks/web/useMessage';
-  import { useRouter } from 'vue-router';
-  import { addCommentParams } from '@/api/sys/model/commentModel';
   import { useQuestionStore } from '@/store/modules/question';
-  import progressBar from './progress.vue';
+  import { PageWrapper } from '@/components/Page';
+  import { useUserStore } from '@/store/modules/user';
+  import Leidatu from './components/Leidatu.vue';
   import Icon from '@/components/Icon/Icon.vue';
+  import progressBar from './progress.vue';
+  import headerImg from '@/assets/images/header.jpg';
   import {
     careerAdvantagesMap,
     columns,
@@ -257,10 +327,24 @@
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const textSize = isMobile ? 'text-3' : 'text-5';
+  const prefixCls = 'result';
+  const fieldMap = {
+    pioneering: '开拓影响',
+    transaction: '事务执行',
+    service: '服务关系',
+    research: '研发策划',
+  };
+  const activeColor = '#28B8C5';
 
   const questionStore = useQuestionStore();
   const userStore = useUserStore();
+
+  const dataSource = ref<any[]>([]);
+  const managementAdvice = ref<any[]>([]);
+
   const userInfo = computed(() => userStore.getUserInfo);
+
+  const avatar = computed(() => userStore.getUserInfo.avatar || headerImg);
   const careerFieldObj = computed(() => {
     return questionStore.careerFieldObj;
   });
@@ -272,10 +356,6 @@
   const competencyObj = computed(() => {
     return questionStore.competencyObj;
   });
-
-  const dataSource = ref<any[]>([]);
-
-  const managementAdvice = ref<any[]>([]);
 
   onMounted(() => {
     competencyObj.value.forEach((item, index) => {
@@ -289,6 +369,9 @@
     for (let i = 0; i < 6; i++) {
       managementAdvice.value.push(competencyObj.value[i][0]);
     }
+    setTimeout(() => {
+      loading.value = false;
+    }, 1000);
   });
 
   function getTopTwo() {
@@ -323,38 +406,7 @@
     Number(careerFieldObj.value.transaction) +
     Number(careerFieldObj.value.service) +
     Number(careerFieldObj.value.research);
-  const prefixCls = 'result';
   const loading = ref(true);
-
-  const router = useRouter();
-
-  setTimeout(() => {
-    loading.value = false;
-  }, 1000);
-
-  const { createMessage } = useMessage();
-  const content = ref('');
-
-  // @ts-ignore
-  const data: addCommentParams = {};
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async function onSubmit() {
-    if (content.value.length < 8) {
-      createMessage.error({
-        content: '请回答选择题',
-        duration: 3,
-      });
-      return;
-    }
-    data.content = content.value;
-    data.avatar = userInfo.value.avatar;
-    data.name = userInfo.value.name;
-    const { success } = await addCommentApi(data);
-    if (success) {
-      content.value = '';
-      router.push('/dashboard/index');
-    }
-  }
 
   function percentageFormatter(num) {
     return new Intl.NumberFormat('default', {
@@ -371,14 +423,6 @@
     const fields = ['pioneering', 'transaction', 'service', 'research'];
     return fields[maxIndex];
   }
-
-  const fieldMap = {
-    pioneering: '开拓影响',
-    transaction: '事务执行',
-    service: '服务关系',
-    research: '研发策划',
-  };
-  const activeColor = '#28B8C5';
 </script>
 
 <style lang="less" scoped>

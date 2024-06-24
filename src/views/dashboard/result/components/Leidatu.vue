@@ -1,5 +1,5 @@
 <template>
-  <Card title="六维结果雷达图" :loading="loading">
+  <Card title="六维结果雷达图" :loading="loading" :headStyle="{ fontSize: '1.125rem' }">
     <div class="flex justify-center">
       <svg
         viewBox="0 0 400 400"
@@ -119,8 +119,6 @@
   import { ref, onMounted } from 'vue';
   import { Card } from 'ant-design-vue';
 
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  const circleClass = !isMobile ? 'circlePc' : 'circleYidong';
   const props = defineProps({
     loading: Boolean,
     width: {
@@ -135,6 +133,9 @@
       type: Object,
     },
   });
+
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const circleClass = !isMobile ? 'circlePc' : 'circleYidong';
   const option = ref({});
   const jiaoji = ref('');
   const yingxiang = ref('');
@@ -147,6 +148,21 @@
   const faming = ref('');
   const renwen = ref('');
   const fuwu = ref('');
+
+  const points = [
+    [100, 200],
+    [120, 140],
+    [155, 110],
+    [200, 100],
+    [245, 110],
+    [285, 150],
+    [300, 200],
+    [280, 260],
+    [245, 290],
+    [200, 300],
+    [130, 270],
+  ];
+
   onMounted(() => {
     option.value = convertArrayToObject(props.options);
     jiaoji.value = generatePath(option.value['交际'], 0, 1);
@@ -161,6 +177,7 @@
     renwen.value = generatePath(option.value['人文'], 9, 10);
     fuwu.value = generatePath(option.value['服务'], 10, 0);
   });
+
   // 线性插值函数
   function linearInterpolation(point2, percentage) {
     const point1 = [200, 200];
@@ -169,6 +186,7 @@
     const y = point1[1] + (point2[1] - point1[1]) * percentage;
     return [x, y];
   }
+
   // 生成路径函数
   function generatePath(value, a, b) {
     return `M200,200 L${linearInterpolation(points[a], value)[0]},${
@@ -176,19 +194,6 @@
     } A${value},${value} 0 0,1 ${linearInterpolation(points[b], value)[0]},
   ${linearInterpolation(points[b], value)[1]} Z`;
   }
-  const points = [
-    [100, 200],
-    [120, 140],
-    [155, 110],
-    [200, 100],
-    [245, 110],
-    [285, 150],
-    [300, 200],
-    [280, 260],
-    [245, 290],
-    [200, 300],
-    [130, 270],
-  ];
 
   function convertArrayToObject(dataArray) {
     const resultObject = {};
