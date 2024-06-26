@@ -159,6 +159,7 @@
     handleFenHang,
     extractAndConvertToLowercase,
   } from './data';
+  import { Question } from './type';
   import { isFenDuan, typeThreeChaoshi, debounce, fourRepeatedObj } from './util';
   import { useQuestionStore } from '@/store/modules/question';
   import { data } from './test';
@@ -168,10 +169,10 @@
   // import { addEvaluateListApi } from '@/api/sys/evaluateLists';
   const questionStore = useQuestionStore();
 
-  let questionTypeOne: object[] = [];
-  let questionTypeTwo: object[] = [];
+  let questionTypeOne: Question[] = [];
+  let questionTypeTwo: Question[] = [];
   let questionTypeThree = ref<object[]>([]);
-  let allquesData: object[] = [];
+  let allquesData: Question[] = [];
   let stopRepeatClick = false;
 
   const { createMessage } = useMessage();

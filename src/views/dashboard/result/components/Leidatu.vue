@@ -1,5 +1,5 @@
 <template>
-  <Card title="六维结果雷达图" :loading="loading" :headStyle="{ fontSize: '1.125rem' }">
+  <Card title="六维结果雷达图" :headStyle="{ fontSize: '1.125rem' }">
     <div class="flex justify-center">
       <svg
         viewBox="0 0 400 400"
@@ -120,7 +120,6 @@
   import { Card } from 'ant-design-vue';
 
   const props = defineProps({
-    loading: Boolean,
     width: {
       type: String as PropType<string>,
       default: '100%',

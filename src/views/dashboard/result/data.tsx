@@ -92,7 +92,7 @@ export const columns: TableColumnsType = [
   },
 ];
 
-export function sortObject(obj) {
+export function sortObject(obj: any) {
   const sortedObj = Object.entries(obj).sort(
     // @ts-ignore
     (a, b) => parseFloat(b[1]) - parseFloat(a[1]),
@@ -315,4 +315,11 @@ export const dapeijianyi = {
   pioneer: '开拓',
   serve: '服务',
   humanistic: '人文',
+};
+
+export const fieldMap = {
+  pioneering: '开拓影响',
+  transaction: '事务执行',
+  service: '服务关系',
+  research: '研发策划',
 };
