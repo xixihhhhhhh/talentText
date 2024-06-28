@@ -22,36 +22,18 @@
     </Card>
     <Card class="w-full mt-2" :class="textSize">
       <div class="font-bold text-lg border-b-grey border-b-2">职业优势前三</div>
-      <div class="flex items-center mt-1">
-        <Icon icon="twemoji:1st-place-medal" :size="30" />
-        <span class="font-bold"
-          >{{ getTopThreeScores().topThreeKeys[0] }}:
-          {{ getTopThreeScores().topThree[0].toFixed(2) }}</span
-        >
+      <div v-for="index in 3" :key="index">
+        <div class="flex items-center mt-1">
+          <Icon :icon="crreerAdvantagesIcons[index - 1]" :size="30" />
+          <span class="font-bold"
+            >{{ getTopThreeScores().topThreeKeys[index - 1] }}:
+            {{ getTopThreeScores().topThree[index - 1].toFixed(2) }}</span
+          >
+        </div>
+        <p class="indent">
+          {{ getTopThreeScores().shuoming[index - 1] }}
+        </p>
       </div>
-      <p class="indent">
-        {{ getTopThreeScores().shuoming[0] }}
-      </p>
-      <div class="flex items-center mt-1">
-        <Icon icon="twemoji:2nd-place-medal" :size="30" />
-        <span class="font-bold"
-          >{{ getTopThreeScores().topThreeKeys[1] }}:
-          {{ getTopThreeScores().topThree[1].toFixed(2) }}</span
-        >
-      </div>
-      <p class="indent">
-        {{ getTopThreeScores().shuoming[1] }}
-      </p>
-      <div class="flex items-center mt-1">
-        <Icon icon="twemoji:3rd-place-medal" :size="30" />
-        <span class="font-bold"
-          >{{ getTopThreeScores().topThreeKeys[2] }}:
-          {{ getTopThreeScores().topThree[2].toFixed(2) }}</span
-        >
-      </div>
-      <p class="indent">
-        {{ getTopThreeScores().shuoming[2] }}
-      </p>
     </Card>
     <Card class="w-full mt-2">
       <div class="font-bold border-b-grey border-b-2">胜任力分析</div>
@@ -171,7 +153,7 @@
   import { ref, computed, onMounted } from 'vue';
   import { Card, Avatar, Table } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
-  import Leidatu from './components/Leidatu.vue';
+  import Leidatu from './components/leidatu.vue';
   import Icon from '@/components/Icon/Icon.vue';
   import progressBar from './progress.vue';
   import careerField from './careerField.vue';
@@ -199,6 +181,11 @@
   const textSize = isMobile ? 'text-3' : 'text-5';
   const prefixCls = 'result';
   const activeColor = '#28B8C5';
+  const crreerAdvantagesIcons = [
+    'twemoji:1st-place-medal',
+    'twemoji:2nd-place-medal',
+    'twemoji:3rd-place-medal',
+  ];
 
   const dataSource = ref<any[]>([]);
   const managementAdvice = ref<any[]>([]);
