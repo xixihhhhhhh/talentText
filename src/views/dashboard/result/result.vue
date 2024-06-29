@@ -2,13 +2,13 @@
   <PageWrapper :class="prefixCls" title="结果分析">
     <template v-if="isMobile">
       <div class="w-full">
-        <Leidatu :options="questionStore.leidatu.series[0].data" class="w-full enter-y" />
+        <leidatu :options="questionStore.leidatu.series[0].data" class="w-full enter-y" />
       </div>
       <careerField />
     </template>
     <div class="flex" v-else>
-      <Leidatu :options="questionStore.leidatu.series[0].data" class="enter-y w-50%" />
-      <careerField />
+      <leidatu :options="questionStore.leidatu.series[0].data" class="enter-y" />
+      <careerField class="enter-y" />
     </div>
     <Card class="w-full mt-2" :class="textSize">
       <div class="font-bold text-lg border-b-grey border-b-2">优势领域说明</div>
@@ -153,7 +153,7 @@
   import { ref, computed, onMounted } from 'vue';
   import { Card, Avatar, Table } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
-  import Leidatu from './components/leidatu.vue';
+  import leidatu from './components/leidatu.vue';
   import Icon from '@/components/Icon/Icon.vue';
   import progressBar from './progress.vue';
   import careerField from './careerField.vue';

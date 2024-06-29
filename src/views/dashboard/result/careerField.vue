@@ -1,5 +1,5 @@
 <template>
-  <Card class="w-full mt-5">
+  <Card class="w-full">
     <div class="font-bold text-lg">职业领域</div>
     <div class="flex justify-around flex-wrap w-full" v-for="index in 4" :key="index">
       <Icon

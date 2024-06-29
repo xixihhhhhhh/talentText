@@ -21,15 +21,16 @@
         <path :d="renwen" fill="#A3E1DC" />
         <path :d="fuwu" fill="#A3E1DC" />
 
-        <circle cx="200" cy="200" r="100" fill="none" stroke="#658EC6" stroke-width="1" />
-
-        <circle cx="200" cy="200" r="80" fill="none" stroke="#658EC6" stroke-width="1" />
-
-        <circle cx="200" cy="200" r="60" fill="none" stroke="#658EC6" stroke-width="1" />
-
-        <circle cx="200" cy="200" r="40" fill="none" stroke="#658EC6" stroke-width="1" />
-
-        <circle cx="200" cy="200" r="20" fill="none" stroke="#658EC6" stroke-width="1" />
+        <circle
+          v-for="item in radius"
+          :key="item"
+          cx="200"
+          cy="200"
+          :r="item"
+          fill="none"
+          stroke="#658EC6"
+          stroke-width="1"
+        />
 
         <line x1="200" y1="345" x2="200" y2="55" />
         <line x1="55" y1="200" x2="345" y2="200" />
@@ -76,40 +77,30 @@
           stroke-width="20"
         />
 
-        <text>
-          <textPath href="#circlePath2" startOffset="10%">交际</textPath>
+        <text v-for="item in circleTexts1" :key="item.offset">
+          <textPath href="#circlePath2" :startOffset="item.offset">
+            {{ item.text }}
+          </textPath>
         </text>
-        <text>
-          <textPath href="#circlePath2" startOffset="27.5%">影响</textPath>
-        </text>
-        <text>
-          <textPath href="#circlePath2" startOffset="42.5%">开拓</textPath>
-        </text>
-        <text>
-          <textPath href="#circlePath2" startOffset="57.5%">管控</textPath>
-        </text>
-        <text>
-          <textPath href="#circlePath2" startOffset="75%">事务</textPath>
-        </text>
-        <text>
-          <textPath href="#circlePath2" startOffset="92.5%">操作</textPath>
+
+        <text v-for="item in circleTexts1" :key="item.offset">
+          <textPath href="#circlePath2" :startOffset="item.offset">
+            {{ item.text }}
+          </textPath>
         </text>
 
         <path id="circlePath3" d="M 200, 200 m -120, 0 a 120,120 0 1,0 240,0" fill="none" />
-        <text>
-          <textPath href="#circlePath3" startOffset="12.5%">服务</textPath>
+
+        <text v-for="item in circleTexts2" :key="item.offset">
+          <textPath href="#circlePath3" :startOffset="item.offset">
+            {{ item.text }}
+          </textPath>
         </text>
-        <text>
-          <textPath href="#circlePath3" startOffset="37.5%">人文</textPath>
-        </text>
-        <text>
-          <textPath href="#circlePath3" startOffset="57.5%">发明</textPath>
-        </text>
-        <text>
-          <textPath href="#circlePath3" startOffset="72.5%">规划</textPath>
-        </text>
-        <text>
-          <textPath href="#circlePath3" startOffset="90%">技能</textPath>
+
+        <text v-for="item in circleTexts2" :key="item.offset">
+          <textPath href="#circlePath3" :startOffset="item.offset">
+            {{ item.text }}
+          </textPath>
         </text>
       </svg>
     </div>
@@ -135,6 +126,24 @@
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const circleClass = !isMobile ? 'circlePc' : 'circleYidong';
+  const radius = ['100', '80', '60', '40', '20'];
+  const circleTexts1 = [
+    { text: '交际', offset: '10%' },
+    { text: '影响', offset: '27.5%' },
+    { text: '开拓', offset: '42.5%' },
+    { text: '管控', offset: '57.5%' },
+    { text: '事务', offset: '75%' },
+    { text: '操作', offset: '92.5%' },
+  ];
+
+  const circleTexts2 = [
+    { text: '服务', offset: '12.5%' },
+    { text: '人文', offset: '37.5%' },
+    { text: '发明', offset: '57.5%' },
+    { text: '规划', offset: '72.5%' },
+    { text: '技能', offset: '90%' },
+  ];
+
   const option = ref({});
   const jiaoji = ref('');
   const yingxiang = ref('');
