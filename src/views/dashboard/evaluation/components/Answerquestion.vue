@@ -2,11 +2,11 @@
   <PageWrapper>
     <div
       v-if="!showResult"
-      :class="['py-5', 'px-2', { 'bg-blue': !showSubmit }]"
+      :class="['py-5', 'px-2', { 'bg-blue': !showAnswerQuestion }]"
       style="min-height: 100vh"
     >
       <div
-        v-if="showSubmit"
+        v-if="showAnswerQuestion"
         class="-enter-x flex items-center justify-center rounded-2"
         style="min-height: 80vh"
       >
@@ -170,6 +170,7 @@
   import { useUserStore } from '@/store/modules/user';
 
   const userStore = useUserStore();
+  const email = ref(userStore.getUserInfo.email);
   // import { addEvaluateListApi } from '@/api/sys/evaluateLists';
   const questionStore = useQuestionStore();
 
@@ -181,7 +182,7 @@
 
   const { createMessage } = useMessage();
   const answerArr = ref<answer[]>([]);
-  const showSubmit = ref(true);
+  const showAnswerQuestion = ref(true);
   const curNum = ref(0);
   const currentQuestionnaireIndex = ref(1);
   const curIndexTypeThree = ref(1);
@@ -192,9 +193,7 @@
   const typeThreeAns = ref<answer[]>([]);
   const answerArrThree = ref([]);
   const selectValue = ref<string>('');
-  const selectValueOne = ref('');
-  const selectValueTwo = ref('');
-  const selectValueThree = ref('');
+  const selectValueTypeThree = ref<string[]>([]);
   const fourArray = ref<answer[]>([]);
   const isTypeThree = ref(false);
 
@@ -222,8 +221,7 @@
   });
 
   onMounted(async () => {
-    const email = userStore.getUserInfo.email;
-    const secondWenJuan = await getSecondWenjuan({ email });
+    const secondWenJuan = await getSecondWenjuan({ email: email.value });
     hasUnFinished.value = !!secondWenJuan.hasUnFinished;
     if (hasUnFinished.value) {
       // 如果有未完成的问卷，那么拿到上一次答题的结果即可,并且拿到上一次未完成的题目
@@ -249,7 +247,7 @@
       questionTypeThree.value = convertToTwoDimensionalArray(firstWenJuan.questionTypeThree, 3);
       allquesData = [...questionTypeOne, ...questionTypeTwo];
       curNum.value = 1;
-      showSubmit.value = false;
+      showAnswerQuestion.value = false;
     } else {
       getScore(data);
       await new Promise(() => {
@@ -267,21 +265,18 @@
     currentQuestionnaireIndex.value = 2;
     questionTypeThree.value = convertToTwoDimensionalArray(secondWenJuans.value, 3);
     answerArrThree.value = [];
-    selectValueOne.value = '';
-    selectValueTwo.value = '';
-    selectValueThree.value = '';
+    selectValueTypeThree.value = [];
     typeThreeAns.value = [];
     curNum.value = 1;
     curIndexTypeThree.value = 1;
-    showSubmit.value = false;
+    showAnswerQuestion.value = false;
     modalVisible.value = false;
   }
 
   // 重新开始
   async function againAssessment() {
     // 清空用户信息先，调接口，传email
-    const email = userStore.getUserInfo.email;
-    await clearSecondWenjuan({ email });
+    await clearSecondWenjuan({ email: email.value });
     curNum.value = 1;
     currentQuestionnaireIndex.value = 1;
     hasUnFinished.value = false;
@@ -290,12 +285,11 @@
 
   // 下次再作答
   async function relaxAssessment() {
-    const email = userStore.getUserInfo.email;
     answerArr.value.push(...answerArrThree.value.flat(2));
     answerArr.value.push(...fourArray.value);
     answerArr.value = answerArr.value.filter(Boolean);
     await setRelaxAssessment({
-      email,
+      email: email.value,
       firstWenJuanAnswer: answerArr.value,
       secondWenJuanQuestion: secondWenJuans.value,
     });
@@ -306,11 +300,11 @@
     answerArr.value = [];
     fourArray.value = [];
     modalVisible.value = false;
-    showSubmit.value = true;
+    showAnswerQuestion.value = true;
   }
 
   function handleEvaluate() {
-    if (selectValueOne.value === '') {
+    if (selectValueTypeThree.value[0] === '') {
       createMessage.error({
         content: '请回答完选择题',
         duration: 3,
@@ -350,9 +344,9 @@
           isTypeThree.value = true;
           if (answerArrThree.value[0]) {
             typeThreeAns.value = answerArrThree.value[0];
-            selectValueOne.value = typeThreeAns.value[0].value;
-            selectValueTwo.value = typeThreeAns.value[1]?.value || '';
-            selectValueThree.value = typeThreeAns.value[2]?.value || '';
+            selectValueTypeThree.value[0] = typeThreeAns.value[0].value || '';
+            selectValueTypeThree.value[1] = typeThreeAns.value[1].value || '';
+            selectValueTypeThree.value[2] = typeThreeAns.value[2].value || '';
           }
           return;
         }
@@ -365,13 +359,7 @@
   }
 
   function isChecked(value: string, index: number) {
-    if (index === 0) {
-      return selectValueOne.value === value;
-    } else if (index === 1) {
-      return selectValueTwo.value === value;
-    } else {
-      return selectValueThree.value === value;
-    }
+    return selectValueTypeThree.value[index] === value;
   }
 
   function handleLastQuesThree() {
@@ -381,20 +369,14 @@
     } else {
       curIndexTypeThree.value = curIndexTypeThree.value - 1;
       typeThreeAns.value = answerArrThree.value[curIndexTypeThree.value - 1];
-      selectValueOne.value = typeThreeAns.value[0]?.value || '';
-      selectValueTwo.value = typeThreeAns.value[1]?.value || '';
-      selectValueThree.value = typeThreeAns.value[2]?.value || '';
+      selectValueTypeThree.value[0] = typeThreeAns.value[0].value || '';
+      selectValueTypeThree.value[1] = typeThreeAns.value[1].value || '';
+      selectValueTypeThree.value[2] = typeThreeAns.value[2].value || '';
     }
   }
 
   async function handleNextQuesThree(item: any, question: any, index: number) {
-    if (index === 0) {
-      selectValueOne.value = item.value;
-    } else if (index === 1) {
-      selectValueTwo.value = item.value;
-    } else {
-      selectValueThree.value = item.value;
-    }
+    selectValueTypeThree.value[index] = item.value;
     const quesData = question.quesData;
     if (quesData.isRepeat) {
       const oppisteCompetency = extractAndConvertToLowercase(quesData.repeatField);
@@ -432,14 +414,12 @@
       (await new Promise(() => {
         setTimeout(() => {
           curIndexTypeThree.value += 1;
-          selectValueOne.value = '';
-          selectValueTwo.value = '';
-          selectValueThree.value = '';
+          selectValueTypeThree.value = [];
           typeThreeAns.value = answerArrThree.value[curIndexTypeThree.value - 1] || [];
           if (typeThreeAns.value.length > 0) {
-            selectValueOne.value = typeThreeAns.value[0].value;
-            selectValueTwo.value = typeThreeAns.value[1].value;
-            selectValueThree.value = typeThreeAns.value[2].value;
+            selectValueTypeThree.value[0] = typeThreeAns.value[0].value || '';
+            selectValueTypeThree.value[1] = typeThreeAns.value[1].value || '';
+            selectValueTypeThree.value[2] = typeThreeAns.value[2].value || '';
           }
         }, 100);
       })) as unknown as Promise<void>;
@@ -450,13 +430,11 @@
 
   function back() {
     isTypeThree.value = false;
-    selectValueOne.value = '';
-    selectValueTwo.value = '';
-    selectValueThree.value = '';
+    selectValueTypeThree.value = [];
     answerArrThree.value = [];
     fourArray.value = [];
     answerArr.value = [];
-    showSubmit.value = true;
+    showAnswerQuestion.value = true;
     curNum.value = 1;
     curIndexTypeThree.value = 1;
     selectValue.value = '';
