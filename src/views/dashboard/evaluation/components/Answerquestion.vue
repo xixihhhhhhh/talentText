@@ -19,13 +19,15 @@
         </div>
       </div>
       <div v-else class="px-2 rounded-2" style="border-radius: 10px">
-        <progressBar :percent="percent" />
+        <ProgressBar :percent="percent" />
         <div v-if="isTypeThree" class="text-20px font-600">
           <div v-for="(question, questionIndex) in curQuestionTypeThree" :key="question">
             <div class="bg-#fff my-4 pt-2">
-              <div v-if="questionTitleThree(question).title" class="text-15px py-2 ml-4">{{
-                questionTitleThree(question).title
-              }}</div>
+              <div
+                v-if="questionTitleThree(question).title"
+                class="text-15px py-2 ml-4 user-slecet-none"
+                >{{ questionTitleThree(question).title }}</div
+              >
               <div :class="['parent', 'text-14px']">
                 <div :class="['trapezoid1', 'trapezoid']"
                   >{{ handleFenHang(questionTitleThree(question).option[0]) }}
@@ -52,6 +54,7 @@
                     'bg-#f5f5f8',
                     'border-2',
                     'border-#eee',
+                    'user-slecet-none',
                     {
                       'bg-#4c7cf6!': isChecked(item.value, questionIndex),
                       'text-white': isChecked(item.value, questionIndex),
@@ -83,7 +86,7 @@
             >
           </div>
         </div>
-        <div class="bg-white pt-2 rounded-2" v-else>
+        <div class="bg-white pt-2 rounded-2 user-slecet-none" v-else>
           <div v-if="isFenDuan(curQuestionTitle)" class="pl-2 text-20px font-600">
             <div v-for="item in typeThreeChaoshi(curQuestionTitle)" :key="item"> {{ item }}</div>
           </div>
@@ -99,6 +102,7 @@
                 'text-lg',
                 'p-2',
                 'bg-#f5f5f8',
+                'user-slecet-none',
                 {
                   'bg-#4c7cf6!': item.value === selectValue,
                   'text-white': item.value === selectValue,
@@ -149,7 +153,7 @@
   import { setRelaxAssessment, getSecondWenjuan, clearSecondWenjuan } from '@/api/sys/user';
   import { useMessage } from '@/hooks/web/useMessage';
   import Result from '@/views/dashboard/result/index.vue';
-  import progressBar from './progress.vue';
+  import ProgressBar from './progress.vue';
   import {
     convertToOptionArray,
     answer,
@@ -483,5 +487,9 @@
     padding: 10px 5px 10px 12.5%;
     background-color: #e6effe;
     clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%);
+  }
+
+  .user-slecet-none {
+    user-select: none;
   }
 </style>

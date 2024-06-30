@@ -1,12 +1,12 @@
 <template>
   <PageWrapper :class="prefixCls">
-    <result />
+    <Result />
   </PageWrapper>
 </template>
 
 <script lang="ts" setup>
   import { PageWrapper } from '@/components/Page';
-  import result from './result.vue';
+  import Result from './result.vue';
 
   const prefixCls = 'result';
 </script>
