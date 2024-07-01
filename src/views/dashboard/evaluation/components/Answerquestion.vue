@@ -156,14 +156,13 @@
   import ProgressBar from './progress.vue';
   import {
     convertToOptionArray,
-    answer,
     questionTitleThree,
     getScore,
     convertToTwoDimensionalArray,
     handleFenHang,
     extractAndConvertToLowercase,
   } from './data';
-  import { Question } from './type';
+  import type { Question, Answer } from './type';
   import { isFenDuan, typeThreeChaoshi, debounce, fourRepeatedObj } from './util';
   import { useQuestionStore } from '@/store/modules/question';
   import { data } from './test';
@@ -176,12 +175,12 @@
 
   let questionTypeOne: Question[] = [];
   let questionTypeTwo: Question[] = [];
-  let questionTypeThree = ref<object[]>([]);
+  const questionTypeThree = ref<Question[][]>([]);
   let allquesData: Question[] = [];
   let stopRepeatClick = false;
 
   const { createMessage } = useMessage();
-  const answerArr = ref<answer[]>([]);
+  const answerArr = ref<Answer[]>([]);
   const showAnswerQuestion = ref(true);
   const curNum = ref(0);
   const currentQuestionnaireIndex = ref(1);
@@ -190,11 +189,11 @@
   const hasUnFinished = ref(false);
   const modalVisible = ref(false);
   const showResult = ref(false);
-  const typeThreeAns = ref<answer[]>([]);
+  const typeThreeAns = ref<Answer[]>([]);
   const answerArrThree = ref([]);
   const selectValue = ref<string>('');
   const selectValueTypeThree = ref<string[]>([]);
-  const fourArray = ref<answer[]>([]);
+  const fourArray = ref<Answer[]>([]);
   const isTypeThree = ref(false);
 
   const percent = computed(() => {
@@ -329,7 +328,7 @@
     if (stopRepeatClick) return;
     stopRepeatClick = true;
     selectValue.value = item.value;
-    let curAnsObj: answer = {
+    let curAnsObj: Answer = {
       careerField: curQuestion.value.careerField,
       careerAdvantages: curQuestion.value.careerAdvantages,
       competency: curQuestion.value.competency,
@@ -387,7 +386,7 @@
       answerObj.score = Number(item.value[1]);
       fourArray.value[index] = answerObj;
     }
-    let curAnsObj: answer = {
+    let curAnsObj: Answer = {
       careerField: question.careerField,
       careerAdvantages: question.careerAdvantages,
       competency: question.competency,

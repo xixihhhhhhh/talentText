@@ -1,5 +1,6 @@
 import { useQuestionStore } from '@/store/modules/question';
 import type { EChartsOption } from 'echarts';
+import type { Answer, Question } from './type';
 
 const questionStore = useQuestionStore();
 
@@ -13,14 +14,6 @@ export interface questions {
   careerAdvantages: string;
   competency: string;
   quesData: object;
-}
-
-export interface answer {
-  careerField: string;
-  careerAdvantages: string;
-  competency: string;
-  score: number;
-  value: string;
 }
 
 export interface question {
@@ -88,7 +81,7 @@ const careerFieldMap = {
   service: ['serve', 'humanistic'],
 };
 
-export function getScore(answerArr: answer[]) {
+export function getScore(answerArr: Answer[]) {
   const competencyArr = answerArr.reduce((acc, obj) => {
     const key = obj.competency;
     if (!acc[key]) {
@@ -205,7 +198,7 @@ export function getScore(answerArr: answer[]) {
   questionStore.setLeidatu(options);
 }
 
-export function convertToTwoDimensionalArray(arr, chunkSize) {
+export function convertToTwoDimensionalArray(arr, chunkSize: number) {
   const result = [];
   for (let i = 0; i < arr.length; i += chunkSize) {
     // @ts-ignore
@@ -256,7 +249,7 @@ export const competencyData = {
   },
 };
 
-function splitString(str) {
+function splitString(str: string) {
   let result: string[] = [];
   const indexA = str.indexOf('A');
   const indexB = str.indexOf('B');
@@ -276,6 +269,6 @@ function splitString(str) {
   }
 }
 
-export function questionTitleThree(item: { quesData: any }) {
+export function questionTitleThree(item: Question) {
   return splitString(item.quesData.questionName);
 }
