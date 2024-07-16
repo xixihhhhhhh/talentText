@@ -12,9 +12,9 @@
     </div>
     <Card class="w-full mt-2" :class="textSize">
       <div class="font-bold text-lg border-b-grey border-b-2">优势领域说明</div>
-      <div class="mt-4">
+      <div class="mt-4 text-4">
         <Avatar :src="avatar" /> {{ userInfo.name }} 在
-        <span class="font-bold text-4" :style="{ color: activeColor }"
+        <span class="font-bold" :style="{ color: activeColor }"
           >{{ fieldMap[getMaxField()] }}
         </span>
         <span>&nbsp;{{ coreAreas[getMaxField()] }}</span>
@@ -134,7 +134,7 @@
           >通过以下搭配建议可以管控受测者的劣势，有助于搭建合作互补的完美团队</span
         >
       </div>
-      <div class="indent-4">
+      <div class="indent-4 text-4">
         <Avatar :src="avatar" /> {{ userInfo.name }}
         的弱势在于
         <span :style="{ color: activeColor }">{{

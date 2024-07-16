@@ -229,11 +229,15 @@ export const schemas: FormSchema[] = [
           children: [
             {
               value: 'skill',
-              label: '技能型',
+              label: '技术型',
               children: [
                 {
                   value: 'flexible',
                   label: '灵活应变',
+                },
+                {
+                  value: 'theory',
+                  label: '理论知识',
                 },
                 {
                   value: 'message',
@@ -294,6 +298,10 @@ export const schemas: FormSchema[] = [
                 {
                   value: 'dedication',
                   label: '敬业尽责',
+                },
+                {
+                  value: 'operationalSkills',
+                  label: '操作技能',
                 },
                 {
                   value: 'confidentiality',

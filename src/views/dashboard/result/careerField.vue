@@ -61,6 +61,6 @@
     const { pioneering, transaction, service, research } = careerFieldObj.value;
     const values = [Number(pioneering), Number(transaction), Number(service), Number(research)];
     const maxIndex = values.indexOf(Math.max(...values));
-    return maxIndex;
+    return maxIndex + 1;
   }
 </script>

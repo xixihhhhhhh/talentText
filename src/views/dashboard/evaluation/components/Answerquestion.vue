@@ -196,7 +196,7 @@
   const isTypeThree = ref(false);
 
   const percent = computed(() => {
-    return Math.round(((curNum.value + (curIndexTypeThree.value - 1) * 3) / 70) * 100);
+    return Math.round(((curNum.value + (curIndexTypeThree.value - 1) * 3) / 74) * 100);
   });
 
   const curQuestion = computed(() => {
@@ -230,22 +230,15 @@
         secondWenJuan.secondWenJuanQuestion,
         3,
       );
-      console.log('🚀 ~ onMounted ~ questionTypeThree:', questionTypeThree);
     } else {
       currentQuestionnaireIndex.value = 1;
     }
   });
 
   async function handleSubmit() {
-    const isTest = true;
+    const isTest = !true;
     if (!isTest) {
       const { firstWenJuan, secondWenJuan } = await getQuesApi();
-      secondWenJuan.questionTypeThree.forEach((item) => {
-        console.log(item.quesData.questionName);
-      });
-      firstWenJuan.questionTypeThree.forEach((item) => {
-        console.log(item.quesData.questionName);
-      });
       secondWenJuans.value = secondWenJuan.questionTypeThree;
       questionTypeOne = firstWenJuan.questionTypeOne;
       questionTypeTwo = firstWenJuan.questionTypeTwo;
@@ -309,7 +302,7 @@
   }
 
   function handleEvaluate() {
-    if (selectValueTypeThree.value[0] === '') {
+    if (selectValueTypeThree.value[0] === '' || selectValueTypeThree.value[1] === '') {
       createMessage.error({
         content: '请回答完选择题',
         duration: 3,
@@ -406,13 +399,13 @@
     ) {
       return;
     }
-    if (!!typeThreeAns.value[0] && !!typeThreeAns.value[1] && !!typeThreeAns.value[2]) {
+    if (typeThreeAns.value[0] && curIndexTypeThree.value === questionTypeThree.value.length) {
+      modalVisible.value = true;
+      return;
+    }
+    if (typeThreeAns.value[0] && typeThreeAns.value[1] && typeThreeAns.value[2]) {
       // @ts-ignore
       answerArrThree.value[curIndexTypeThree.value - 1] = typeThreeAns.value;
-      if (curIndexTypeThree.value === questionTypeThree.value.length) {
-        modalVisible.value = true;
-        return;
-      }
       if (curIndexTypeThree.value === questionTypeThree.value.length) {
         return;
       }

@@ -2,7 +2,7 @@ import type { TableColumnsType } from 'ant-design-vue';
 
 export const careerAdvantagesMap = {
   affairs: '事务型',
-  skill: '技能型',
+  skill: '技术型',
   hatched: '规划型',
   invent: '发明型',
   operable: '操作型',
@@ -101,8 +101,9 @@ export function sortObject(obj: any) {
 }
 
 export const advantageMap = {
-  flexible: ['灵活应变', '技能型'],
-  message: ['信息管理', '技能型'],
+  flexible: ['灵活应变', '技术型'],
+  theory: ['理论知识', '技术型'],
+  message: ['信息管理', '技术型'],
   policy: ['政策解读', '规划型'],
   writing: ['书面表达', '规划型'],
   holistic: ['全局观念', '规划型'],
@@ -111,6 +112,7 @@ export const advantageMap = {
   find: ['洞察发现', '发明型'],
   create: ['创新创造', '发明型'],
   dedication: ['敬业尽责', '操作型'],
+  operationalSkills: ['操作技能', '操作型'],
   confidentiality: ['保密意识', '操作型'],
   unimpressed: ['独立自主', '操作型'],
   norms: ['遵守规范', '操作型'],
@@ -152,6 +154,7 @@ export const coreAreas = {
 
 export const competencyDefinition = {
   flexible: '面对突发情况与困难处境时能够保持沉着冷静，并调整自身状态，灵活应对',
+  theory: '对学科或领域内基本原理、概念和规律的深刻理解和系统掌握',
   message: '能够通过多种渠道与方法获取更多信息，并构建具有实际价值的信息库',
   policy: '能够解读、传达并应用行业政策，制定相应的应对策略',
   writing: '能够攥写各类文件、报告等材料，以清晰、准确和恰当的方式传达信息',
@@ -161,6 +164,7 @@ export const competencyDefinition = {
   find: '在思考问题时能够关联不同的知识领域和信息，从不同层次与角度进行思考',
   create: '能够跳出固化的思维定势，提出未知和全新的理念，以及突破性的创新方法',
   dedication: '能够在工作中做到亲力亲为，信守承诺，努力保证任务的完成',
+  operationalSkills: '熟练的实践操作和技巧应用，能够高效准确地完成任务',
   confidentiality: '确保公司的敏感信息、机密文件及其他重要资料不被未经授权的人员获取或泄露',
   unimpressed: '在面对风险、困难和混乱的情况下能够果敢迅速地进行决策判断',
   norms: '能够在工作中严格要求自身遵守既定的工作规范与流程，不违反规定',
@@ -193,6 +197,8 @@ export const competencyDefinition = {
 export const guanlijianyi = {
   flexible:
     '当出现多变的工作环境和突发情况时，他能够迅速调整策略，适应新的挑战；但需要注意他可能追求新鲜感而忽视长期目标的实现。',
+  theory:
+    '强调对知识的深入挖掘和逻辑推理，能够在复杂情况下提供科学的解释，通常善于思考和总结。但要注意理论与实际应用的匹配。',
   message:
     '当工作需要管理和处理大量信息时，他能够高效地整理、分类和管理信息，确保信息的准确性和完备性；但需要注意他可能过度投入支持他人的需求而忽略自身工作任务。',
   policy:
@@ -209,6 +215,8 @@ export const guanlijianyi = {
     '当面临新的挑战或问题时，他能够积极主动地寻找创新机会，提出新颖的想法和解决方案；但需注意他可能过于执着于自己的创新想法而忽略已经建立的有效流程和标准。',
   dedication:
     '当出现工作任务要求高度专注并独立执行时，他能够主动承担此项任务，亲力亲为负责到底；但需注意他可能独自负责而忽略依靠团队的力量。',
+  operationalSkills:
+    '强调对知识的深入挖掘和逻辑推理，能够在复杂情况下提供科学的解释，通常善于思考和总结。但要注意理论与实际应用的匹配。',
   confidentiality:
     '当处理企业内部或客户的敏感信息时，他能够严格遵守保密规定，保护企业和客户的机密信息不受泄露；但需注意他可能不愿意分享信息或与他人合作而导致团队合作效率降低。',
   unimpressed:
