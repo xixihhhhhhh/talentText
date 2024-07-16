@@ -71,3 +71,11 @@ export const fourRepeatedObj = [
     score: 1,
   },
 ];
+
+export function ouranToouer(str: string): string {
+  if (str.trim() !== '偶然符合') {
+    return str;
+  } else {
+    return '偶尔符合';
+  }
+}

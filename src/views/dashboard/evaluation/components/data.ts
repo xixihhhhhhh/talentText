@@ -41,7 +41,7 @@ export interface OptionsData {
 export function convertToOptionArray(data: OptionsData): Option[] {
   const keys = ['A', 'B', 'C', 'D', 'E'] as const;
 
-  return keys.reduce((arr: Option[], key: (typeof keys)[number]) => {
+  const res = keys.reduce((arr: Option[], key: (typeof keys)[number]) => {
     if (data[`ratio${key}`]) {
       arr.push({
         option: key + ': ' + data[`option${key}`]!,
@@ -50,6 +50,7 @@ export function convertToOptionArray(data: OptionsData): Option[] {
     }
     return arr;
   }, []);
+  return res;
 }
 
 const careerAdvantagesMap = {

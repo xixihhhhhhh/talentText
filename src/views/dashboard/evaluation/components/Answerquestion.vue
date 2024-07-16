@@ -20,7 +20,7 @@
       </div>
       <div v-else class="px-2 rounded-2" style="border-radius: 10px">
         <ProgressBar :percent="percent" />
-        <div v-if="isTypeThree" class="text-20px font-600">
+        <div class="text-20px font-600" v-if="isTypeThree">
           <div v-for="(question, questionIndex) in curQuestionTypeThree" :key="question">
             <div class="bg-#fff my-4 pt-2">
               <div
@@ -82,7 +82,7 @@
               v-if="
                 currentQuestionnaireIndex === 2 && curIndexTypeThree === questionTypeThree.length
               "
-              >测评结果</a-button
+              >提交测评</a-button
             >
           </div>
         </div>
@@ -111,8 +111,8 @@
               v-for="item in curQues"
               :key="item"
               @click="handleNextQues(item)"
-              >{{ item.option.slice(2).replace('。', '') }}</div
-            >
+              >{{ ouranToouer(item.option.slice(2).replace('。', '')) }}
+            </div>
           </div>
           <div class="text-center mt-5 pb-5 flex justify-around">
             <Popconfirm @confirm="back" title="确定后答题情况作废"
@@ -133,9 +133,8 @@
       <Result />
     </div>
     <Modal centered title="提示" v-model:open="modalVisible" cancelText="休息" okText="继续">
-      <p class="indent-4"
-        >恭喜您，您已完成第一份问卷，继续完成第二份问卷将获得个人能力评价，您可以选择：</p
-      >
+      <div class="p-4">恭喜您，您已完成第一份问卷！</div>
+      <div class="p-4">继续完成第二份问卷将获得个人能力评价，您可以选择：</div>
       <template #footer>
         <a-button key="back" @click="relaxAssessment">下次再作答</a-button>
         <a-button key="submit" type="primary" @click="resumeAssessment">继续作答</a-button>
@@ -163,7 +162,7 @@
     extractAndConvertToLowercase,
   } from './data';
   import type { Question, Answer } from './type';
-  import { isFenDuan, typeThreeChaoshi, debounce, fourRepeatedObj } from './util';
+  import { isFenDuan, typeThreeChaoshi, debounce, fourRepeatedObj, ouranToouer } from './util';
   import { useQuestionStore } from '@/store/modules/question';
   import { data } from './test';
   import { useUserStore } from '@/store/modules/user';
@@ -231,15 +230,22 @@
         secondWenJuan.secondWenJuanQuestion,
         3,
       );
+      console.log('🚀 ~ onMounted ~ questionTypeThree:', questionTypeThree);
     } else {
       currentQuestionnaireIndex.value = 1;
     }
   });
 
   async function handleSubmit() {
-    const isTest = false;
+    const isTest = true;
     if (!isTest) {
       const { firstWenJuan, secondWenJuan } = await getQuesApi();
+      secondWenJuan.questionTypeThree.forEach((item) => {
+        console.log(item.quesData.questionName);
+      });
+      firstWenJuan.questionTypeThree.forEach((item) => {
+        console.log(item.quesData.questionName);
+      });
       secondWenJuans.value = secondWenJuan.questionTypeThree;
       questionTypeOne = firstWenJuan.questionTypeOne;
       questionTypeTwo = firstWenJuan.questionTypeTwo;

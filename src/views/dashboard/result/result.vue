@@ -21,7 +21,7 @@
       </div>
     </Card>
     <Card class="w-full mt-2" :class="textSize">
-      <div class="font-bold text-lg border-b-grey border-b-2">职业优势前三</div>
+      <div class="font-bold text-lg border-b-2">职业优势前三</div>
       <div v-for="index in 3" :key="index">
         <div class="flex items-center mt-1">
           <Icon :icon="crreerAdvantagesIcons[index - 1]" :size="30" />
@@ -36,7 +36,7 @@
       </div>
     </Card>
     <Card class="w-full mt-2">
-      <div class="font-bold border-b-grey border-b-2">胜任力分析</div>
+      <div class="font-bold text-lg border-b-2">胜任力分析</div>
       <Table
         :dataSource="dataSource"
         :columns="columns"
@@ -135,7 +135,8 @@
         >
       </div>
       <div class="indent-4">
-        TA 的弱势在于
+        <Avatar :src="avatar" /> {{ userInfo.name }}
+        的弱势在于
         <span :style="{ color: activeColor }">{{
           dapeijianyi[getEndThree()[0]] +
           '、' +
