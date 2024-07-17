@@ -30,3 +30,22 @@ export interface Answer {
   score: number;
   value: string;
 }
+
+export interface OptionsData {
+  ratioA?: number;
+  ratioB?: number;
+  ratioC?: number;
+  ratioD?: number;
+  ratioE?: number;
+
+  optionA?: string;
+  optionB?: string;
+  optionC?: string;
+  optionD?: string;
+  optionE?: string;
+}
+
+export interface Option {
+  option: string;
+  value: string;
+}

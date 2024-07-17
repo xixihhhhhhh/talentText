@@ -1,42 +1,8 @@
 import { useQuestionStore } from '@/store/modules/question';
 import type { EChartsOption } from 'echarts';
-import type { Answer, Question } from './type';
+import type { Answer, Question, OptionsData, Option } from './type';
 
 const questionStore = useQuestionStore();
-
-export interface Option {
-  option: string;
-  value: string;
-}
-
-export interface questions {
-  careerField: string;
-  careerAdvantages: string;
-  competency: string;
-  quesData: object;
-}
-
-export interface question {
-  careerField: string;
-  careerAdvantages: string;
-  competency: string;
-  score: number;
-  value: string;
-}
-
-export interface OptionsData {
-  ratioA?: number;
-  ratioB?: number;
-  ratioC?: number;
-  ratioD?: number;
-  ratioE?: number;
-
-  optionA?: string;
-  optionB?: string;
-  optionC?: string;
-  optionD?: string;
-  optionE?: string;
-}
 
 export function convertToOptionArray(data: OptionsData): Option[] {
   const keys = ['A', 'B', 'C', 'D', 'E'] as const;
@@ -54,11 +20,12 @@ export function convertToOptionArray(data: OptionsData): Option[] {
 }
 
 const careerAdvantagesMap = {
-  skill: ['flexible', 'message'],
+  skill: ['flexible', 'theory', 'message'],
   hatched: ['policy', 'writing', 'holistic', 'risk'],
   invent: ['study', 'find', 'create'],
   operable: [
     'dedication',
+    'operationalSkills',
     'confidentiality',
     'unimpressed',
     'norms',
