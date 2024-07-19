@@ -99,10 +99,10 @@
             </div>
           </div>
           <div class="flex flex-col">
-            <div class="font-bold">{{ gongzuofangmian[getTopTwo()[0]] }}方面</div>
-            <div class="indent-2">例如:{{ gongzuogangwei[getTopTwo()[0]] }}</div>
-            <div class="font-bold">{{ gongzuofangmian[getTopTwo()[1]] }}方面</div>
-            <div class="indent-2">例如:{{ gongzuogangwei[getTopTwo()[1]] }}</div>
+            <div class="font-bold whitespace-nowrap">{{ gongzuofangmian[getTopTwo()[0]] }}方面</div>
+            <div class="indent-2">例如:{{ gongzuogangwei[getTopTwo()[0]][corrFunc] }}等</div>
+            <div class="font-bold whitespace-nowrap">{{ gongzuofangmian[getTopTwo()[1]] }}方面</div>
+            <div class="indent-2">例如:{{ gongzuogangwei[getTopTwo()[1]][corrFunc] }}等</div>
           </div>
         </div>
       </div>
@@ -119,10 +119,10 @@
             </div>
           </div>
           <div class="flex flex-col">
-            <div class="font-bold">{{ gongzuofangmian[getEndTwo()[0]] }}方面</div>
-            <div class="indent-2">例如:{{ gongzuogangwei[getEndTwo()[1]] }}</div>
-            <div class="font-bold">{{ gongzuofangmian[getEndTwo()[1]] }}方面</div>
-            <div class="indent-2">例如:{{ gongzuogangwei[getEndTwo()[1]] }}</div>
+            <div class="font-bold whitespace-nowrap">{{ gongzuofangmian[getEndTwo()[0]] }}方面</div>
+            <div class="indent-2">例如:{{ gongzuogangwei[getEndTwo()[1]][corrFunc] }}等</div>
+            <div class="font-bold whitespace-nowrap">{{ gongzuofangmian[getEndTwo()[1]] }}方面</div>
+            <div class="indent-2">例如:{{ gongzuogangwei[getEndTwo()[1]][corrFunc] }}等</div>
           </div>
         </div>
       </div>
@@ -176,6 +176,8 @@
   } from './data';
 
   const questionStore = useQuestionStore();
+  const corrFunc = questionStore.corrFunc;
+  console.log('🚀 ~ corrFunc:', corrFunc);
   const userStore = useUserStore();
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

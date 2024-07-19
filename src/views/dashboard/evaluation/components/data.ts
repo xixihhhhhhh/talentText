@@ -1,4 +1,6 @@
+import { FormSchema, RenderCallbackParams } from '@/components/Form';
 import { useQuestionStore } from '@/store/modules/question';
+import { evaluteFormDataObject, evaluteFormDataSubDepartment } from './evaluteFormData';
 import type { EChartsOption } from 'echarts';
 import type { Answer, Question, OptionsData, Option } from './type';
 
@@ -50,6 +52,7 @@ const careerFieldMap = {
 };
 
 export function getScore(answerArr: Answer[]) {
+  console.log('🚀 ~ getScore ~ answerArr:', answerArr);
   const competencyArr = answerArr.reduce((acc, obj) => {
     const key = obj.competency;
     if (!acc[key]) {
@@ -240,3 +243,86 @@ function splitString(str: string) {
 export function questionTitleThree(item: Question) {
   return splitString(item.quesData.questionName);
 }
+
+export const schemas: FormSchema[] = [
+  {
+    field: 'department',
+    component: 'Select',
+    label: '您的部门是：',
+    colProps: { span: 14 },
+    componentProps: {
+      options: [
+        { value: '办公室（企业管理科）', label: '办公室（企业管理科）' },
+        {
+          value: '专卖监督管理办公室（专卖稽查支队）',
+          label: '专卖监督管理办公室（专卖稽查支队）',
+        },
+        { value: '内管派驻办', label: '内管派驻办' },
+        { value: '政策法规与体制改革科', label: '政策法规与体制改革科' },
+        { value: '财务管理中心', label: '财务管理中心' },
+        { value: '审计派驻办', label: '审计派驻办' },
+        {
+          value: '人事科（职工培训中心、督察考评中心）',
+          label: '人事科（职工培训中心、督察考评中心）',
+        },
+        {
+          value: '党建工作科（机关党委办公室、工会办公室）',
+          label: '党建工作科（机关党委办公室、工会办公室）',
+        },
+        {
+          value: '纪检监察科（与党组纪检组合署办公）',
+          label: '纪检监察科（与党组纪检组合署办公）',
+        },
+        { value: '安全管理科', label: '安全管理科' },
+        { value: '营销管理中心', label: '营销管理中心' },
+        { value: '物流配送中心', label: '物流配送中心' },
+        { value: '信息中心', label: '信息中心' },
+        { value: '城区管理中心', label: '城区管理中心' },
+        { value: '区局（分公司）', label: '区局（分公司）' },
+      ],
+    },
+    rules: [{ required: true, type: 'string' }],
+  },
+];
+
+Object.keys(evaluteFormDataSubDepartment).forEach((key: string) => {
+  const schemaItem: FormSchema = {
+    field: 'subDeaprtment' + '/' + key,
+    component: 'Select',
+    label: '您的细分部门是：',
+    colProps: { span: 20 },
+    componentProps: {
+      options: evaluteFormDataSubDepartment[key],
+    },
+    rules: [{ required: true, type: 'string' }],
+    show: (renderCallbackParams: RenderCallbackParams) => {
+      // 更新第二个下拉框的选项
+      if (renderCallbackParams.model.department === key) {
+        return true;
+      }
+      return false;
+    },
+  };
+  schemas.push(schemaItem);
+});
+
+Object.keys(evaluteFormDataObject).forEach((key: string) => {
+  const schemaItem: FormSchema = {
+    field: 'position' + '/' + key,
+    component: 'Select',
+    label: '您的岗位是：',
+    colProps: { span: 14 },
+    componentProps: {
+      options: evaluteFormDataObject[key],
+    },
+    rules: [{ required: true, type: 'string' }],
+    ifShow: (renderCallbackParams: RenderCallbackParams) => {
+      // 更新第二个下拉框的选项
+      if (renderCallbackParams.model.department === key) {
+        return true;
+      }
+      return false;
+    },
+  };
+  schemas.push(schemaItem);
+});

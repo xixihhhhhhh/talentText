@@ -5,15 +5,17 @@
       :class="['py-5', 'px-2', { 'bg-blue': !showAnswerQuestion }]"
       style="min-height: 100vh"
     >
-      <div
-        v-if="showAnswerQuestion"
-        class="-enter-x flex items-center justify-center rounded-2"
-        style="min-height: 80vh"
-      >
-        <a-button v-if="!hasUnFinished" type="primary" class="mr-4" @click="handleSubmit"
+      <div v-if="showAnswerQuestion" class="-enter-x rounded-2" style="min-height: 80vh">
+        <!-- <a-button v-if="!hasUnFinished" type="primary" class="mr-4" @click="handleSubmit"
           >开始测评</a-button
-        >
-        <div v-else class="-enter-x flex items-center">
+        > -->
+        <BasicForm
+          v-if="!hasUnFinished"
+          @register="register"
+          @submit="handleSubmit"
+          class="-enter-x mt-10"
+        />
+        <div v-else class="-enter-x h-100 flex items-center justify-center">
           <a-button type="primary" class="mr-4" @click="resumeAssessment">继续作答</a-button>
           <a-button type="primary" class="mr-4" @click="againAssessment">重新开始</a-button>
         </div>
@@ -145,6 +147,7 @@
 
 <script lang="ts" setup>
   import { ref, computed, onMounted, h } from 'vue';
+  import { BasicForm, useForm } from '@/components/Form';
   import { LeftSquareOutlined, PauseCircleOutlined } from '@ant-design/icons-vue';
   import { Popconfirm, Modal } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
@@ -160,14 +163,22 @@
     convertToTwoDimensionalArray,
     handleFenHang,
     extractAndConvertToLowercase,
+    schemas,
   } from './data';
-  import type { Question, Answer } from './type';
+  import { processDepartmentObj } from './methods';
+  import type { Question, Answer, DepartmentInfos } from './type';
   import { isFenDuan, typeThreeChaoshi, debounce, fourRepeatedObj, ouranToouer } from './util';
   import { useQuestionStore } from '@/store/modules/question';
   import { data } from './test';
   import { useUserStore } from '@/store/modules/user';
 
   const userStore = useUserStore();
+  const [register] = useForm({
+    labelWidth: 120,
+    schemas,
+    actionColOptions: { span: 24, style: { textAlign: 'center' } },
+    submitButtonOptions: { text: '开始测评' },
+  });
   const email = ref(userStore.getUserInfo.email);
   // import { addEvaluateListApi } from '@/api/sys/evaluateLists';
   const questionStore = useQuestionStore();
@@ -179,6 +190,7 @@
   let stopRepeatClick = false;
 
   const { createMessage } = useMessage();
+  const deparmentform = ref<DepartmentInfos>();
   const answerArr = ref<Answer[]>([]);
   const showAnswerQuestion = ref(true);
   const curNum = ref(0);
@@ -220,9 +232,10 @@
 
   onMounted(async () => {
     const secondWenJuan = await getSecondWenjuan({ email: email.value });
-    hasUnFinished.value = !!secondWenJuan.hasUnFinished;
+    hasUnFinished.value = secondWenJuan.hasUnFinish;
     if (hasUnFinished.value) {
       // 如果有未完成的问卷，那么拿到上一次答题的结果即可,并且拿到上一次未完成的题目
+      questionStore.setCorrFunc(secondWenJuan.corrFunc);
       currentQuestionnaireIndex.value = 2;
       answerArr.value.push(...secondWenJuan.firstWenJuanAnswer);
       secondWenJuans.value = secondWenJuan.secondWenJuanQuestion;
@@ -235,7 +248,10 @@
     }
   });
 
-  async function handleSubmit() {
+  async function handleSubmit(values: any) {
+    values = processDepartmentObj(values);
+    deparmentform.value = values;
+    console.log('🚀 ~ handleSubmit ~ deparmentform:', deparmentform.value.corrFunc);
     const isTest = !true;
     if (!isTest) {
       const { firstWenJuan, secondWenJuan } = await getQuesApi();
@@ -259,6 +275,7 @@
   // 继续答题
   function resumeAssessment() {
     answerArr.value.push(...answerArrThree.value.flat(2));
+    typeThreeAns.value[0] && answerArr.value.push(typeThreeAns.value[0]);
     isTypeThree.value = true;
     currentQuestionnaireIndex.value = 2;
     questionTypeThree.value = convertToTwoDimensionalArray(secondWenJuans.value, 3);
@@ -285,17 +302,20 @@
   async function relaxAssessment() {
     answerArr.value.push(...answerArrThree.value.flat(2));
     answerArr.value.push(...fourArray.value);
+    answerArr.value.push(typeThreeAns.value[0]);
     answerArr.value = answerArr.value.filter(Boolean);
     await setRelaxAssessment({
       email: email.value,
       firstWenJuanAnswer: answerArr.value,
       secondWenJuanQuestion: secondWenJuans.value,
+      corrFunc: deparmentform.value!.corrFunc,
     });
     curNum.value = 1;
     curIndexTypeThree.value = 1;
     answerArrThree.value = [];
     hasUnFinished.value = true;
-    answerArr.value = [];
+    typeThreeAns.value = [];
+    // answerArr.value = [];
     fourArray.value = [];
     modalVisible.value = false;
     showAnswerQuestion.value = true;
@@ -310,11 +330,13 @@
     } else {
       fourArray.value = fourArray.value.filter(Boolean);
       answerArr.value.push(...fourArray.value);
-      answerArr.value.push(typeThreeAns.value[0]);
+      answerArr.value.push(...typeThreeAns.value);
       answerArr.value.push(...answerArrThree.value.flat(2));
       questionStore.setQuestionAns(answerArr.value);
       getScore(answerArr.value);
       showResult.value = true;
+      deparmentform.value && questionStore.setCorrFunc(deparmentform.value.corrFunc);
+      clearSecondWenjuan({ email: email.value });
     }
   }
 

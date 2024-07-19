@@ -49,3 +49,21 @@ export interface Option {
   option: string;
   value: string;
 }
+
+export interface FormOption {
+  label: string;
+  value: string;
+}
+
+export interface DepartmentInfo {
+  department: string;
+  position: string;
+  subDeaprtment?: string;
+}
+
+export interface DepartmentInfos {
+  department: string;
+  position: string;
+  corrFunc: string;
+  subDeaprtment?: string;
+}

@@ -7,14 +7,11 @@ interface Question {
   competencyObj: any;
   careerAdvantagesObj: any;
   careerFieldObj: any;
+  corrFunc: string;
 }
-function sort(obj) {
-  const sortedScores = Object.entries(obj).sort(
-    // @ts-ignore
-    (a, b) => parseFloat(b[1]) - parseFloat(a[1]),
-  );
 
-  // @ts-ignore
+function sort(obj: { [key: string]: string }): [string, string][] {
+  const sortedScores = Object.entries(obj).sort((a, b) => parseFloat(b[1]) - parseFloat(a[1]));
   return sortedScores;
 }
 export const useQuestionStore = defineStore({
@@ -25,6 +22,7 @@ export const useQuestionStore = defineStore({
     competencyObj: {},
     careerAdvantagesObj: {},
     careerFieldObj: {},
+    corrFunc: '',
   }),
   getters: {
     getLeidatu(state): EChartsOption {
@@ -33,15 +31,18 @@ export const useQuestionStore = defineStore({
   },
   actions: {
     setLeidatu(leidatu: object) {
-      this.leidatu = leidatu; // for null or undefined value
+      this.leidatu = leidatu;
     },
     setQuestionAns(questionAns: Array<any>) {
-      this.questionAns = questionAns; // for null or undefined value
+      this.questionAns = questionAns;
     },
     setScores({ competencyObj, careerAdvantagesObj, careerFieldObj }) {
       this.competencyObj = sort(competencyObj);
       this.careerAdvantagesObj = sort(careerAdvantagesObj);
       this.careerFieldObj = careerFieldObj;
+    },
+    setCorrFunc(corrFunc: string) {
+      this.corrFunc = corrFunc;
     },
   },
 });
