@@ -35,12 +35,21 @@ const questionnaire: AppRouteModule = {
       },
     },
     {
-      path: 'reportManagement',
+      path: 'reportManagementUser',
       name: 'reportManagement',
-      component: () => import('@/views/dashboard/reportManagement/index.vue'),
+      component: () => import('@/views/dashboard/reportManagementUser/index.vue'),
       meta: {
         title: '报告管理',
-        roles: [RoleEnum.SUPER, RoleEnum.User],
+        roles: [RoleEnum.User],
+      },
+    },
+    {
+      path: 'reportManagementAdmin',
+      name: 'reportManagement',
+      component: () => import('@/views/dashboard/reportManagementAdmin/index.vue'),
+      meta: {
+        title: '报告管理',
+        roles: [RoleEnum.SUPER],
       },
     },
     {
@@ -49,7 +58,7 @@ const questionnaire: AppRouteModule = {
       component: () => import('@/views/dashboard/organizationStructure/index.vue'),
       meta: {
         title: '组织架构',
-        roles: [RoleEnum.SUPER, RoleEnum.User],
+        roles: [RoleEnum.SUPER],
       },
     },
     {
@@ -58,7 +67,7 @@ const questionnaire: AppRouteModule = {
       component: () => import('@/views/dashboard/selectPeopleByPosition/index.vue'),
       meta: {
         title: '以岗选人',
-        roles: [RoleEnum.SUPER, RoleEnum.User],
+        roles: [RoleEnum.SUPER],
       },
     },
     {
