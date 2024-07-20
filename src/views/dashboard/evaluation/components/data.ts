@@ -52,7 +52,6 @@ const careerFieldMap = {
 };
 
 export function getScore(answerArr: Answer[]) {
-  console.log('🚀 ~ getScore ~ answerArr:', answerArr);
   const competencyArr = answerArr.reduce((acc, obj) => {
     const key = obj.competency;
     if (!acc[key]) {

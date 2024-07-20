@@ -147,6 +147,27 @@
         方面，如果TA的工作职责范围涉及到这些方面相关的内容，就需要和这些方面比较强的工作搭档进行优势互补，以便相应提高工作成效。
       </div>
     </Card>
+    <Card class="w-full mt-2" :class="textSize">
+      <div class="font-bold text-lg border-b-2"
+        >岗位胜任力需求
+        <span class="text-3 color-gray"
+          >提供所在岗位所需的关键胜任力，提升个人岗位上的表现和职业发展</span
+        >
+      </div>
+      <div class="indent-4 font-bold text-4">
+        通过对 <Avatar :src="avatar" /> {{ userInfo.name }}
+        所在的岗位进行了胜任力分析，总结出岗位所需的前五项关键胜任力，分别为：
+      </div>
+      <div v-for="i in 5" :key="i" class="flex text-4">
+        <div class="flex-shrink-0 mr-4" :style="{ color: activeColor }">{{
+          advantageMap[competencyObj[i][0]][0]
+        }}</div>
+        <div>{{ competencyDefinition[competencyObj[i][0]] }}</div>
+      </div>
+      <div class="indent-4 font-bold text-4">
+        通过了解这些关键胜任力，TA可以更清晰地认识到岗位对TA的要求，有针对性地提升自身的能力和表现进一步推动TA的职业发展。
+      </div>
+    </Card>
   </PageWrapper>
 </template>
 
@@ -177,7 +198,6 @@
 
   const questionStore = useQuestionStore();
   const corrFunc = questionStore.corrFunc;
-  console.log('🚀 ~ corrFunc:', corrFunc);
   const userStore = useUserStore();
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

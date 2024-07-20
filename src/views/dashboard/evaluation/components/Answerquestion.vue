@@ -251,7 +251,6 @@
   async function handleSubmit(values: any) {
     values = processDepartmentObj(values);
     deparmentform.value = values;
-    console.log('🚀 ~ handleSubmit ~ deparmentform:', deparmentform.value.corrFunc);
     const isTest = !true;
     if (!isTest) {
       const { firstWenJuan, secondWenJuan } = await getQuesApi();
