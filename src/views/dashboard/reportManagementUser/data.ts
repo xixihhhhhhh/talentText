@@ -309,6 +309,12 @@ export const columns = [
     width: 100,
   },
   {
+    title: '细分部门',
+    dataIndex: 'subDepartment',
+    key: 'subDepartment',
+    width: 100,
+  },
+  {
     title: '岗位',
     dataIndex: 'position',
     key: 'position',
