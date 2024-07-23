@@ -1,7 +1,11 @@
 <template>
-  <div class="container"> </div>
+  <PageWrapper>
+    <div></div>
+  </PageWrapper>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { PageWrapper } from '@/components/Page';
+</script>
 
 <style scoped></style>
