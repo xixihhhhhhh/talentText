@@ -249,7 +249,7 @@
   async function handleSubmit(values: any) {
     values = processDepartmentObj(values);
     deparmentform.value = values;
-    const isTest = !!true;
+    const isTest = !true;
     if (!isTest) {
       const { firstWenJuan, secondWenJuan } = await getQuesApi();
       secondWenJuans.value = secondWenJuan.questionTypeThree;

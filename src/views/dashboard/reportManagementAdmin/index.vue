@@ -70,14 +70,14 @@
       </template>
     </Table>
     <ResultPdf
-      ref="resultPdf"
+      v-if="showResultPdf"
+      @close="close"
       :user-info="userInfo"
       :career-advantages-obj="careerAdvantagesObj"
       :career-field-obj="careerFieldObj"
       :competency-obj="competencyObj"
       :corr-func="corrFunc"
       :echart-options="echartOptions"
-      v-if="showResultPdf"
     />
   </div>
 </template>
@@ -98,7 +98,6 @@
   const sortOrder = ref('');
   const showResultPdf = ref(false);
   const dataSource = ref([]);
-  const resultPdf = ref(null);
   const userInfo = ref({});
   const careerAdvantagesObj = ref({});
   const careerFieldObj = ref({});
@@ -135,6 +134,10 @@
     echartOptions.value = record.echartOptions;
     corrFunc.value = record.corrFunc;
     showResultPdf.value = true;
+  }
+
+  function close() {
+    showResultPdf.value = false;
   }
 </script>
 

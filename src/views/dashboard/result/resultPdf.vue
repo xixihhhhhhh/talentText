@@ -3,13 +3,13 @@
     <div ref="resultPdf">
       <template v-if="isMobile">
         <div class="w-full">
-          <Leidatu :options="echartOptions.series[0].data" class="w-full enter-y" />
+          <Leidatu :options="echartOptions.series[0].data" class="w-full" />
         </div>
         <CareerField />
       </template>
       <div class="flex" v-else>
-        <leidatu :options="echartOptions.series[0].data" class="enter-y" />
-        <CareerField class="enter-y" />
+        <leidatu :options="echartOptions.series[0].data" />
+        <CareerField />
       </div>
       <Card class="w-full mt-2" :class="textSize">
         <div class="font-bold text-lg border-b-grey border-b-2">优势领域说明</div>
@@ -234,6 +234,8 @@
     },
   });
 
+  const emits = defineEmits(['close']);
+
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const textSize = isMobile ? 'text-3' : 'text-5';
   const prefixCls = 'result';
@@ -266,8 +268,8 @@
       managementAdvice.value.push(competencyObj[i][0]);
     }
     await nextTick();
-    console.log(resultPdf.value, 'resultPdf.value');
     htmlPdf.getPdf('测试', resultPdf.value);
+    emits('close');
   });
 
   function getTopTwo() {
