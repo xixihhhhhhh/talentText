@@ -5,11 +5,11 @@
         <div class="w-full">
           <Leidatu :options="echartOptions.series[0].data" class="w-full" />
         </div>
-        <CareerField />
+        <CareerFieldPdf :careerFieldObj="careerFieldObj" />
       </template>
       <div class="flex" v-else>
         <leidatu :options="echartOptions.series[0].data" />
-        <CareerField />
+        <CareerFieldPdf :careerFieldObj="careerFieldObj" />
       </div>
       <Card class="w-full mt-2" :class="textSize">
         <div class="font-bold text-lg border-b-grey border-b-2">优势领域说明</div>
@@ -189,7 +189,7 @@
   import Leidatu from './components/leidatu.vue';
   import Icon from '@/components/Icon/Icon.vue';
   import progressBar from './progress.vue';
-  import CareerField from './careerField.vue';
+  import CareerFieldPdf from './careerFieldPdf.vue';
   import headerImg from '@/assets/images/header.jpg';
   import {
     careerAdvantagesMap,
