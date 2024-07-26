@@ -14,6 +14,7 @@ enum Api {
   ResetPassword = '/user/resetPassword',
   Logout = '/user/logout',
   GetUserInfo = '/user/getUserInfo',
+  GetUserInfoById = '/user/getUserInfoById',
   RelaxAssessment = '/user/relaxAssessment',
   GetSecondWenjuan = '/user/getSecondWenjuan',
   ClearSecondWenjuan = '/user/clearSecondWenjuan',
@@ -60,6 +61,13 @@ export function resetPasswordApi(params: LoginParams, mode: ErrorMessageMode = '
 
 export function getUserInfo() {
   return defHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
+}
+
+export function getUserInfoById(params: any) {
+  return defHttp.post<GetUserInfoModel>(
+    { url: Api.GetUserInfoById, params },
+    { errorMessageMode: 'none' },
+  );
 }
 
 export function setRelaxAssessment(params: any) {

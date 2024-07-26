@@ -1,10 +1,7 @@
 import { FormSchema, RenderCallbackParams } from '@/components/Form';
-import { useQuestionStore } from '@/store/modules/question';
 import { evaluteFormDataObject, evaluteFormDataSubDepartment } from './evaluteFormData';
 import type { EChartsOption } from 'echarts';
 import type { Answer, Question, OptionsData, Option } from './type';
-
-const questionStore = useQuestionStore();
 
 export function convertToOptionArray(data: OptionsData): Option[] {
   const keys = ['A', 'B', 'C', 'D', 'E'] as const;
@@ -80,8 +77,7 @@ export function getScore(answerArr: Answer[]) {
     const averageScore = scores.reduce((acc, score) => acc + score, 0) / scores.length;
     careerFieldObj[key] = averageScore.toFixed(2);
   }
-  questionStore.setScores({ competencyObj, careerAdvantagesObj, careerFieldObj });
-  const options: EChartsOption = {
+  const echartOptions: EChartsOption = {
     tooltip: {
       trigger: 'item',
       formatter: '{a} <br/>{b} : {c} ({d}%)',
@@ -162,10 +158,15 @@ export function getScore(answerArr: Answer[]) {
   });
 
   // @ts-ignore
-  options.series[0].data = echartsData;
+  echartOptions.series[0].data = echartsData;
   // @ts-ignore
-  options.series[1].data = careerData;
-  questionStore.setLeidatu(options);
+  echartOptions.series[1].data = careerData;
+  return {
+    competencyObj,
+    careerAdvantagesObj,
+    careerFieldObj,
+    echartOptions,
+  };
 }
 
 export function convertToTwoDimensionalArray(arr, chunkSize: number) {

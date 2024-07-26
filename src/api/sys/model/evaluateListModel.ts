@@ -1,15 +1,13 @@
 export interface addEvaluateListParams {
-  userId: string;
-  result: object;
+  user_id: number;
+  name: string;
+  department: string;
+  position: string;
+  finishTime: string;
+  echartOptions: Object;
+  subDepartment?: string;
 }
 
 export interface addEvaluateListModel {
   success: boolean;
-}
-
-export interface getEvaluateListModel {
-  avatar: string;
-  name: string;
-  date: string;
-  content: string;
 }

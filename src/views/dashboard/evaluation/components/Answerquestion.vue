@@ -6,9 +6,6 @@
       style="min-height: 100vh"
     >
       <div v-if="showAnswerQuestion" class="-enter-x rounded-2" style="min-height: 80vh">
-        <!-- <a-button v-if="!hasUnFinished" type="primary" class="mr-4" @click="handleSubmit"
-          >开始测评</a-button
-        > -->
         <BasicForm
           v-if="!hasUnFinished"
           @register="register"
@@ -165,12 +162,13 @@
     extractAndConvertToLowercase,
     schemas,
   } from './data';
-  import { processDepartmentObj } from './methods';
+  import { processDepartmentObj, getTime } from './methods';
   import type { Question, Answer, DepartmentInfos } from './type';
   import { isFenDuan, typeThreeChaoshi, debounce, fourRepeatedObj, ouranToouer } from './util';
   import { useQuestionStore } from '@/store/modules/question';
-  import { data } from './test';
+  import { testData } from './test';
   import { useUserStore } from '@/store/modules/user';
+  import { addEvaluateListApi } from '@/api/sys/evaluateHistory';
 
   const userStore = useUserStore();
   const [register] = useForm({
@@ -179,8 +177,8 @@
     actionColOptions: { span: 24, style: { textAlign: 'center' } },
     submitButtonOptions: { text: '开始测评' },
   });
-  const email = ref(userStore.getUserInfo.email);
-  // import { addEvaluateListApi } from '@/api/sys/evaluateLists';
+  const userInfo = userStore.getUserInfo;
+  const email = ref(userInfo.email);
   const questionStore = useQuestionStore();
 
   let questionTypeOne: Question[] = [];
@@ -251,7 +249,7 @@
   async function handleSubmit(values: any) {
     values = processDepartmentObj(values);
     deparmentform.value = values;
-    const isTest = !true;
+    const isTest = !!true;
     if (!isTest) {
       const { firstWenJuan, secondWenJuan } = await getQuesApi();
       secondWenJuans.value = secondWenJuan.questionTypeThree;
@@ -262,7 +260,24 @@
       curNum.value = 1;
       showAnswerQuestion.value = false;
     } else {
-      getScore(data);
+      const { competencyObj, careerAdvantagesObj, careerFieldObj, echartOptions } =
+        getScore(testData);
+      questionStore.setScores({ competencyObj, careerAdvantagesObj, careerFieldObj });
+      questionStore.setLeidatu(echartOptions);
+      if (!deparmentform.value) return;
+      addEvaluateListApi({
+        user_id: +userInfo.userId,
+        name: userInfo.name,
+        department: deparmentform.value.department,
+        position: deparmentform.value.position,
+        finishTime: getTime(),
+        subDepartment: deparmentform.value.subDeaprtment ?? '',
+        echartOptions,
+        competencyObj,
+        careerAdvantagesObj,
+        careerFieldObj,
+        corrFunc: deparmentform.value.corrFunc,
+      });
       await new Promise(() => {
         setTimeout(() => {
           showResult.value = true;
@@ -332,10 +347,27 @@
       answerArr.value.push(...typeThreeAns.value);
       answerArr.value.push(...answerArrThree.value.flat(2));
       questionStore.setQuestionAns(answerArr.value);
-      getScore(answerArr.value);
+      const { competencyObj, careerAdvantagesObj, careerFieldObj, echartOptions } =
+        getScore(testData);
+      questionStore.setScores({ competencyObj, careerAdvantagesObj, careerFieldObj });
+      questionStore.setLeidatu(echartOptions);
       showResult.value = true;
       deparmentform.value && questionStore.setCorrFunc(deparmentform.value.corrFunc);
       clearSecondWenjuan({ email: email.value });
+      if (!deparmentform.value) return;
+      addEvaluateListApi({
+        user_id: +userInfo.userId,
+        name: userInfo.name,
+        department: deparmentform.value.department,
+        position: deparmentform.value.position,
+        finishTime: getTime(),
+        subDepartment: deparmentform.value.subDeaprtment ?? '',
+        echartOptions,
+        competencyObj,
+        careerAdvantagesObj,
+        careerFieldObj,
+        corrFunc: deparmentform.value.corrFunc,
+      });
     }
   }
 

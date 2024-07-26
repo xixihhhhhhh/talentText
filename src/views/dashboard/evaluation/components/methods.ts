@@ -39,3 +39,15 @@ export function processDepartmentObj(obj: any): {
   }
   return result;
 }
+
+export function getTime() {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = (now.getMonth() + 1).toString().padStart(2, '0'); // 月份从 0 开始，所以需要加 1
+  const dd = now.getDate().toString().padStart(2, '0');
+  const hh = now.getHours().toString().padStart(2, '0');
+  const mi = now.getMinutes().toString().padStart(2, '0');
+
+  const formattedDateTime = `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
+  return formattedDateTime;
+}

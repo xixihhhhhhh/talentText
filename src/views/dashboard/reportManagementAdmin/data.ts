@@ -295,6 +295,15 @@ export const positionOptions = [
   },
 ];
 
+export const sortOptions = [
+  {
+    value: '升序',
+  },
+  {
+    value: '降序',
+  },
+];
+
 export const columns = [
   {
     title: '名字',
@@ -322,8 +331,8 @@ export const columns = [
   },
   {
     title: '报告完成时间',
-    key: 'reportDate',
-    dataIndex: 'reportDate',
+    key: 'finishTime',
+    dataIndex: 'finishTime',
     width: 130,
   },
   {

@@ -12,16 +12,20 @@
       </div>
       <div class="my-2 flex items-center">
         <span class="mr-2">岗位：</span>
-        <Select v-model="selectedPosition" :options="positionOptions" class="flex-1" />
+        <Select
+          allowClear
+          v-model:value="selectedPosition"
+          :options="positionOptions"
+          class="flex-1"
+        />
       </div>
       <div class="my-2 flex items-center">
         <span class="">报告完成时间排序：</span>
-        <Select v-model="sortOrder" class="flex-1">
-          <Select.Option value="升序">升序</Select.Option>
-          <Select.Option value="降序">降序</Select.Option>
-        </Select>
+        <Select allowClear v-model:value="sortOrder" :options="sortOptions" class="flex-1" />
       </div>
-      <a-button type="primary" :icon="h(SearchOutlined)" class="my-2">搜索</a-button>
+      <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
+        >搜索</a-button
+      >
     </div>
     <div class="pt-5 flex items-center" v-else>
       <span class="mr-2">部门：</span>
@@ -32,13 +36,17 @@
         allowClear
       />
       <span class="mr-2">岗位：</span>
-      <Select v-model="selectedPosition" :options="positionOptions" class="w-20% mr-2" />
+      <Select
+        v-model:value="selectedPosition"
+        :options="positionOptions"
+        class="w-20% mr-2"
+        allowClear
+      />
       <span class="">报告完成时间排序：</span>
-      <Select v-model="sortOrder" class="w-20% mr-2">
-        <Select.Option value="升序">升序</Select.Option>
-        <Select.Option value="降序">降序</Select.Option>
-      </Select>
-      <a-button type="primary" :icon="h(SearchOutlined)" class="my-2">搜索</a-button>
+      <Select allowClear v-model:value="sortOrder" :options="sortOptions" class="w-20% mr-2" />
+      <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
+        >搜索</a-button
+      >
     </div>
     <Table
       :dataSource="dataSource"
@@ -53,66 +61,81 @@
           <div class="flex justify-center">{{ title }}</div>
         </template>
       </template>
-      <template #bodyCell="{ column }">
+      <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">
-            <a-button type="primary">下载</a-button>
+            <a-button type="primary" @click="download(record)">下载</a-button>
           </div>
         </template>
       </template>
     </Table>
+    <ResultPdf
+      ref="resultPdf"
+      :user-info="userInfo"
+      :career-advantages-obj="careerAdvantagesObj"
+      :career-field-obj="careerFieldObj"
+      :competency-obj="competencyObj"
+      :corr-func="corrFunc"
+      :echart-options="echartOptions"
+      v-if="showResultPdf"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, h } from 'vue';
+  import { ref, h, onMounted } from 'vue';
   import { Table, Select } from 'ant-design-vue';
-  import { departmentOptions, positionOptions, columns } from './data';
+  import { departmentOptions, positionOptions, sortOptions, columns } from './data';
   import { SearchOutlined } from '@ant-design/icons-vue';
+  import { getAllEvaluateListApi } from '@/api/sys/evaluateHistory';
+  import ResultPdf from '@/views/dashboard/result/resultPdf.vue';
+  import { getUserInfoById } from '@/api/sys/user';
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-  const dataSource = [
-    {
-      key: '1',
-      name: '张三',
-      department: '研发部',
-      position: '前端工程师',
-      reportDate: '2023-03-15',
-    },
-    {
-      key: '2',
-      name: '李四',
-      department: '设计部',
-      position: 'UI设计师',
-      reportDate: '2023-03-10',
-    },
-    {
-      key: '3',
-      name: '王五',
-      department: '测试部',
-      position: '测试工程师',
-      reportDate: '2023-03-20',
-    },
-    {
-      key: '4',
-      name: '赵六',
-      department: '市场部',
-      position: '市场专员',
-      reportDate: '2023-03-18',
-    },
-    {
-      key: '5',
-      name: '孙七',
-      department: '运营部',
-      position: '运营经理',
-      reportDate: '2023-03-12',
-    },
-  ];
 
   const selectedDepartment = ref('');
   const selectedPosition = ref('');
   const sortOrder = ref('');
+  const showResultPdf = ref(false);
+  const dataSource = ref([]);
+  const resultPdf = ref(null);
+  const userInfo = ref({});
+  const careerAdvantagesObj = ref({});
+  const careerFieldObj = ref({});
+  const competencyObj = ref({});
+  const echartOptions = ref({});
+  const corrFunc = ref('');
+
+  onMounted(() => {
+    GetAllEvaluateListApi({});
+  });
+
+  function search() {
+    const filter = {
+      department: selectedDepartment.value,
+      position: selectedPosition.value,
+      sortOrder: sortOrder.value,
+    };
+    GetAllEvaluateListApi(filter);
+  }
+
+  async function GetAllEvaluateListApi(filter: any) {
+    const res = await getAllEvaluateListApi(filter);
+    dataSource.value = res;
+  }
+
+  async function download(record: any) {
+    // 先根据userId拿到userInfo
+    const { user_id } = record;
+    const user = await getUserInfoById({ user_id });
+    userInfo.value = { name: user.name, avatar: user.avatar };
+    careerAdvantagesObj.value = record.careerAdvantagesObj;
+    careerFieldObj.value = record.careerFieldObj;
+    competencyObj.value = record.competencyObj;
+    echartOptions.value = record.echartOptions;
+    corrFunc.value = record.corrFunc;
+    showResultPdf.value = true;
+  }
 </script>
 
 <style scoped></style>

@@ -1,4 +1,4 @@
-export const data = [
+export const testData = [
   {
     score: 3,
     value: 'B3',
