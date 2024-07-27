@@ -2,12 +2,12 @@
   <PageWrapper :class="prefixCls" title="结果分析">
     <template v-if="isMobile">
       <div class="w-full">
-        <Leidatu :options="questionStore.leidatu.series[0].data" class="w-full enter-y" />
+        <Leidatu :options="questionStore.leidatu" class="w-full enter-y" />
       </div>
       <CareerField />
     </template>
     <div class="flex" v-else>
-      <leidatu :options="questionStore.leidatu.series[0].data" class="enter-y" />
+      <leidatu :options="questionStore.leidatu" class="enter-y" />
       <CareerField class="enter-y" />
     </div>
     <Card class="w-full mt-2" :class="textSize">

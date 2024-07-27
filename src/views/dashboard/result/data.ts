@@ -14,57 +14,6 @@ export const careerAdvantagesMap = {
   humanistic: '人文型',
 };
 
-export const dataSource = [
-  {
-    key: '1',
-    ability: 'Mike',
-    pronounced: 32,
-    define: '10 Downing Street',
-  },
-  {
-    key: '2',
-    ability: 'John',
-    pronounced: 42,
-    define: '10 Downing Street',
-  },
-  {
-    key: '3',
-    ability: 'Mike',
-    pronounced: 32,
-    define: '10 Downing Street',
-  },
-  {
-    key: '4',
-    ability: 'John',
-    pronounced: 42,
-    define: '10 Downing Street',
-  },
-  {
-    key: '5',
-    ability: 'Mike',
-    pronounced: 32,
-    define: '10 Downing Street',
-  },
-  {
-    key: '6',
-    ability: 'John',
-    pronounced: 42,
-    define: '10 Downing Street',
-  },
-  {
-    key: '7',
-    ability: 'Mike',
-    pronounced: 32,
-    define: '10 Downing Street',
-  },
-  {
-    key: '8',
-    ability: 'John',
-    pronounced: 42,
-    define: '10 Downing Street',
-  },
-];
-
 export const columns: TableColumnsType = [
   {
     title: '排名',
@@ -91,14 +40,6 @@ export const columns: TableColumnsType = [
     width: 150,
   },
 ];
-
-export function sortObject(obj: any) {
-  const sortedObj = Object.entries(obj).sort(
-    // @ts-ignore
-    (a, b) => parseFloat(b[1]) - parseFloat(a[1]),
-  );
-  return sortedObj;
-}
 
 export const advantageMap = {
   flexible: ['灵活应变', '技术型'],

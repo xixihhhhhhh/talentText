@@ -3,12 +3,12 @@
     <div ref="resultPdf">
       <template v-if="isMobile">
         <div class="w-full">
-          <Leidatu :options="echartOptions.series[0].data" class="w-full" />
+          <Leidatu :options="echartOptions" class="w-full" />
         </div>
         <CareerFieldPdf :careerFieldObj="careerFieldObj" />
       </template>
       <div class="flex" v-else>
-        <leidatu :options="echartOptions.series[0].data" />
+        <leidatu :options="echartOptions" />
         <CareerFieldPdf :careerFieldObj="careerFieldObj" />
       </div>
       <Card class="w-full mt-2" :class="textSize">

@@ -1,6 +1,5 @@
 import { FormSchema, RenderCallbackParams } from '@/components/Form';
 import { evaluteFormDataObject, evaluteFormDataSubDepartment } from './evaluteFormData';
-import type { EChartsOption } from 'echarts';
 import type { Answer, Question, OptionsData, Option } from './type';
 
 export function convertToOptionArray(data: OptionsData): Option[] {
@@ -77,38 +76,7 @@ export function getScore(answerArr: Answer[]) {
     const averageScore = scores.reduce((acc, score) => acc + score, 0) / scores.length;
     careerFieldObj[key] = averageScore.toFixed(2);
   }
-  const echartOptions: EChartsOption = {
-    tooltip: {
-      trigger: 'item',
-      formatter: '{a} <br/>{b} : {c} ({d}%)',
-    },
-    series: [
-      {
-        name: '职业优势',
-        type: 'pie',
-        radius: [0, '80%'],
-        center: ['50%', '50%'],
-        roseType: 'area',
-        label: {
-          position: 'inner',
-          fontSize: 12,
-        },
-      },
-      {
-        name: '职业领域',
-        type: 'pie',
-        radius: ['80%', '100%'],
-        labelLine: {
-          length: 1,
-        },
-        label: {
-          position: 'inner',
-          fontSize: 14,
-        },
-      },
-    ],
-  };
-  let echartsData = [
+  let echartOptions = [
     {
       value: 30,
       name: '管控',
@@ -136,31 +104,14 @@ export function getScore(answerArr: Answer[]) {
     { value: 16, name: '影响', itemStyle: { color: '#f09ba2' }, englishName: 'impact' },
     { value: 16, name: '开拓', itemStyle: { color: '#f09ba2' }, englishName: 'pioneer' },
   ];
-  echartsData = echartsData.map((item: any) => {
+  echartOptions = echartOptions.map((item: any) => {
     const { englishName } = item;
     const advantagesScore = careerAdvantagesObj[englishName];
     item.value = advantagesScore;
     delete item.englishName;
     return item;
   });
-  let careerData = [
-    { value: 1, name: '事务执行', englishName: 'transaction' },
-    { value: 1, name: '研发策划', englishName: 'research' },
-    { value: 1, name: '服务关系', englishName: 'service' },
-    { value: 1, name: '开拓影响', englishName: 'pioneering' },
-  ];
-  careerData = careerData.map((item: any) => {
-    const { englishName } = item;
-    const advantagesScore = careerFieldObj[englishName];
-    item.value = advantagesScore;
-    delete item.englishName;
-    return item;
-  });
 
-  // @ts-ignore
-  echartOptions.series[0].data = echartsData;
-  // @ts-ignore
-  echartOptions.series[1].data = careerData;
   return {
     competencyObj,
     careerAdvantagesObj,
