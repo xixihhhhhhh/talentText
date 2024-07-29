@@ -249,7 +249,7 @@
   async function handleSubmit(values: any) {
     values = processDepartmentObj(values);
     deparmentform.value = values;
-    const isTest = !true;
+    const isTest = false;
     if (!isTest) {
       const { firstWenJuan, secondWenJuan } = await getQuesApi();
       secondWenJuans.value = secondWenJuan.questionTypeThree;
@@ -329,7 +329,6 @@
     answerArrThree.value = [];
     hasUnFinished.value = true;
     typeThreeAns.value = [];
-    // answerArr.value = [];
     fourArray.value = [];
     modalVisible.value = false;
     showAnswerQuestion.value = true;
