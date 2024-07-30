@@ -306,6 +306,12 @@ export const sortOptions = [
 
 export const columns = [
   {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    width: 60,
+  },
+  {
     title: '名字',
     dataIndex: 'name',
     key: 'name',

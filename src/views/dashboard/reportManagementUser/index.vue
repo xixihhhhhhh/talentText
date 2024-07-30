@@ -60,8 +60,16 @@
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">{{ title }}</div>
         </template>
+        <template v-if="column.key === 'index'">
+          <div class="flex justify-center">{{ title }}</div>
+        </template>
       </template>
-      <template #bodyCell="{ column, record }">
+      <template #bodyCell="{ text, column, record }">
+        <template v-if="column.key === 'index'">
+          <div class="flex justify-center">
+            {{ text }}
+          </div>
+        </template>
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">
             <a-button type="primary" @click="download(record)">下载</a-button>
@@ -128,7 +136,10 @@
   async function GetAllEvaluateListApi(filter: any) {
     filter.userId = userInfo.userId;
     const res = await getPersonalEvaluateListApi(filter);
-    dataSource.value = res;
+    dataSource.value = res.map((item, index) => {
+      item.index = index + 1;
+      return item;
+    });
   }
 
   async function download(record: any) {

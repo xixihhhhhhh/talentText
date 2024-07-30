@@ -60,11 +60,22 @@
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">{{ title }}</div>
         </template>
+        <template v-if="column.key === 'index'">
+          <div class="flex justify-center">{{ title }}</div>
+        </template>
       </template>
-      <template #bodyCell="{ column, record }">
+      <template #bodyCell="{ text, column, record }">
+        <template v-if="column.key === 'index'">
+          <div class="flex justify-center">
+            {{ text }}
+          </div>
+        </template>
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">
-            <a-button type="primary" @click="download(record)">下载</a-button>
+            <a-button type="primary" class="mr-4" @click="download(record)">下载</a-button>
+            <Popconfirm @confirm="deleteReport(record)" title="确定删除吗">
+              <a-button type="primary" danger>刪除</a-button>
+            </Popconfirm>
           </div>
         </template>
       </template>
@@ -84,13 +95,13 @@
 
 <script setup lang="ts">
   import { ref, h, onMounted } from 'vue';
-  import { Table, Select } from 'ant-design-vue';
+  import { Table, Select, Popconfirm, notification } from 'ant-design-vue';
   import { sortOptions, columns } from './data';
   import { SearchOutlined } from '@ant-design/icons-vue';
-  import { getAllEvaluateListApi } from '@/api/sys/evaluateHistory';
-  import ResultPdf from '@/views/dashboard/result/resultPdf.vue';
+  import { getAllEvaluateListApi, deleteEvaluateApi } from '@/api/sys/evaluateHistory';
   import { getUserInfoById } from '@/api/sys/user';
   import { getAllDepartmentAndPositionApi } from '@/api/sys/duty';
+  import ResultPdf from '@/views/dashboard/result/resultPdf.vue';
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -126,7 +137,10 @@
 
   async function GetAllEvaluateListApi(filter: any) {
     const res = await getAllEvaluateListApi(filter);
-    dataSource.value = res;
+    dataSource.value = res.map((item, index) => {
+      item.index = index + 1;
+      return item;
+    });
   }
 
   async function download(record: any) {
@@ -140,6 +154,18 @@
     echartOptions.value = record.echartOptions;
     corrFunc.value = record.corrFunc;
     showResultPdf.value = true;
+  }
+
+  async function deleteReport(record: any) {
+    const { success } = await deleteEvaluateApi({ id: record.id });
+    if (success) {
+      GetAllEvaluateListApi({});
+      notification.open({
+        message: `删除成功`,
+        placement: 'top',
+        type: 'success',
+      });
+    }
   }
 
   function close() {

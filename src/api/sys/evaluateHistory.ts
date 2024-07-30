@@ -7,7 +7,8 @@ const baseUrl = '/evaluateHistory';
 enum Api {
   addEvaluateList = baseUrl + '/add',
   getAllEvaluateList = baseUrl + '/getAllEvaluateHistory',
-  getPersonalEvaluateListApi = baseUrl + '/getPersonalEvaluateList',
+  getPersonalEvaluateList = baseUrl + '/getPersonalEvaluateList',
+  deleteEvaluate = baseUrl + '/deleteEvaluate',
 }
 
 export function addEvaluateListApi(params: any, mode: ErrorMessageMode = 'modal') {
@@ -37,7 +38,19 @@ export function getAllEvaluateListApi(params: any, mode: ErrorMessageMode = 'mod
 export function getPersonalEvaluateListApi(params: any, mode: ErrorMessageMode = 'modal') {
   return defHttp.post<any>(
     {
-      url: Api.getPersonalEvaluateListApi,
+      url: Api.getPersonalEvaluateList,
+      params,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+export function deleteEvaluateApi(params: any, mode: ErrorMessageMode = 'modal') {
+  return defHttp.post<any>(
+    {
+      url: Api.deleteEvaluate,
       params,
     },
     {

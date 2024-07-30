@@ -2,6 +2,12 @@ import { FormSchema } from '@/components/Form';
 
 export const columns = [
   {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    width: 60,
+  },
+  {
     title: '部门名称',
     dataIndex: 'department',
     key: 'department',

@@ -31,11 +31,19 @@
       :scroll="{ x: 15, y: 400 }"
     >
       <template #headerCell="{ column, title }">
+        <template v-if="column.key === 'index'">
+          <div class="flex justify-center">{{ title }}</div>
+        </template>
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">{{ title }}</div>
         </template>
       </template>
-      <template #bodyCell="{ column, record }">
+      <template #bodyCell="{ text, column, record }">
+        <template v-if="column.key === 'index'">
+          <div class="flex justify-center">
+            {{ text }}
+          </div>
+        </template>
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">
             <Popconfirm @confirm="deleteDuty(record)" title="确定删除吗">
@@ -97,7 +105,6 @@
     const { allDepartment, allPosition } = await getAllDepartmentAndPositionApi();
     departmentOptions.value = allDepartment;
     positionOptions.value = allPosition;
-    console.log('🚀 ~ onMounted ~ allDepartment:', allDepartment, allPosition);
   });
 
   function search() {
@@ -110,7 +117,10 @@
 
   async function GetDutyApi(filter: any) {
     const res = await getDutyApi(filter);
-    dataSource.value = res;
+    dataSource.value = res.map((item, index) => {
+      item.index = index + 1;
+      return item;
+    });
   }
 
   async function deleteDuty(record: any) {
