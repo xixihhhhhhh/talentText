@@ -269,7 +269,7 @@
     }
     await nextTick();
     htmlPdf.getPdf('测试', resultPdf.value);
-    emits('close');
+    setTimeout(() => emits('close'), 0);
   });
 
   function getTopTwo() {

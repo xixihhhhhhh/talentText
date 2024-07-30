@@ -85,11 +85,12 @@
 <script setup lang="ts">
   import { ref, h, onMounted } from 'vue';
   import { Table, Select } from 'ant-design-vue';
-  import { departmentOptions, positionOptions, sortOptions, columns } from './data';
+  import { sortOptions, columns } from './data';
   import { SearchOutlined } from '@ant-design/icons-vue';
   import { getAllEvaluateListApi } from '@/api/sys/evaluateHistory';
   import ResultPdf from '@/views/dashboard/result/resultPdf.vue';
   import { getUserInfoById } from '@/api/sys/user';
+  import { getAllDepartmentAndPositionApi } from '@/api/sys/duty';
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -104,9 +105,14 @@
   const competencyObj = ref({});
   const echartOptions = ref({});
   const corrFunc = ref('');
+  const departmentOptions = ref([]);
+  const positionOptions = ref([]);
 
-  onMounted(() => {
+  onMounted(async () => {
     GetAllEvaluateListApi({});
+    const { allDepartment, allPosition } = await getAllDepartmentAndPositionApi();
+    departmentOptions.value = allDepartment;
+    positionOptions.value = allPosition;
   });
 
   function search() {

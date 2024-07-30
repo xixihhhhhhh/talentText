@@ -150,6 +150,7 @@
   import { PageWrapper } from '@/components/Page';
   import { getQuesApi } from '@/api/sys/question';
   import { setRelaxAssessment, getSecondWenjuan, clearSecondWenjuan } from '@/api/sys/user';
+  import { getEvaluteFormDataApi } from '@/api/sys/duty';
   import { useMessage } from '@/hooks/web/useMessage';
   import Result from '@/views/dashboard/result/index.vue';
   import ProgressBar from './progress.vue';
@@ -160,7 +161,6 @@
     convertToTwoDimensionalArray,
     handleFenHang,
     extractAndConvertToLowercase,
-    schemas,
   } from './data';
   import { processDepartmentObj, getTime } from './methods';
   import type { Question, Answer, DepartmentInfos } from './type';
@@ -169,14 +169,11 @@
   import { testData } from './test';
   import { useUserStore } from '@/store/modules/user';
   import { addEvaluateListApi } from '@/api/sys/evaluateHistory';
+  import { getSchemas } from './evaluteFormData';
 
+  const { createMessage } = useMessage();
   const userStore = useUserStore();
-  const [register] = useForm({
-    labelWidth: 120,
-    schemas,
-    actionColOptions: { span: 24, style: { textAlign: 'center' } },
-    submitButtonOptions: { text: '开始测评' },
-  });
+  const [register, { setProps }] = useForm({});
   const userInfo = userStore.getUserInfo;
   const email = ref(userInfo.email);
   const questionStore = useQuestionStore();
@@ -187,7 +184,6 @@
   let allquesData: Question[] = [];
   let stopRepeatClick = false;
 
-  const { createMessage } = useMessage();
   const deparmentform = ref<DepartmentInfos>();
   const answerArr = ref<Answer[]>([]);
   const showAnswerQuestion = ref(true);
@@ -229,6 +225,15 @@
   });
 
   onMounted(async () => {
+    const { departmentObj, subDepartmentObj, departmentObjArr } = await getEvaluteFormDataApi();
+    const schemas = getSchemas(departmentObjArr, departmentObj, subDepartmentObj);
+    const schemasOption = {
+      labelWidth: 120,
+      schemas,
+      actionColOptions: { span: 24, style: { textAlign: 'center' } },
+      submitButtonOptions: { text: '开始测评' },
+    };
+    setProps(schemasOption);
     const secondWenJuan = await getSecondWenjuan({ email: email.value });
     hasUnFinished.value = secondWenJuan.hasUnFinish;
     if (hasUnFinished.value) {
@@ -250,16 +255,7 @@
     values = processDepartmentObj(values);
     deparmentform.value = values;
     const isTest = false;
-    if (!isTest) {
-      const { firstWenJuan, secondWenJuan } = await getQuesApi();
-      secondWenJuans.value = secondWenJuan.questionTypeThree;
-      questionTypeOne = firstWenJuan.questionTypeOne;
-      questionTypeTwo = firstWenJuan.questionTypeTwo;
-      questionTypeThree.value = convertToTwoDimensionalArray(firstWenJuan.questionTypeThree, 3);
-      allquesData = [...questionTypeOne, ...questionTypeTwo];
-      curNum.value = 1;
-      showAnswerQuestion.value = false;
-    } else {
+    if (isTest) {
       const { competencyObj, careerAdvantagesObj, careerFieldObj, echartOptions } =
         getScore(testData);
       questionStore.setScores({ competencyObj, careerAdvantagesObj, careerFieldObj });
@@ -278,11 +274,16 @@
         careerFieldObj,
         corrFunc: deparmentform.value.corrFunc,
       });
-      await new Promise(() => {
-        setTimeout(() => {
-          showResult.value = true;
-        }, 0);
-      });
+      showResult.value = true;
+    } else {
+      const { firstWenJuan, secondWenJuan } = await getQuesApi();
+      secondWenJuans.value = secondWenJuan.questionTypeThree;
+      questionTypeOne = firstWenJuan.questionTypeOne;
+      questionTypeTwo = firstWenJuan.questionTypeTwo;
+      questionTypeThree.value = convertToTwoDimensionalArray(firstWenJuan.questionTypeThree, 3);
+      allquesData = [...questionTypeOne, ...questionTypeTwo];
+      curNum.value = 1;
+      showAnswerQuestion.value = false;
     }
   }
 
@@ -346,8 +347,9 @@
       answerArr.value.push(...typeThreeAns.value);
       answerArr.value.push(...answerArrThree.value.flat(2));
       questionStore.setQuestionAns(answerArr.value);
-      const { competencyObj, careerAdvantagesObj, careerFieldObj, echartOptions } =
-        getScore(testData);
+      const { competencyObj, careerAdvantagesObj, careerFieldObj, echartOptions } = getScore(
+        answerArr.value,
+      );
       questionStore.setScores({ competencyObj, careerAdvantagesObj, careerFieldObj });
       questionStore.setLeidatu(echartOptions);
       showResult.value = true;

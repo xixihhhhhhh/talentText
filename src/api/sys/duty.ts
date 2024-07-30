@@ -11,6 +11,7 @@ enum Api {
   deleteDuty = baseUrl + '/deleteDuty',
   updateDuty = baseUrl + '/updateDuty',
   getAllDepartmentAndPosition = baseUrl + '/getAllDepartmentAndPosition',
+  getEvaluteFormData = baseUrl + '/getEvaluteFormData',
 }
 
 export function addDutyApi(params: any, mode: ErrorMessageMode = 'modal') {
@@ -65,6 +66,17 @@ export function getAllDepartmentAndPositionApi(mode: ErrorMessageMode = 'modal')
   return defHttp.post<any>(
     {
       url: Api.getAllDepartmentAndPosition,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+export function getEvaluteFormDataApi(mode: ErrorMessageMode = 'modal') {
+  return defHttp.post<any>(
+    {
+      url: Api.getEvaluteFormData,
     },
     {
       errorMessageMode: mode,
