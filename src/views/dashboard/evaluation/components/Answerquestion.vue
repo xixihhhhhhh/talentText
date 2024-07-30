@@ -225,8 +225,9 @@
   });
 
   onMounted(async () => {
-    const { departmentObj, subDepartmentObj, departmentObjArr } = await getEvaluteFormDataApi();
-    const schemas = getSchemas(departmentObjArr, departmentObj, subDepartmentObj);
+    const { departmentObj, subDepartmentObj, departmentObjArr, subPosition } =
+      await getEvaluteFormDataApi();
+    const schemas = getSchemas(departmentObjArr, departmentObj, subDepartmentObj, subPosition);
     const schemasOption = {
       labelWidth: 120,
       schemas,
