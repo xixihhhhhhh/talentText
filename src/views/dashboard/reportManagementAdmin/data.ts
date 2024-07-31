@@ -342,6 +342,12 @@ export const columns = [
     width: 130,
   },
   {
+    title: '报告可信度',
+    key: 'reportTruth',
+    dataIndex: 'reportTruth',
+    width: 130,
+  },
+  {
     title: '操作',
     key: 'action',
     dataIndex: 'action',

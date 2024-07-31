@@ -78,7 +78,7 @@
     "randonNumber": "验证码",
     "verfiyCodeErrot": "验证码错误",
     "loginSuccessDesc": "欢迎回来",
-    "usernamePlaceholder": "请输入用户名称",
+    "usernamePlaceholder": "请输入您的姓名",
     "emailPlaceholder": "请输入合法的邮箱",
     "passwordPlaceholder": "请输入密码",
     "checkPasswordPlaceholder": "请输入确认密码",

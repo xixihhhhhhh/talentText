@@ -73,9 +73,8 @@
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">
             <a-button type="primary" class="mr-4" @click="download(record)">下载</a-button>
-            <Popconfirm @confirm="deleteReport(record)" title="确定删除吗">
-              <a-button type="primary" danger>刪除</a-button>
-            </Popconfirm>
+            <a-button type="primary" class="mr-4" @click="detail(record)">详情</a-button>
+            <a-button type="primary" class="mr-4" @click="download(record)">重新邀评</a-button>
           </div>
         </template>
       </template>
@@ -95,22 +94,26 @@
 
 <script setup lang="ts">
   import { ref, h, onMounted } from 'vue';
-  import { Table, Select, Popconfirm, notification } from 'ant-design-vue';
+  import { useRouter } from 'vue-router';
+  import { Table, Select } from 'ant-design-vue';
   import { sortOptions, columns } from './data';
   import { SearchOutlined } from '@ant-design/icons-vue';
-  import { getAllEvaluateListApi, deleteEvaluateApi } from '@/api/sys/evaluateHistory';
+  import { getAllEvaluateListApi } from '@/api/sys/evaluateHistory';
   import { getUserInfoById } from '@/api/sys/user';
   import { getAllDepartmentAndPositionApi } from '@/api/sys/duty';
   import ResultPdf from '@/views/dashboard/result/resultPdf.vue';
+  import { useResultStore } from '@/store/modules/result';
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
+  const resultStore = useResultStore();
+  const router = useRouter();
   const selectedDepartment = ref('');
   const selectedPosition = ref('');
   const sortOrder = ref('');
   const showResultPdf = ref(false);
   const dataSource = ref([]);
-  const userInfo = ref({});
+  const userInfo = ref<any>({});
   const careerAdvantagesObj = ref({});
   const careerFieldObj = ref({});
   const competencyObj = ref({});
@@ -156,20 +159,24 @@
     showResultPdf.value = true;
   }
 
-  async function deleteReport(record: any) {
-    const { success } = await deleteEvaluateApi({ id: record.id });
-    if (success) {
-      GetAllEvaluateListApi({});
-      notification.open({
-        message: `删除成功`,
-        placement: 'top',
-        type: 'success',
-      });
-    }
-  }
-
   function close() {
     showResultPdf.value = false;
+  }
+
+  async function detail(record: any) {
+    const { user_id } = record;
+    const user = await getUserInfoById({ user_id });
+    userInfo.value = { name: user.name, avatar: user.avatar };
+    resultStore.setState({
+      name: userInfo.value.name,
+      avatart: userInfo.value.avatar,
+      careerAdvantagesObj: record.careerAdvantagesObj,
+      careerFieldObj: record.careerFieldObj,
+      competencyObj: record.competencyObj,
+      echartOptions: record.echartOptions,
+      corrFunc: record.corrFunc,
+    });
+    router.push({ name: 'resultRoute' });
   }
 </script>
 
