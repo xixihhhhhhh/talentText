@@ -74,9 +74,9 @@
           <div class="flex justify-center">
             <a-button type="primary" class="mr-4" @click="download(record)">下载</a-button>
             <a-button type="primary" class="mr-4" @click="detail(record)">详情</a-button>
-            <a-button type="primary" class="mr-4" @click="reinviteforevaluation(record)"
-              >重新邀评</a-button
-            >
+            <Popconfirm @confirm="reinviteforevaluation(record)" title="确定重新邀评吗">
+              <a-button type="primary" class="mr-4">重新邀评</a-button>
+            </Popconfirm>
           </div>
         </template>
       </template>
@@ -97,7 +97,7 @@
 <script setup lang="ts">
   import { ref, h, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
-  import { Table, Select, message } from 'ant-design-vue';
+  import { Table, Select, message, Popconfirm } from 'ant-design-vue';
   import { sortOptions, columns } from './data';
   import { SearchOutlined } from '@ant-design/icons-vue';
   import { getAllEvaluateListApi } from '@/api/sys/evaluateHistory';

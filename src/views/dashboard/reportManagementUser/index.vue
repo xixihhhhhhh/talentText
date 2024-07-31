@@ -73,6 +73,7 @@
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">
             <a-button type="primary" @click="download(record)">下载</a-button>
+            <a-button type="primary" class="mr-4" @click="detail(record)">详情</a-button>
           </div>
         </template>
       </template>
@@ -92,6 +93,7 @@
 
 <script setup lang="ts">
   import { ref, h, onMounted, toRaw } from 'vue';
+  import { useRouter } from 'vue-router';
   import { useUserStore } from '@/store/modules/user';
   import { Table, Select } from 'ant-design-vue';
   import { sortOptions, columns } from '../reportManagementAdmin/data';
@@ -99,10 +101,13 @@
   import { getPersonalEvaluateListApi } from '@/api/sys/evaluateHistory';
   import { getAllDepartmentAndPositionApi } from '@/api/sys/duty';
   import ResultPdf from '@/views/dashboard/result/resultPdf.vue';
+  import { useResultStore } from '@/store/modules/result';
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const resultStore = useResultStore();
   const userStore = useUserStore();
   const userInfo = toRaw(userStore.getUserInfo);
+  const router = useRouter();
 
   const selectedDepartment = ref('');
   const selectedPosition = ref('');
@@ -150,6 +155,19 @@
     echartOptions.value = record.echartOptions;
     corrFunc.value = record.corrFunc;
     showResultPdf.value = true;
+  }
+
+  async function detail(record: any) {
+    resultStore.setState({
+      name: userInfo.name,
+      avatart: userInfo.avatar,
+      careerAdvantagesObj: record.careerAdvantagesObj,
+      careerFieldObj: record.careerFieldObj,
+      competencyObj: record.competencyObj,
+      echartOptions: record.echartOptions,
+      corrFunc: record.corrFunc,
+    });
+    router.push({ name: 'resultRoute' });
   }
 
   function close() {
