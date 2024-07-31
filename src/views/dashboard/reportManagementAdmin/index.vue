@@ -74,7 +74,9 @@
           <div class="flex justify-center">
             <a-button type="primary" class="mr-4" @click="download(record)">下载</a-button>
             <a-button type="primary" class="mr-4" @click="detail(record)">详情</a-button>
-            <a-button type="primary" class="mr-4" @click="download(record)">重新邀评</a-button>
+            <a-button type="primary" class="mr-4" @click="reinviteforevaluation(record)"
+              >重新邀评</a-button
+            >
           </div>
         </template>
       </template>
@@ -95,11 +97,11 @@
 <script setup lang="ts">
   import { ref, h, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
-  import { Table, Select } from 'ant-design-vue';
+  import { Table, Select, message } from 'ant-design-vue';
   import { sortOptions, columns } from './data';
   import { SearchOutlined } from '@ant-design/icons-vue';
   import { getAllEvaluateListApi } from '@/api/sys/evaluateHistory';
-  import { getUserInfoById } from '@/api/sys/user';
+  import { getUserInfoById, setCanTextApi } from '@/api/sys/user';
   import { getAllDepartmentAndPositionApi } from '@/api/sys/duty';
   import ResultPdf from '@/views/dashboard/result/resultPdf.vue';
   import { useResultStore } from '@/store/modules/result';
@@ -177,6 +179,15 @@
       corrFunc: record.corrFunc,
     });
     router.push({ name: 'resultRoute' });
+  }
+
+  async function reinviteforevaluation(record: any) {
+    const { user_id } = record;
+    const res = await setCanTextApi({ user_id, canTest: true });
+    const { success } = res;
+    if (success) {
+      message.success('邀请评测成功!');
+    }
   }
 </script>
 

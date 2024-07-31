@@ -139,6 +139,19 @@
         <a-button key="submit" type="primary" @click="resumeAssessment">继续作答</a-button>
       </template>
     </Modal>
+    <Modal
+      centered
+      title="提示"
+      v-model:open="openDisable"
+      cancelText="取消"
+      okText="确定"
+      @ok="openDisable = false"
+    >
+      <div class="flex justify-center items-center font-bold text-lg">抱歉，您已经测评过了。</div>
+      <div class="flex justify-center items-center font-bold text-lg"
+        >可以找管理员申请重新测评。</div
+      >
+    </Modal>
   </PageWrapper>
 </template>
 
@@ -149,7 +162,12 @@
   import { Popconfirm, Modal } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
   import { getQuesApi } from '@/api/sys/question';
-  import { setRelaxAssessment, getSecondWenjuan, clearSecondWenjuan } from '@/api/sys/user';
+  import {
+    setRelaxAssessment,
+    getSecondWenjuan,
+    clearSecondWenjuan,
+    getCanTextApi,
+  } from '@/api/sys/user';
   import { getEvaluteFormDataApi } from '@/api/sys/duty';
   import { useMessage } from '@/hooks/web/useMessage';
   import Result from '@/views/dashboard/result/index.vue';
@@ -200,6 +218,8 @@
   const selectValueTypeThree = ref<string[]>([]);
   const fourArray = ref<Answer[]>([]);
   const isTypeThree = ref(false);
+  const canTest = ref(true);
+  const openDisable = ref(false);
 
   const percent = computed(() => {
     return Math.round(((curNum.value + (curIndexTypeThree.value - 1) * 3) / 74) * 100);
@@ -225,6 +245,9 @@
   });
 
   onMounted(async () => {
+    const res = await getCanTextApi({ user_id: userInfo.userId });
+    console.log('🚀 ~ onMounted ~ res:', res);
+    canTest.value = res.canTest;
     const { departmentObj, subDepartmentObj, departmentObjArr, subPosition } =
       await getEvaluteFormDataApi();
     const schemas = getSchemas(departmentObjArr, departmentObj, subDepartmentObj, subPosition);
@@ -253,6 +276,10 @@
   });
 
   async function handleSubmit(values: any) {
+    if (!canTest.value) {
+      openDisable.value = true;
+      return;
+    }
     values = processDepartmentObj(values);
     deparmentform.value = values;
     const isTest = false;

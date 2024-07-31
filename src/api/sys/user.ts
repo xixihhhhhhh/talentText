@@ -8,17 +8,20 @@ import {
 
 import { ErrorMessageMode } from '#/axios';
 
+const baseUrl = '/user';
 enum Api {
-  Register = '/user/register',
-  Login = '/user/login',
-  ResetPassword = '/user/resetPassword',
-  Logout = '/user/logout',
-  GetUserInfo = '/user/getUserInfo',
-  GetUserInfoById = '/user/getUserInfoById',
-  RelaxAssessment = '/user/relaxAssessment',
-  GetSecondWenjuan = '/user/getSecondWenjuan',
-  ClearSecondWenjuan = '/user/clearSecondWenjuan',
-  GetUserNumber = '/user/getAllUsers',
+  Register = baseUrl + '/register',
+  Login = baseUrl + '/login',
+  ResetPassword = baseUrl + '/resetPassword',
+  Logout = baseUrl + '/logout',
+  GetUserInfo = baseUrl + '/getUserInfo',
+  GetUserInfoById = baseUrl + '/getUserInfoById',
+  RelaxAssessment = baseUrl + '/relaxAssessment',
+  GetSecondWenjuan = baseUrl + '/getSecondWenjuan',
+  ClearSecondWenjuan = baseUrl + '/clearSecondWenjuan',
+  GetUserNumber = baseUrl + '/getAllUsers',
+  getCanText = baseUrl + '/getCanText',
+  setCanText = baseUrl + '/setCanText',
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
 }
@@ -87,6 +90,14 @@ export function getUsersNumber() {
     { url: Api.GetUserNumber },
     { errorMessageMode: 'none' },
   );
+}
+
+export function getCanTextApi(params: any) {
+  return defHttp.post<any>({ url: Api.getCanText, params }, { errorMessageMode: 'none' });
+}
+
+export function setCanTextApi(params: any) {
+  return defHttp.post<any>({ url: Api.setCanText, params }, { errorMessageMode: 'none' });
 }
 
 export function getPermCode() {
