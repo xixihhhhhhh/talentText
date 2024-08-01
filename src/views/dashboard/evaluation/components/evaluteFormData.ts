@@ -5,13 +5,19 @@ export function getSchemas(
   evaluteFormDataObject: any,
   evaluteFormDataSubDepartment: any,
   subPosition: any,
+  expressionArr?: string[],
+  sortOption?: boolean,
 ) {
+  if (!expressionArr) {
+    expressionArr = ['您的部门是：', '您的细分部门是：', '您的岗位是：'];
+  }
   const schemas: FormSchema[] = [
     {
       field: 'department',
       component: 'Select',
-      label: '您的部门是：',
-      colProps: { span: 14 },
+      label: expressionArr[0],
+      colProps: { span: 18 },
+      labelWidth: 250,
       componentProps: {
         options: departmentObjArr,
       },
@@ -23,8 +29,9 @@ export function getSchemas(
     const schemaItem: FormSchema = {
       field: 'subDeaprtment',
       component: 'Select',
-      label: '您的细分部门是：',
-      colProps: { span: 14 },
+      label: expressionArr[1],
+      colProps: { span: 18 },
+      labelWidth: 250,
       componentProps: {
         options: evaluteFormDataSubDepartment[key],
       },
@@ -44,8 +51,9 @@ export function getSchemas(
     const schemaItem: FormSchema = {
       field: 'position' + '/' + key,
       component: 'Select',
-      label: '您的岗位是：',
-      colProps: { span: 14 },
+      label: expressionArr[2],
+      colProps: { span: 18 },
+      labelWidth: 250,
       componentProps: {
         options: evaluteFormDataObject[key],
       },
@@ -65,8 +73,9 @@ export function getSchemas(
     const schemaItem: FormSchema = {
       field: 'position' + '/' + key,
       component: 'Select',
-      label: '您的岗位是：',
-      colProps: { span: 14 },
+      label: expressionArr[2],
+      colProps: { span: 18 },
+      labelWidth: 250,
       componentProps: {
         options: subPosition[key],
       },
@@ -84,6 +93,28 @@ export function getSchemas(
     };
     schemas.push(schemaItem);
   });
+
+  if (sortOption) {
+    const schemaItem: FormSchema = {
+      field: 'sortOption',
+      component: 'Select',
+      label: '报告完成时间排序：',
+      colProps: { span: 18 },
+      labelWidth: 250,
+      componentProps: {
+        options: [
+          {
+            value: '升序',
+          },
+          {
+            value: '降序',
+          },
+        ],
+      },
+      rules: [{ type: 'string' }],
+    };
+    schemas.push(schemaItem);
+  }
 
   return schemas;
 }

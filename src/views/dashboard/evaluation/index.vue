@@ -1,9 +1,9 @@
 <template>
   <PageWrapper>
-    <answerQuestion />
+    <replyquestion />
   </PageWrapper>
 </template>
 <script lang="ts" setup>
   import { PageWrapper } from '@/components/Page';
-  import answerQuestion from './components/answerquestion.vue';
+  import replyquestion from './components/replyquestion.vue';
 </script>

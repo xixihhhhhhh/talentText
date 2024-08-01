@@ -312,7 +312,7 @@ export const columns = [
     width: 60,
   },
   {
-    title: '名字',
+    title: '姓名',
     dataIndex: 'name',
     key: 'name',
     width: 70,

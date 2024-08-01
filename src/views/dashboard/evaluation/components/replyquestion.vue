@@ -246,7 +246,6 @@
 
   onMounted(async () => {
     const res = await getCanTextApi({ user_id: userInfo.userId });
-    console.log('🚀 ~ onMounted ~ res:', res);
     canTest.value = res.canTest;
     const { departmentObj, subDepartmentObj, departmentObjArr, subPosition } =
       await getEvaluteFormDataApi();

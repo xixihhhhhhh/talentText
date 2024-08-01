@@ -9,6 +9,7 @@ enum Api {
   getAllEvaluateList = baseUrl + '/getAllEvaluateHistory',
   getPersonalEvaluateList = baseUrl + '/getPersonalEvaluateList',
   deleteEvaluate = baseUrl + '/deleteEvaluate',
+  getMatchedUsers = baseUrl + '/getMatchedUsers',
 }
 
 export function addEvaluateListApi(params: any, mode: ErrorMessageMode = 'modal') {
@@ -51,6 +52,18 @@ export function deleteEvaluateApi(params: any, mode: ErrorMessageMode = 'modal')
   return defHttp.post<any>(
     {
       url: Api.deleteEvaluate,
+      params,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+export function getMatchedUsersApi(params: any, mode: ErrorMessageMode = 'modal') {
+  return defHttp.post<any>(
+    {
+      url: Api.getMatchedUsers,
       params,
     },
     {
