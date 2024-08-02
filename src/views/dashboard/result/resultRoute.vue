@@ -70,7 +70,7 @@
             >通过以下建议可以发挥受测者的优势，有助于大大地提升其工作成效</span
           >
         </div>
-        <div v-for="i in 6" :key="i" :style="{ padding: '1rem 0  0 0' }">
+        <div v-for="i in 6" :key="i" class="pt-1rem">
           <Icon
             icon="material-symbols-light:circle"
             :size="20"
@@ -172,17 +172,23 @@
             >提供所在岗位所需的关键胜任力，提升个人岗位上的表现和职业发展</span
           >
         </div>
-        <div class="indent-4 font-bold text-4">
+        <div class="indent-4 font-bold">
           通过对 <Avatar :src="avatar" /> {{ resultStore.name }}
           所在的岗位进行了胜任力分析，总结出岗位所需的前五项关键胜任力，分别为：
         </div>
-        <div v-for="i in 5" :key="i" class="flex text-4">
-          <div class="flex-shrink-0 mr-4" :style="{ color: activeColor }">{{
+        <div v-for="i in 5" :key="i" class="indent-4 line-height-loose">
+          <Icon
+            icon="material-symbols-light:circle"
+            :size="20"
+            :color="activeColor"
+            class="relative top-0.5"
+          />
+          <span class="flex-shrink-0 mr-4" :style="{ color: activeColor }">{{
             advantageMap[competencyObj[i][0]][0]
-          }}</div>
-          <div>{{ competencyDefinition[competencyObj[i][0]] }}</div>
+          }}</span>
+          <span>{{ competencyDefinition[competencyObj[i][0]] }}</span>
         </div>
-        <div class="indent-4 font-bold text-4">
+        <div class="indent-4 font-bold">
           通过了解这些关键胜任力，TA可以更清晰地认识到岗位对TA的要求，有针对性地提升自身的能力和表现进一步推动TA的职业发展。
         </div>
       </Card>
