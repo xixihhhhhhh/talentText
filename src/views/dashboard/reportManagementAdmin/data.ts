@@ -295,15 +295,6 @@ export const positionOptions = [
   },
 ];
 
-export const sortOptions = [
-  {
-    value: '升序',
-  },
-  {
-    value: '降序',
-  },
-];
-
 export const columns = [
   {
     title: '序号',
@@ -340,6 +331,7 @@ export const columns = [
     key: 'finishTime',
     dataIndex: 'finishTime',
     width: 130,
+    sorter: true,
   },
   {
     title: '报告可信度',

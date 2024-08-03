@@ -8,6 +8,7 @@
         defaultPageSize: 5,
       }"
       :scroll="{ x: 15, y: 400 }"
+      @change="handleTableChange"
     >
       <template #headerCell="{ column, title }">
         <template v-if="column.key === 'action'">
@@ -57,7 +58,6 @@
       subDepartmentObj,
       subPosition,
       expressionArr,
-      true,
     );
     const schemasOption = {
       labelWidth: 120,
@@ -68,17 +68,36 @@
     setProps(schemasOption);
   });
 
+  // @ts-ignore
+  const handleTableChange: TableProps['onChange'] = (
+    filters: any,
+    sorter: any,
+    pag: {
+      pageSize: number;
+      current: number;
+      order: string;
+    },
+  ) => {
+    const { order } = pag;
+    if (order === 'ascend') {
+      dataSource.value = dataSource.value.sort((a: any, b: any) => {
+        return new Date(a.finishTime).getTime() - new Date(b.finishTime).getTime();
+      });
+    } else {
+      dataSource.value = dataSource.value.sort((a: any, b: any) => {
+        return new Date(b.finishTime).getTime() - new Date(a.finishTime).getTime();
+      });
+    }
+  };
+
   async function handleSubmit(values: any) {
-    console.log('🚀 ~ handleSubmit ~ values:', values);
     values = processDepartmentObj(values);
     const { corrFunc, sortOption } = values;
     const res = await getMatchedUsersApi({ corrFunc, sortOption });
-    console.log('🚀 ~ handleSubmit ~ res:', res);
     dataSource.value = res.map((item, index) => {
       item.index = index + 1;
       return item;
     });
-    console.log('🚀 ~ onMounted ~ res:', res);
   }
 </script>
 

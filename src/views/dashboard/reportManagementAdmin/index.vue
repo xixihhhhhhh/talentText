@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white px-2">
     <div class="pt-5" v-if="isMobile">
-      <div class="my-2 flex items-center">
+      <div class="my-2 ml-4 flex items-center justify-center w-80%">
         <span class="mr-2">部门：</span>
         <Select
           v-model:value="selectedDepartment"
@@ -10,7 +10,7 @@
           allowClear
         />
       </div>
-      <div class="my-2 flex items-center">
+      <div class="my-2 ml-4 flex items-center justify-center w-80%">
         <span class="mr-2">岗位：</span>
         <Select
           allowClear
@@ -19,31 +19,27 @@
           class="flex-1"
         />
       </div>
-      <div class="my-2 flex items-center">
-        <span class="">报告完成时间排序：</span>
-        <Select allowClear v-model:value="sortOrder" :options="sortOptions" class="flex-1" />
+      <div class="flex justify-center">
+        <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
+          >搜索</a-button
+        >
       </div>
-      <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
-        >搜索</a-button
-      >
     </div>
     <div class="pt-5 flex items-center" v-else>
       <span class="mr-2">部门：</span>
       <Select
         v-model:value="selectedDepartment"
         :options="departmentOptions"
-        class="w-20% mr-2"
+        class="w-30% mr-2"
         allowClear
       />
       <span class="mr-2">岗位：</span>
       <Select
         v-model:value="selectedPosition"
         :options="positionOptions"
-        class="w-20% mr-2"
+        class="w-30% mr-2"
         allowClear
       />
-      <span class="">报告完成时间排序：</span>
-      <Select allowClear v-model:value="sortOrder" :options="sortOptions" class="w-20% mr-2" />
       <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
         >搜索</a-button
       >
@@ -51,10 +47,10 @@
     <Table
       :dataSource="dataSource"
       :columns="columns"
-      :pagination="{
-        defaultPageSize: 5,
-      }"
+      :pagination="{ defaultPageSize: 5 }"
       :scroll="{ x: 15, y: 400 }"
+      :row-key="(record) => record.name"
+      @change="handleTableChange"
     >
       <template #headerCell="{ column, title }">
         <template v-if="column.key === 'action'">
@@ -75,7 +71,7 @@
             <a-button type="primary" class="mr-4" @click="download(record)">下载</a-button>
             <a-button type="primary" class="mr-4" @click="detail(record)">详情</a-button>
             <Popconfirm @confirm="reinviteforevaluation(record)" title="确定重新邀评吗">
-              <a-button type="primary" class="mr-4">重新邀评</a-button>
+              <a-button type="primary">重新邀评</a-button>
             </Popconfirm>
           </div>
         </template>
@@ -98,13 +94,14 @@
   import { ref, h, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { Table, Select, message, Popconfirm } from 'ant-design-vue';
-  import { sortOptions, columns } from './data';
+  import { columns } from './data';
   import { SearchOutlined } from '@ant-design/icons-vue';
   import { getAllEvaluateListApi } from '@/api/sys/evaluateHistory';
   import { getUserInfoById, setCanTextApi } from '@/api/sys/user';
   import { getAllDepartmentAndPositionApi } from '@/api/sys/duty';
   import ResultPdf from '@/views/dashboard/result/resultPdf.vue';
   import { useResultStore } from '@/store/modules/result';
+  import type { TableProps } from 'ant-design-vue';
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -139,6 +136,28 @@
     };
     GetAllEvaluateListApi(filter);
   }
+
+  // @ts-ignore
+  const handleTableChange: TableProps['onChange'] = (
+    filters: any,
+    sorter: any,
+    pag: {
+      pageSize: number;
+      current: number;
+      order: string;
+    },
+  ) => {
+    const { order } = pag;
+    if (order === 'ascend') {
+      dataSource.value = dataSource.value.sort((a: any, b: any) => {
+        return new Date(a.finishTime).getTime() - new Date(b.finishTime).getTime();
+      });
+    } else {
+      dataSource.value = dataSource.value.sort((a: any, b: any) => {
+        return new Date(b.finishTime).getTime() - new Date(a.finishTime).getTime();
+      });
+    }
+  };
 
   async function GetAllEvaluateListApi(filter: any) {
     const res = await getAllEvaluateListApi(filter);

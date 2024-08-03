@@ -6,7 +6,6 @@ export function getSchemas(
   evaluteFormDataSubDepartment: any,
   subPosition: any,
   expressionArr?: string[],
-  sortOption?: boolean,
 ) {
   if (!expressionArr) {
     expressionArr = ['您的部门是：', '您的细分部门是：', '您的岗位是：'];
@@ -93,28 +92,6 @@ export function getSchemas(
     };
     schemas.push(schemaItem);
   });
-
-  if (sortOption) {
-    const schemaItem: FormSchema = {
-      field: 'sortOption',
-      component: 'Select',
-      label: '报告完成时间排序：',
-      colProps: { span: 18 },
-      labelWidth: 250,
-      componentProps: {
-        options: [
-          {
-            value: '升序',
-          },
-          {
-            value: '降序',
-          },
-        ],
-      },
-      rules: [{ type: 'string' }],
-    };
-    schemas.push(schemaItem);
-  }
 
   return schemas;
 }

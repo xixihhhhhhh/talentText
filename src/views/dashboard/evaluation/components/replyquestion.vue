@@ -281,7 +281,7 @@
     }
     values = processDepartmentObj(values);
     deparmentform.value = values;
-    const isTest = false;
+    const isTest = true;
     if (isTest) {
       const { competencyObj, careerAdvantagesObj, careerFieldObj, echartOptions } =
         getScore(testData);

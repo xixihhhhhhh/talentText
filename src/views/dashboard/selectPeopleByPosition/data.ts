@@ -29,6 +29,7 @@ export const columns = [
     title: '报告完成时间',
     key: 'finishTime',
     dataIndex: 'finishTime',
+    sorter: true,
   },
   {
     title: '报告可信度',

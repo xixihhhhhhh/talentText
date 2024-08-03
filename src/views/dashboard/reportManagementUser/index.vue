@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white px-2">
     <div class="pt-5" v-if="isMobile">
-      <div class="my-2 flex items-center">
+      <div class="my-2 ml-4 flex items-center justify-center w-80%">
         <span class="mr-2">部门：</span>
         <Select
           v-model:value="selectedDepartment"
@@ -10,7 +10,7 @@
           allowClear
         />
       </div>
-      <div class="my-2 flex items-center">
+      <div class="my-2 ml-4 flex items-center justify-center w-80%">
         <span class="mr-2">岗位：</span>
         <Select
           allowClear
@@ -19,31 +19,27 @@
           class="flex-1"
         />
       </div>
-      <div class="my-2 flex items-center">
-        <span class="">报告完成时间排序：</span>
-        <Select allowClear v-model:value="sortOrder" :options="sortOptions" class="flex-1" />
+      <div class="flex justify-center">
+        <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
+          >搜索</a-button
+        >
       </div>
-      <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
-        >搜索</a-button
-      >
     </div>
     <div class="pt-5 flex items-center" v-else>
       <span class="mr-2">部门：</span>
       <Select
         v-model:value="selectedDepartment"
         :options="departmentOptions"
-        class="w-20% mr-2"
+        class="w-30% mr-2"
         allowClear
       />
       <span class="mr-2">岗位：</span>
       <Select
         v-model:value="selectedPosition"
         :options="positionOptions"
-        class="w-20% mr-2"
+        class="w-30% mr-2"
         allowClear
       />
-      <span class="">报告完成时间排序：</span>
-      <Select allowClear v-model:value="sortOrder" :options="sortOptions" class="w-20% mr-2" />
       <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
         >搜索</a-button
       >
@@ -72,8 +68,8 @@
         </template>
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">
-            <a-button type="primary" @click="download(record)">下载</a-button>
-            <a-button type="primary" class="mr-4" @click="detail(record)">详情</a-button>
+            <a-button type="primary" class="mr-4" @click="download(record)">下载</a-button>
+            <a-button type="primary" @click="detail(record)">详情</a-button>
           </div>
         </template>
       </template>
@@ -96,7 +92,7 @@
   import { useRouter } from 'vue-router';
   import { useUserStore } from '@/store/modules/user';
   import { Table, Select } from 'ant-design-vue';
-  import { sortOptions, columns } from '../reportManagementAdmin/data';
+  import { columns } from '../reportManagementAdmin/data';
   import { SearchOutlined } from '@ant-design/icons-vue';
   import { getPersonalEvaluateListApi } from '@/api/sys/evaluateHistory';
   import { getAllDepartmentAndPositionApi } from '@/api/sys/duty';
