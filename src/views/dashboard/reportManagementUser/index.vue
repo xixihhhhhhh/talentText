@@ -1,49 +1,5 @@
 <template>
   <div class="bg-white px-2">
-    <div class="pt-5" v-if="isMobile">
-      <div class="my-2 ml-4 flex items-center justify-center w-80%">
-        <span class="mr-2">部门：</span>
-        <Select
-          v-model:value="selectedDepartment"
-          :options="departmentOptions"
-          class="flex-1"
-          allowClear
-        />
-      </div>
-      <div class="my-2 ml-4 flex items-center justify-center w-80%">
-        <span class="mr-2">岗位：</span>
-        <Select
-          allowClear
-          v-model:value="selectedPosition"
-          :options="positionOptions"
-          class="flex-1"
-        />
-      </div>
-      <div class="flex justify-center">
-        <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
-          >搜索</a-button
-        >
-      </div>
-    </div>
-    <div class="pt-5 flex items-center" v-else>
-      <span class="mr-2">部门：</span>
-      <Select
-        v-model:value="selectedDepartment"
-        :options="departmentOptions"
-        class="w-30% mr-2"
-        allowClear
-      />
-      <span class="mr-2">岗位：</span>
-      <Select
-        v-model:value="selectedPosition"
-        :options="positionOptions"
-        class="w-30% mr-2"
-        allowClear
-      />
-      <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
-        >搜索</a-button
-      >
-    </div>
     <Table
       :dataSource="dataSource"
       :columns="columns"
@@ -88,26 +44,20 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, h, onMounted, toRaw } from 'vue';
+  import { ref, onMounted, toRaw } from 'vue';
   import { useRouter } from 'vue-router';
   import { useUserStore } from '@/store/modules/user';
-  import { Table, Select } from 'ant-design-vue';
+  import { Table } from 'ant-design-vue';
   import { columns } from '../reportManagementAdmin/data';
-  import { SearchOutlined } from '@ant-design/icons-vue';
   import { getPersonalEvaluateListApi } from '@/api/sys/evaluateHistory';
-  import { getAllDepartmentAndPositionApi } from '@/api/sys/duty';
   import ResultPdf from '@/views/dashboard/result/resultPdf.vue';
   import { useResultStore } from '@/store/modules/result';
 
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const resultStore = useResultStore();
   const userStore = useUserStore();
   const userInfo = toRaw(userStore.getUserInfo);
   const router = useRouter();
 
-  const selectedDepartment = ref('');
-  const selectedPosition = ref('');
-  const sortOrder = ref('');
   const showResultPdf = ref(false);
   const dataSource = ref([]);
   const careerAdvantagesObj = ref({});
@@ -115,24 +65,10 @@
   const competencyObj = ref({});
   const echartOptions = ref({});
   const corrFunc = ref('');
-  const departmentOptions = ref([]);
-  const positionOptions = ref([]);
 
   onMounted(async () => {
     GetAllEvaluateListApi({});
-    const { allDepartment, allPosition } = await getAllDepartmentAndPositionApi();
-    departmentOptions.value = allDepartment;
-    positionOptions.value = allPosition;
   });
-
-  function search() {
-    const filter = {
-      department: selectedDepartment.value,
-      position: selectedPosition.value,
-      sortOrder: sortOrder.value,
-    };
-    GetAllEvaluateListApi(filter);
-  }
 
   async function GetAllEvaluateListApi(filter: any) {
     filter.userId = userInfo.userId;

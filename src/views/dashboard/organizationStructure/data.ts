@@ -11,26 +11,31 @@ export const columns = [
     title: '部门名称',
     dataIndex: 'department',
     key: 'department',
+    width: 100,
   },
   {
     title: '细分部门',
     dataIndex: 'subDepartment',
     key: 'subDepartment',
+    width: 60,
   },
   {
     title: '岗位名称',
     dataIndex: 'position',
     key: 'position',
+    width: 100,
   },
   {
     title: '对应职能',
     key: 'corrFunc',
     dataIndex: 'corrFunc',
+    width: 100,
   },
   {
     title: '操作',
     key: 'action',
     dataIndex: 'action',
+    width: 150,
   },
 ];
 

@@ -72,7 +72,7 @@ export const fourRepeatedObj = [
   },
 ];
 
-export function ouranToouer(str: string): string {
+export function ouran(str: string): string {
   if (str.trim() !== '偶然符合') {
     return str;
   } else {

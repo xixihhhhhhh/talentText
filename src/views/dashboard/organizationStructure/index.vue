@@ -1,18 +1,59 @@
 <template>
   <div class="bg-white px-2">
-    <div class="pt-5 flex items-center">
+    <div class="pt-5" v-if="isMobile">
+      <div class="my-2 ml-4 flex items-center justify-center w-80%">
+        <span class="mr-2">部门：</span>
+        <Select
+          v-model:value="selectedDepartment"
+          :options="departmentOptions"
+          class="flex-1"
+          allowClear
+        />
+      </div>
+      <div class="my-2 ml-4 flex items-center justify-center w-80%">
+        <span class="mr-2">细分部门：</span>
+        <Select
+          allowClear
+          v-model:value="selectedSubDepartment"
+          :options="subDepartmentOptions"
+          class="flex-1"
+        />
+      </div>
+      <div class="my-2 ml-4 flex items-center justify-center w-80%">
+        <span class="mr-2">岗位：</span>
+        <Select
+          allowClear
+          v-model:value="selectedPosition"
+          :options="positionOptions"
+          class="flex-1"
+        />
+      </div>
+      <div class="flex justify-center">
+        <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
+          >搜索</a-button
+        >
+      </div>
+    </div>
+    <div class="pt-5 flex items-center" v-else>
       <span class="mr-2">部门：</span>
       <Select
         v-model:value="selectedDepartment"
         :options="departmentOptions"
-        class="w-20% mr-2"
+        class="w-18% mr-2"
+        allowClear
+      />
+      <span class="mr-2">细分部门：</span>
+      <Select
+        v-model:value="selectedSubDepartment"
+        :options="subDepartmentOptions"
+        class="w-18% mr-2"
         allowClear
       />
       <span class="mr-2">岗位：</span>
       <Select
         v-model:value="selectedPosition"
         :options="positionOptions"
-        class="w-20% mr-2"
+        class="w-18% mr-2"
         allowClear
       />
       <a-button type="primary" :icon="h(SearchOutlined)" class="my-2 mr-3" @click="search"
@@ -49,7 +90,7 @@
             <Popconfirm @confirm="deleteDuty(record)" title="确定删除吗">
               <a-button type="primary" class="mr-4" danger>删除</a-button>
             </Popconfirm>
-            <a-button type="primary" @click="openUpbateDuty(record)">修改</a-button>
+            <a-button type="primary" @click="openUpdateDuty(record)">修改</a-button>
           </div>
         </template>
       </template>
@@ -58,7 +99,7 @@
       <BasicForm @register="registerAdd" @submit="addDuty" class="-enter-x h-110%" />
     </Modal>
     <Modal v-model:open="openUpdate" title="添加职能" :footer="null">
-      <BasicForm @register="registerUpbate" @submit="updateDuty" class="-enter-x h-110%" />
+      <BasicForm @register="registerUpdate" @submit="updateDuty" class="-enter-x h-110%" />
     </Modal>
   </div>
 </template>
@@ -73,18 +114,22 @@
     getDutyApi,
     deleteDutyApi,
     addDutyApi,
-    upbateDutyApi,
+    updateDutyApi,
     getAllDepartmentAndPositionApi,
   } from '@/api/sys/duty';
 
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
   const selectedDepartment = ref('');
   const selectedPosition = ref('');
+  const selectedSubDepartment = ref('');
   const dataSource = ref([]);
   const openAdd = ref(false);
   const openUpdate = ref(false);
   const updateDutyId = ref(0);
   const departmentOptions = ref([]);
   const positionOptions = ref([]);
+  const subDepartmentOptions = ref([]);
 
   const [registerAdd] = useForm({
     labelWidth: 120,
@@ -93,7 +138,7 @@
     submitButtonOptions: { text: '添加' },
   });
 
-  const [registerUpbate, { setFieldsValue }] = useForm({
+  const [registerUpdate, { setFieldsValue }] = useForm({
     labelWidth: 120,
     schemas,
     actionColOptions: { span: 24 },
@@ -102,14 +147,16 @@
 
   onMounted(async () => {
     GetDutyApi({});
-    const { allDepartment, allPosition } = await getAllDepartmentAndPositionApi();
+    const { allDepartment, allPosition, allSubDepartment } = await getAllDepartmentAndPositionApi();
     departmentOptions.value = allDepartment;
+    subDepartmentOptions.value = allSubDepartment;
     positionOptions.value = allPosition;
   });
 
   function search() {
     const filter = {
       department: selectedDepartment.value,
+      subDepartment: selectedSubDepartment.value,
       position: selectedPosition.value,
     };
     GetDutyApi(filter);
@@ -133,7 +180,7 @@
     });
   }
 
-  async function openUpbateDuty(record: any) {
+  async function openUpdateDuty(record: any) {
     openUpdate.value = true;
     await nextTick();
     const { department, subDepartment, position, corrFunc } = record;
@@ -147,7 +194,7 @@
   }
 
   async function updateDuty(values: any) {
-    await upbateDutyApi({ ...values, id: updateDutyId.value });
+    await updateDutyApi({ ...values, id: updateDutyId.value });
     search();
     notification.open({
       message: `修改成功`,

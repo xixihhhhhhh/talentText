@@ -24,7 +24,7 @@ export function processDepartmentObj(obj: any): {
   department: string;
   position: string;
   corrFunc: string;
-  subDeaprtment?: string;
+  subDepartment?: string;
 } {
   obj = filterUndefinedObj(obj);
   obj = processObject(obj);
@@ -34,8 +34,8 @@ export function processDepartmentObj(obj: any): {
     position: positionObj.岗位名称,
     corrFunc: positionObj.对应职能,
   };
-  if (obj.subDeaprtment) {
-    result.subDeaprtment = obj.subDeaprtment;
+  if (obj.subDepartment) {
+    result.subDepartment = obj.subDepartment;
   }
   return result;
 }

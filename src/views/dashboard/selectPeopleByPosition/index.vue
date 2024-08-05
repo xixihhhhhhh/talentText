@@ -33,10 +33,10 @@
   import { ref, onMounted } from 'vue';
   import { PageWrapper } from '@/components/Page';
   import { BasicForm, useForm } from '@/components/Form';
-  import { getEvaluteFormDataApi } from '@/api/sys/duty';
+  import { getEvaluateFormDataApi } from '@/api/sys/duty';
   import { Table } from 'ant-design-vue';
   import { columns } from './data';
-  import { getSchemas } from '../evaluation/components/evaluteFormData';
+  import { getSchemas } from '../evaluation/components/evaluateFormData';
   import { getMatchedUsersApi } from '@/api/sys/evaluateHistory';
   import { processDepartmentObj } from '../evaluation/components/methods';
 
@@ -46,7 +46,7 @@
 
   onMounted(async () => {
     const { departmentObj, subDepartmentObj, departmentObjArr, subPosition } =
-      await getEvaluteFormDataApi();
+      await getEvaluateFormDataApi();
     const expressionArr = [
       '您需要匹配的岗位所在的部门是：',
       '您需要匹配的岗位所在的细分部门是：',
@@ -69,24 +69,29 @@
   });
 
   // @ts-ignore
-  const handleTableChange: TableProps['onChange'] = (
-    filters: any,
-    sorter: any,
-    pag: {
-      pageSize: number;
-      current: number;
-      order: string;
-    },
-  ) => {
-    const { order } = pag;
-    if (order === 'ascend') {
-      dataSource.value = dataSource.value.sort((a: any, b: any) => {
-        return new Date(a.finishTime).getTime() - new Date(b.finishTime).getTime();
-      });
+  const handleTableChange: TableProps['onChange'] = (filters: any, sorter: any, pag: any) => {
+    const { column, order } = pag;
+    if (!column) return;
+    if (column.key === 'finishTime') {
+      if (order === 'ascend') {
+        dataSource.value = dataSource.value.sort((a: any, b: any) => {
+          return new Date(a.finishTime).getTime() - new Date(b.finishTime).getTime();
+        });
+      } else {
+        dataSource.value = dataSource.value.sort((a: any, b: any) => {
+          return new Date(b.finishTime).getTime() - new Date(a.finishTime).getTime();
+        });
+      }
     } else {
-      dataSource.value = dataSource.value.sort((a: any, b: any) => {
-        return new Date(b.finishTime).getTime() - new Date(a.finishTime).getTime();
-      });
+      if (order === 'ascend') {
+        dataSource.value = dataSource.value.sort((a: any, b: any) => {
+          return Number(a.match.slice(0, -1)) - Number(b.match.slice(0, -1));
+        });
+      } else {
+        dataSource.value = dataSource.value.sort((a: any, b: any) => {
+          return Number(b.match.slice(0, -1)) - Number(a.match.slice(0, -1));
+        });
+      }
     }
   };
 

@@ -25,7 +25,7 @@
         <div class="font-bold text-lg border-b-2">职业优势前三</div>
         <div v-for="index in 3" :key="index">
           <div class="flex items-center mt-1">
-            <Icon :icon="crreerAdvantagesIcons[index - 1]" :size="30" />
+            <Icon :icon="careerAdvantagesIcons[index - 1]" :size="30" />
             <span class="font-bold"
               >{{ getTopThreeScores().topThreeKeys[index - 1] }}:
               {{ getTopThreeScores().topThree[index - 1].toFixed(2) }}</span
@@ -226,7 +226,7 @@
   const textSize = isMobile ? 'text-3' : 'text-5';
   const prefixCls = 'result';
   const activeColor = '#28B8C5';
-  const crreerAdvantagesIcons = [
+  const careerAdvantagesIcons = [
     'twemoji:1st-place-medal',
     'twemoji:2nd-place-medal',
     'twemoji:3rd-place-medal',

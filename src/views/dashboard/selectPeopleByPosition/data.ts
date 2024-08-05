@@ -40,5 +40,6 @@ export const columns = [
     title: '匹配度',
     key: 'match',
     dataIndex: 'match',
+    sorter: true,
   },
 ];

@@ -58,12 +58,12 @@ export interface FormOption {
 export interface DepartmentInfo {
   department: string;
   position: string;
-  subDeaprtment?: string;
+  subDepartment?: string;
 }
 
 export interface DepartmentInfos {
   department: string;
   position: string;
   corrFunc: string;
-  subDeaprtment?: string;
+  subDepartment?: string;
 }

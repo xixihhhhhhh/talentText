@@ -11,6 +11,15 @@
         />
       </div>
       <div class="my-2 ml-4 flex items-center justify-center w-80%">
+        <span class="mr-2">细分部门：</span>
+        <Select
+          allowClear
+          v-model:value="selectedSubDepartment"
+          :options="subDepartmentOptions"
+          class="flex-1"
+        />
+      </div>
+      <div class="my-2 ml-4 flex items-center justify-center w-80%">
         <span class="mr-2">岗位：</span>
         <Select
           allowClear
@@ -30,14 +39,21 @@
       <Select
         v-model:value="selectedDepartment"
         :options="departmentOptions"
-        class="w-30% mr-2"
+        class="w-20% mr-2"
+        allowClear
+      />
+      <span class="mr-2">细分部门：</span>
+      <Select
+        v-model:value="selectedSubDepartment"
+        :options="subDepartmentOptions"
+        class="w-20% mr-2"
         allowClear
       />
       <span class="mr-2">岗位：</span>
       <Select
         v-model:value="selectedPosition"
         :options="positionOptions"
-        class="w-30% mr-2"
+        class="w-20% mr-2"
         allowClear
       />
       <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
@@ -70,7 +86,7 @@
           <div class="flex justify-center">
             <a-button type="primary" class="mr-4" @click="download(record)">下载</a-button>
             <a-button type="primary" class="mr-4" @click="detail(record)">详情</a-button>
-            <Popconfirm @confirm="reinviteforevaluation(record)" title="确定重新邀评吗">
+            <Popconfirm @confirm="reinviteForEvaluation(record)" title="确定重新邀评吗">
               <a-button type="primary">重新邀评</a-button>
             </Popconfirm>
           </div>
@@ -109,6 +125,7 @@
   const router = useRouter();
   const selectedDepartment = ref('');
   const selectedPosition = ref('');
+  const selectedSubDepartment = ref('');
   const sortOrder = ref('');
   const showResultPdf = ref(false);
   const dataSource = ref([]);
@@ -120,17 +137,20 @@
   const corrFunc = ref('');
   const departmentOptions = ref([]);
   const positionOptions = ref([]);
+  const subDepartmentOptions = ref([]);
 
   onMounted(async () => {
     GetAllEvaluateListApi({});
-    const { allDepartment, allPosition } = await getAllDepartmentAndPositionApi();
+    const { allDepartment, allPosition, allSubDepartment } = await getAllDepartmentAndPositionApi();
     departmentOptions.value = allDepartment;
+    subDepartmentOptions.value = allSubDepartment;
     positionOptions.value = allPosition;
   });
 
   function search() {
     const filter = {
       department: selectedDepartment.value,
+      subDepartment: selectedSubDepartment.value,
       position: selectedPosition.value,
       sortOrder: sortOrder.value,
     };
@@ -200,7 +220,7 @@
     router.push({ name: 'resultRoute' });
   }
 
-  async function reinviteforevaluation(record: any) {
+  async function reinviteForEvaluation(record: any) {
     const { user_id } = record;
     const res = await setCanTextApi({ user_id, canTest: true });
     const { success } = res;

@@ -24,7 +24,7 @@
             <div class="bg-#fff my-4 pt-2">
               <div
                 v-if="questionTitleThree(question).title"
-                class="text-15px py-2 ml-4 user-slecet-none"
+                class="text-15px py-2 ml-4 user-select-none"
                 >{{ questionTitleThree(question).title }}</div
               >
               <div :class="['parent', 'text-14px']">
@@ -40,8 +40,8 @@
                   v-for="item in convertToOptionArray(question.quesData)"
                   :value="item"
                   :key="item"
-                  @click="debouncedhandleNextQuesThree(item, question, questionIndex)"
-                  style="border-radius: 5px"
+                  @click="debouncedHandleNextQuesThree(item, question, questionIndex)"
+                  style="border-radius: 5px; user-select: none"
                   :class="[
                     'flex',
                     'justify-center',
@@ -53,7 +53,6 @@
                     'bg-#f5f5f8',
                     'border-2',
                     'border-#eee',
-                    'user-slecet-none',
                     {
                       'bg-#4c7cf6!': isChecked(item.value, questionIndex),
                       'text-white': isChecked(item.value, questionIndex),
@@ -85,7 +84,7 @@
             >
           </div>
         </div>
-        <div class="bg-white pt-2 rounded-2 user-slecet-none" v-else>
+        <div class="bg-white pt-2 rounded-2 user-select-none" v-else>
           <div v-if="isFenDuan(curQuestionTitle)" class="pl-2 text-20px font-600">
             <div v-for="item in typeThreeChaoshi(curQuestionTitle)" :key="item"> {{ item }}</div>
           </div>
@@ -101,7 +100,7 @@
                 'text-lg',
                 'p-2',
                 'bg-#f5f5f8',
-                'user-slecet-none',
+                'user-select-none',
                 {
                   'bg-#4c7cf6!': item.value === selectValue,
                   'text-white': item.value === selectValue,
@@ -110,7 +109,7 @@
               v-for="item in curQues"
               :key="item"
               @click="handleNextQues(item)"
-              >{{ ouranToouer(item.option.slice(2).replace('。', '')) }}
+              >{{ ouran(item.option.slice(2).replace('。', '')) }}
             </div>
           </div>
           <div class="text-center mt-5 pb-5 flex justify-around">
@@ -168,7 +167,7 @@
     clearSecondWenjuan,
     getCanTextApi,
   } from '@/api/sys/user';
-  import { getEvaluteFormDataApi } from '@/api/sys/duty';
+  import { getEvaluateFormDataApi } from '@/api/sys/duty';
   import { useMessage } from '@/hooks/web/useMessage';
   import Result from '@/views/dashboard/result/index.vue';
   import ProgressBar from './progress.vue';
@@ -182,12 +181,12 @@
   } from './data';
   import { processDepartmentObj, getTime } from './methods';
   import type { Question, Answer, DepartmentInfos } from './type';
-  import { isFenDuan, typeThreeChaoshi, debounce, fourRepeatedObj, ouranToouer } from './util';
+  import { isFenDuan, typeThreeChaoshi, debounce, fourRepeatedObj, ouran } from './util';
   import { useQuestionStore } from '@/store/modules/question';
   import { testData } from './test';
   import { useUserStore } from '@/store/modules/user';
   import { addEvaluateListApi } from '@/api/sys/evaluateHistory';
-  import { getSchemas } from './evaluteFormData';
+  import { getSchemas } from './evaluateFormData';
 
   const { createMessage } = useMessage();
   const userStore = useUserStore();
@@ -202,7 +201,7 @@
   let allquesData: Question[] = [];
   let stopRepeatClick = false;
 
-  const deparmentform = ref<DepartmentInfos>();
+  const departmentForm = ref<DepartmentInfos>();
   const answerArr = ref<Answer[]>([]);
   const showAnswerQuestion = ref(true);
   const curNum = ref(0);
@@ -248,7 +247,7 @@
     const res = await getCanTextApi({ user_id: userInfo.userId });
     canTest.value = res.canTest;
     const { departmentObj, subDepartmentObj, departmentObjArr, subPosition } =
-      await getEvaluteFormDataApi();
+      await getEvaluateFormDataApi();
     const schemas = getSchemas(departmentObjArr, departmentObj, subDepartmentObj, subPosition);
     const schemasOption = {
       labelWidth: 120,
@@ -280,26 +279,26 @@
       return;
     }
     values = processDepartmentObj(values);
-    deparmentform.value = values;
-    const isTest = true;
+    departmentForm.value = values;
+    const isTest = false;
     if (isTest) {
       const { competencyObj, careerAdvantagesObj, careerFieldObj, echartOptions } =
         getScore(testData);
       questionStore.setScores({ competencyObj, careerAdvantagesObj, careerFieldObj });
       questionStore.setLeidatu(echartOptions);
-      if (!deparmentform.value) return;
+      if (!departmentForm.value) return;
       addEvaluateListApi({
         user_id: +userInfo.userId,
         name: userInfo.name,
-        department: deparmentform.value.department,
-        position: deparmentform.value.position,
+        department: departmentForm.value.department,
+        position: departmentForm.value.position,
         finishTime: getTime(),
-        subDepartment: deparmentform.value.subDeaprtment ?? '',
+        subDepartment: departmentForm.value.subDepartment ?? '',
         echartOptions,
         competencyObj,
         careerAdvantagesObj,
         careerFieldObj,
-        corrFunc: deparmentform.value.corrFunc,
+        corrFunc: departmentForm.value.corrFunc,
       });
       showResult.value = true;
     } else {
@@ -350,7 +349,7 @@
       email: email.value,
       firstWenJuanAnswer: answerArr.value,
       secondWenJuanQuestion: secondWenJuans.value,
-      corrFunc: deparmentform.value!.corrFunc,
+      corrFunc: departmentForm.value!.corrFunc,
     });
     curNum.value = 1;
     curIndexTypeThree.value = 1;
@@ -380,21 +379,21 @@
       questionStore.setScores({ competencyObj, careerAdvantagesObj, careerFieldObj });
       questionStore.setLeidatu(echartOptions);
       showResult.value = true;
-      deparmentform.value && questionStore.setCorrFunc(deparmentform.value.corrFunc);
+      departmentForm.value && questionStore.setCorrFunc(departmentForm.value.corrFunc);
       clearSecondWenjuan({ email: email.value });
-      if (!deparmentform.value) return;
+      if (!departmentForm.value) return;
       addEvaluateListApi({
         user_id: +userInfo.userId,
         name: userInfo.name,
-        department: deparmentform.value.department,
-        position: deparmentform.value.position,
+        department: departmentForm.value.department,
+        position: departmentForm.value.position,
         finishTime: getTime(),
-        subDepartment: deparmentform.value.subDeaprtment ?? '',
+        subDepartment: departmentForm.value.subDepartment ?? '',
         echartOptions,
         competencyObj,
         careerAdvantagesObj,
         careerFieldObj,
-        corrFunc: deparmentform.value.corrFunc,
+        corrFunc: departmentForm.value.corrFunc,
       });
     }
   }
@@ -505,7 +504,7 @@
     }
   }
 
-  const debouncedhandleNextQuesThree = debounce(handleNextQuesThree, 200);
+  const debouncedHandleNextQuesThree = debounce(handleNextQuesThree, 200);
 
   function back() {
     isTypeThree.value = false;
@@ -546,7 +545,7 @@
     clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%);
   }
 
-  .user-slecet-none {
+  .user-select-none {
     user-select: none;
   }
 </style>

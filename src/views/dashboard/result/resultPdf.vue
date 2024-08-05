@@ -25,7 +25,7 @@
         <div class="font-bold text-lg border-b-2">职业优势前三</div>
         <div v-for="index in 3" :key="index">
           <div class="flex items-center mt-1">
-            <Icon :icon="crreerAdvantagesIcons[index - 1]" :size="30" />
+            <Icon :icon="careerAdvantagesIcons[index - 1]" :size="30" />
             <span class="font-bold"
               >{{ getTopThreeScores().topThreeKeys[index - 1] }}:
               {{ getTopThreeScores().topThree[index - 1].toFixed(2) }}</span
@@ -168,15 +168,16 @@
           通过对 <Avatar :src="avatar" /> {{ userInfo.name }}
           所在的岗位进行了胜任力分析，总结出岗位所需的前五项关键胜任力，分别为：
         </div>
-        <div v-for="i in 5" :key="i" class="flex line-height-loose">
+        <div v-for="i in 5" :key="i" class="indent-4 line-height-loose">
           <Icon
             icon="material-symbols-light:circle"
             :size="20"
             :color="activeColor"
             class="relative top-0.5"
           />
-          <span class="flex-shrink-0 mr-4">{{ guanlijianyi[managementAdvice[i - 1]] }}</span>
-          <span :style="{ color: activeColor }">{{ advantageMap[competencyObj[i][0]][0] }}</span>
+          <span class="flex-shrink-0 mr-4" :style="{ color: activeColor }">{{
+            advantageMap[competencyObj[i][0]][0]
+          }}</span>
           <span>{{ competencyDefinition[competencyObj[i][0]] }}</span>
         </div>
         <div class="indent-4 font-bold">
@@ -245,7 +246,7 @@
   const textSize = isMobile ? 'text-3' : 'text-5';
   const prefixCls = 'result';
   const activeColor = '#28B8C5';
-  const crreerAdvantagesIcons = [
+  const careerAdvantagesIcons = [
     'twemoji:1st-place-medal',
     'twemoji:2nd-place-medal',
     'twemoji:3rd-place-medal',
