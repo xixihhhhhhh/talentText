@@ -38,7 +38,6 @@
   const max_question_num = 4;
   function handleSubmit(values: any) {
     showSubmit.value = false;
-    console.log(values, 'values');
     submitData.value = { ...values };
   }
 

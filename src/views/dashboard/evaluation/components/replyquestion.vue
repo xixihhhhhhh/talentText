@@ -7,12 +7,12 @@
     >
       <div v-if="showAnswerQuestion" class="-enter-x rounded-2" style="min-height: 80vh">
         <BasicForm
-          v-if="!hasUnFinished"
+          v-show="!hasUnFinished"
           @register="register"
           @submit="handleSubmit"
           class="-enter-x mt-10"
         />
-        <div v-else class="-enter-x h-100 flex items-center justify-center">
+        <div v-show="hasUnFinished" class="-enter-x h-100 flex items-center justify-center">
           <a-button type="primary" class="mr-4" @click="resumeAssessment">继续作答</a-button>
           <a-button type="primary" class="mr-4" @click="againAssessment">重新开始</a-button>
         </div>
@@ -20,7 +20,7 @@
       <div v-else class="px-2 rounded-2" style="border-radius: 10px">
         <ProgressBar :percent="percent" />
         <div class="text-20px font-600" v-if="isTypeThree">
-          <div v-for="(question, questionIndex) in curQuestionTypeThree" :key="question">
+          <div v-for="(question, questionIndex) in curQuestionTypeThree" :key="questionIndex">
             <div class="bg-#fff my-4 pt-2">
               <div
                 v-if="questionTitleThree(question).title"
@@ -37,9 +37,9 @@
               </div>
               <div class="flex w-full text-lg mt-4 pb-4">
                 <div
-                  v-for="item in convertToOptionArray(question.quesData)"
+                  v-for="(item, index) in convertToOptionArray(question.quesData)"
                   :value="item"
-                  :key="item"
+                  :key="index"
                   @click="debouncedHandleNextQuesThree(item, question, questionIndex)"
                   style="border-radius: 5px; user-select: none"
                   :class="[
@@ -86,7 +86,9 @@
         </div>
         <div class="bg-white pt-2 rounded-2 user-select-none" v-else>
           <div v-if="isFenDuan(curQuestionTitle)" class="pl-2 text-20px font-600">
-            <div v-for="item in typeThreeChaoshi(curQuestionTitle)" :key="item"> {{ item }}</div>
+            <div v-for="(item, index) in typeThreeChaoshi(curQuestionTitle)" :key="index">
+              {{ item }}</div
+            >
           </div>
           <div class="pl-2 text-20px font-600" v-else>
             {{ curQuestionTitle.replace(/[（）]/g, '') }}
@@ -106,8 +108,8 @@
                   'text-white': item.value === selectValue,
                 },
               ]"
-              v-for="item in curQues"
-              :key="item"
+              v-for="(item, index) in curQues"
+              :key="index"
               @click="handleNextQues(item)"
               >{{ ouran(item.option.slice(2).replace('。', '')) }}
             </div>
@@ -151,6 +153,19 @@
         >可以找管理员申请重新测评。</div
       >
     </Modal>
+    <Modal
+      centered
+      title="温馨提醒"
+      v-model:open="openModal"
+      cancelText="退出本次作答"
+      okText="继续作答"
+      @ok="continueTimeKeeping"
+      @cancel="back"
+    >
+      <div class="flex justify-center items-center font-bold text-lg"
+        >您在当前页面停留时间过长，请您选择：</div
+      >
+    </Modal>
   </PageWrapper>
 </template>
 
@@ -166,6 +181,7 @@
     getSecondWenjuan,
     clearSecondWenjuan,
     getCanTextApi,
+    continueAnswer,
   } from '@/api/sys/user';
   import { getEvaluateFormDataApi } from '@/api/sys/duty';
   import { useMessage } from '@/hooks/web/useMessage';
@@ -187,10 +203,18 @@
   import { useUserStore } from '@/store/modules/user';
   import { addEvaluateListApi } from '@/api/sys/evaluateHistory';
   import { getSchemas } from './evaluateFormData';
+  import { useTime } from './useTime';
+  import { useWarning } from './useWarning';
 
   const { createMessage } = useMessage();
   const userStore = useUserStore();
-  const [register, { setProps }] = useForm({});
+  const [register, { setProps }] = useForm({
+    labelWidth: 120,
+    actionColOptions: { span: 24, style: { textAlign: 'center' } },
+    submitButtonOptions: { text: '开始测评' },
+  });
+  const { start, getSpendTime } = useTime();
+  const { openModal, startTimeKeeping, clearTimeKeeping, continueTimeKeeping } = useWarning();
   const userInfo = userStore.getUserInfo;
   const email = ref(userInfo.email);
   const questionStore = useQuestionStore();
@@ -219,6 +243,7 @@
   const isTypeThree = ref(false);
   const canTest = ref(true);
   const openDisable = ref(false);
+  const schemasOption = ref({});
 
   const percent = computed(() => {
     return Math.round(((curNum.value + (curIndexTypeThree.value - 1) * 3) / 74) * 100);
@@ -249,13 +274,13 @@
     const { departmentObj, subDepartmentObj, departmentObjArr, subPosition } =
       await getEvaluateFormDataApi();
     const schemas = getSchemas(departmentObjArr, departmentObj, subDepartmentObj, subPosition);
-    const schemasOption = {
+    schemasOption.value = {
       labelWidth: 120,
       schemas,
       actionColOptions: { span: 24, style: { textAlign: 'center' } },
       submitButtonOptions: { text: '开始测评' },
     };
-    setProps(schemasOption);
+    setProps(schemasOption.value);
     const secondWenJuan = await getSecondWenjuan({ email: email.value });
     hasUnFinished.value = secondWenJuan.hasUnFinish;
     if (hasUnFinished.value) {
@@ -310,11 +335,15 @@
       allquesData = [...questionTypeOne, ...questionTypeTwo];
       curNum.value = 1;
       showAnswerQuestion.value = false;
+      start();
+      clearTimeKeeping();
+      startTimeKeeping();
     }
   }
 
   // 继续答题
-  function resumeAssessment() {
+  async function resumeAssessment() {
+    await continueAnswer({ email: email.value, spendTime: getSpendTime() });
     answerArr.value.push(...answerArrThree.value.flat(2));
     typeThreeAns.value[0] && answerArr.value.push(typeThreeAns.value[0]);
     isTypeThree.value = true;
@@ -327,10 +356,14 @@
     curIndexTypeThree.value = 1;
     showAnswerQuestion.value = false;
     modalVisible.value = false;
+    start();
+    clearTimeKeeping();
+    startTimeKeeping();
   }
 
   // 重新开始
   async function againAssessment() {
+    clearTimeKeeping();
     // 清空用户信息先，调接口，传email
     await clearSecondWenjuan({ email: email.value });
     curNum.value = 1;
@@ -341,6 +374,7 @@
 
   // 下次再作答
   async function relaxAssessment() {
+    clearTimeKeeping();
     answerArr.value.push(...answerArrThree.value.flat(2));
     answerArr.value.push(...fourArray.value);
     answerArr.value.push(typeThreeAns.value[0]);
@@ -350,6 +384,7 @@
       firstWenJuanAnswer: answerArr.value,
       secondWenJuanQuestion: secondWenJuans.value,
       corrFunc: departmentForm.value!.corrFunc,
+      spendTime: getSpendTime(),
     });
     curNum.value = 1;
     curIndexTypeThree.value = 1;
@@ -362,6 +397,7 @@
   }
 
   function handleEvaluate() {
+    clearTimeKeeping();
     if (selectValueTypeThree.value[0] === '' || selectValueTypeThree.value[1] === '') {
       createMessage.error({
         content: '请回答完选择题',
@@ -394,16 +430,21 @@
         careerAdvantagesObj,
         careerFieldObj,
         corrFunc: departmentForm.value.corrFunc,
+        spendTime: getSpendTime(),
       });
     }
   }
 
   function handleLastQues() {
+    clearTimeKeeping();
+    startTimeKeeping();
     selectValue.value = answerArr.value[curNum.value - 2].value;
     curNum.value = curNum.value - 1;
   }
 
   async function handleNextQues(item: any) {
+    clearTimeKeeping();
+    startTimeKeeping();
     if (stopRepeatClick) return;
     stopRepeatClick = true;
     selectValue.value = item.value;
@@ -441,6 +482,8 @@
   }
 
   function handleLastQuesThree() {
+    clearTimeKeeping();
+    startTimeKeeping();
     if (curIndexTypeThree.value === 1) {
       selectValue.value = answerArr.value[curNum.value - 1]?.value || '';
       isTypeThree.value = false;
@@ -454,6 +497,8 @@
   }
 
   async function handleNextQuesThree(item: any, question: any, index: number) {
+    clearTimeKeeping();
+    startTimeKeeping();
     selectValueTypeThree.value[index] = item.value;
     const quesData = question.quesData;
     if (quesData.isRepeat) {
@@ -516,6 +561,7 @@
     curNum.value = 1;
     curIndexTypeThree.value = 1;
     selectValue.value = '';
+    clearTimeKeeping();
   }
 </script>
 

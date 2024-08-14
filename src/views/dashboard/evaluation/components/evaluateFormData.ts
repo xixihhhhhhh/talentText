@@ -2,8 +2,8 @@ import { FormSchema, RenderCallbackParams } from '@/components/Form';
 
 export function getSchemas(
   departmentObjArr: any,
-  evaluteFormDataObject: any,
-  evaluteFormDataSubDepartment: any,
+  evaluateFormDataObject: any,
+  evaluateFormDataSubDepartment: any,
   subPosition: any,
   expressionArr?: string[],
 ) {
@@ -24,15 +24,15 @@ export function getSchemas(
     },
   ];
 
-  Object.keys(evaluteFormDataSubDepartment).forEach((key: string) => {
+  Object.keys(evaluateFormDataSubDepartment).forEach((key: string) => {
     const schemaItem: FormSchema = {
-      field: 'subDeaprtment',
+      field: 'subDepartment',
       component: 'Select',
       label: expressionArr[1],
       colProps: { span: 18 },
       labelWidth: 250,
       componentProps: {
-        options: evaluteFormDataSubDepartment[key],
+        options: evaluateFormDataSubDepartment[key],
       },
       rules: [{ required: true, type: 'string' }],
       show: (renderCallbackParams: RenderCallbackParams) => {
@@ -46,7 +46,7 @@ export function getSchemas(
     schemas.push(schemaItem);
   });
 
-  Object.keys(evaluteFormDataObject).forEach((key: string) => {
+  Object.keys(evaluateFormDataObject).forEach((key: string) => {
     const schemaItem: FormSchema = {
       field: 'position' + '/' + key,
       component: 'Select',
@@ -54,7 +54,7 @@ export function getSchemas(
       colProps: { span: 18 },
       labelWidth: 250,
       componentProps: {
-        options: evaluteFormDataObject[key],
+        options: evaluateFormDataObject[key],
       },
       rules: [{ required: true, type: 'string' }],
       ifShow: (renderCallbackParams: RenderCallbackParams) => {
@@ -82,7 +82,7 @@ export function getSchemas(
       ifShow: (renderCallbackParams: RenderCallbackParams) => {
         // 更新第二个下拉框的选项
         if (
-          renderCallbackParams.model.department + renderCallbackParams.model.subDeaprtment ===
+          renderCallbackParams.model.department + renderCallbackParams.model.subDepartment ===
           key
         ) {
           return true;

@@ -22,9 +22,16 @@
             {{ text }}
           </div>
         </template>
+        <template v-if="column.key === 'spendTime'">
+          <div class="flex justify-center">
+            {{ handleReportTruth(text) }}
+          </div>
+        </template>
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">
-            <a-button type="primary" class="mr-4" @click="download(record)">下载</a-button>
+            <a-button v-if="!isMobile" type="primary" class="mr-4" @click="download(record)"
+              >下载</a-button
+            >
             <a-button type="primary" @click="detail(record)">详情</a-button>
           </div>
         </template>
@@ -48,7 +55,7 @@
   import { useRouter } from 'vue-router';
   import { useUserStore } from '@/store/modules/user';
   import { Table } from 'ant-design-vue';
-  import { columns } from '../reportManagementAdmin/data';
+  import { columns, handleReportTruth } from '../reportManagementAdmin/data';
   import { getPersonalEvaluateListApi } from '@/api/sys/evaluateHistory';
   import ResultPdf from '@/views/dashboard/result/resultPdf.vue';
   import { useResultStore } from '@/store/modules/result';
@@ -65,6 +72,8 @@
   const competencyObj = ref({});
   const echartOptions = ref({});
   const corrFunc = ref('');
+
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   onMounted(async () => {
     GetAllEvaluateListApi({});
@@ -92,7 +101,7 @@
   async function detail(record: any) {
     resultStore.setState({
       name: userInfo.name,
-      avatart: userInfo.avatar,
+      avatar: userInfo.avatar,
       careerAdvantagesObj: record.careerAdvantagesObj,
       careerFieldObj: record.careerFieldObj,
       competencyObj: record.competencyObj,

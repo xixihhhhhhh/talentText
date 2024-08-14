@@ -3,6 +3,7 @@ node_modules
 dist
 .cache
 .turbo
+.vscode
 
 tests/server/static
 tests/server/static/upload

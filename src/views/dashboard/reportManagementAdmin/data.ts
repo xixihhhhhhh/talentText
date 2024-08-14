@@ -312,7 +312,7 @@ export const columns = [
     title: '部门',
     dataIndex: 'department',
     key: 'department',
-    width: 100,
+    width: 200,
   },
   {
     title: '细分部门',
@@ -324,7 +324,7 @@ export const columns = [
     title: '岗位',
     dataIndex: 'position',
     key: 'position',
-    width: 120,
+    width: 140,
   },
   {
     title: '报告完成时间',
@@ -335,14 +335,31 @@ export const columns = [
   },
   {
     title: '报告可信度',
-    key: 'reportTruth',
-    dataIndex: 'reportTruth',
+    key: 'spendTime',
+    dataIndex: 'spendTime',
     width: 130,
   },
   {
     title: '操作',
     key: 'action',
     dataIndex: 'action',
-    width: 100,
+    width: 200,
   },
 ];
+
+export function handleReportTruth(spendTime: number) {
+  // 将秒转换为分钟
+  const spendTimeMinutes = spendTime / 60;
+
+  // 根据时间区间返回可信度
+  if (spendTimeMinutes >= 16 && spendTimeMinutes <= 24) {
+    return '高';
+  } else if (
+    (spendTimeMinutes >= 6 && spendTimeMinutes < 16) ||
+    (spendTimeMinutes > 24 && spendTimeMinutes <= 34)
+  ) {
+    return '正常';
+  } else {
+    return '低';
+  }
+}

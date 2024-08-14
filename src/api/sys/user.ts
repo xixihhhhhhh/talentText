@@ -18,6 +18,7 @@ enum Api {
   GetUserInfoById = baseUrl + '/getUserInfoById',
   RelaxAssessment = baseUrl + '/relaxAssessment',
   GetSecondWenjuan = baseUrl + '/getSecondWenjuan',
+  ContinueAnswer = baseUrl + '/continueAnswer',
   ClearSecondWenjuan = baseUrl + '/clearSecondWenjuan',
   GetUserNumber = baseUrl + '/getAllUsers',
   getCanText = baseUrl + '/getCanText',
@@ -83,6 +84,10 @@ export function getSecondWenjuan(params: any) {
 
 export function clearSecondWenjuan(params: any) {
   return defHttp.post({ url: Api.ClearSecondWenjuan, params }, { errorMessageMode: 'none' });
+}
+
+export function continueAnswer(params: any) {
+  return defHttp.post({ url: Api.ContinueAnswer, params }, { errorMessageMode: 'none' });
 }
 
 export function getUsersNumber() {

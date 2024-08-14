@@ -24,6 +24,11 @@
             {{ text }}
           </div>
         </template>
+        <template v-if="column.key === 'spendTime'">
+          <div class="flex justify-center">
+            {{ handleReportTruth(text) }}
+          </div>
+        </template>
       </template>
     </Table>
   </PageWrapper>
@@ -39,6 +44,7 @@
   import { getSchemas } from '../evaluation/components/evaluateFormData';
   import { getMatchedUsersApi } from '@/api/sys/evaluateHistory';
   import { processDepartmentObj } from '../evaluation/components/methods';
+  import { handleReportTruth } from '../reportManagementAdmin/data';
 
   const [register, { setProps }] = useForm({});
 

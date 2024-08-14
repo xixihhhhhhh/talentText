@@ -82,9 +82,16 @@
             {{ text }}
           </div>
         </template>
+        <template v-if="column.key === 'spendTime'">
+          <div class="flex justify-center">
+            {{ handleReportTruth(text) }}
+          </div>
+        </template>
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">
-            <a-button type="primary" class="mr-4" @click="download(record)">下载</a-button>
+            <a-button v-if="!isMobile" type="primary" class="mr-4" @click="download(record)"
+              >下载</a-button
+            >
             <a-button type="primary" class="mr-4" @click="detail(record)">详情</a-button>
             <Popconfirm @confirm="reinviteForEvaluation(record)" title="确定重新邀评吗">
               <a-button type="primary">重新邀评</a-button>
@@ -110,7 +117,7 @@
   import { ref, h, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { Table, Select, message, Popconfirm } from 'ant-design-vue';
-  import { columns } from './data';
+  import { columns, handleReportTruth } from './data';
   import { SearchOutlined } from '@ant-design/icons-vue';
   import { getAllEvaluateListApi } from '@/api/sys/evaluateHistory';
   import { getUserInfoById, setCanTextApi } from '@/api/sys/user';
@@ -210,7 +217,7 @@
     userInfo.value = { name: user.name, avatar: user.avatar };
     resultStore.setState({
       name: userInfo.value.name,
-      avatart: userInfo.value.avatar,
+      avatar: userInfo.value.avatar,
       careerAdvantagesObj: record.careerAdvantagesObj,
       careerFieldObj: record.careerFieldObj,
       competencyObj: record.competencyObj,
@@ -226,6 +233,8 @@
     const { success } = res;
     if (success) {
       message.success('邀请评测成功!');
+    } else {
+      message.error('邀请评测失败!');
     }
   }
 </script>

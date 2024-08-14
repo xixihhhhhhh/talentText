@@ -26,7 +26,7 @@ export const columns = [
     width: 100,
   },
   {
-    title: '对应职能',
+    title: '岗位职能',
     key: 'corrFunc',
     dataIndex: 'corrFunc',
     width: 100,
@@ -64,7 +64,7 @@ export const schemas: FormSchema[] = [
   {
     field: 'corrFunc',
     component: 'Input',
-    label: '对应职能：',
+    label: '岗位职能：',
     colProps: { span: 20 },
     rules: [{ required: true, type: 'string' }],
   },

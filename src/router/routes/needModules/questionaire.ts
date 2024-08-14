@@ -53,11 +53,11 @@ const questionnaire: AppRouteModule = {
       },
     },
     {
-      path: 'organizationStructure',
-      name: 'organizationStructure',
-      component: () => import('@/views/dashboard/organizationStructure/index.vue'),
+      path: 'positionSetting',
+      name: 'positionSetting',
+      component: () => import('@/views/dashboard/positionSetting/index.vue'),
       meta: {
-        title: '组织架构',
+        title: '岗位设置',
         roles: [RoleEnum.SUPER],
       },
     },

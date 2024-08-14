@@ -38,30 +38,7 @@
       </Card>
       <Card class="w-full mt-2">
         <div class="font-bold text-lg border-b-2">胜任力分析</div>
-        <Table
-          :dataSource="dataSource"
-          :columns="columns"
-          :pagination="{
-            defaultPageSize: 5,
-          }"
-          :scroll="{ x: 15, y: 800 }"
-        >
-          <template #bodyCell="{ column, record }">
-            <template v-if="column.key === 'index'"> {{ record.index + 1 }} </template>
-            <template v-if="column.key === 'ability'">
-              <div class="font-bold">{{ advantageMap[record.ability][0] }}</div>
-              <div>( {{ advantageMap[record.ability][1] }} )</div>
-            </template>
-            <template v-if="column.key === 'pronounced'">
-              <div class="flex items-center w-full">
-                <progressBar :percent="record.pronounced" class="w-10" />
-              </div>
-            </template>
-            <template v-if="column.key === 'define'">
-              {{ competencyDefinition[record.key] }}
-            </template>
-          </template>
-        </Table>
+        <competencyAnalysis :obvious="obvious" :notObvious="notObvious" />
       </Card>
       <Card class="w-full mt-2" :class="textSize">
         <div class="font-bold text-lg border-b-grey border-b-2"
@@ -144,7 +121,7 @@
             >通过以下搭配建议可以管控受测者的劣势，有助于搭建合作互补的完美团队</span
           >
         </div>
-        <div class="indent-4 text-4">
+        <div class="indent-4">
           <Avatar :src="avatar" /> {{ userInfo.name }}
           的弱势在于
           <span :style="{ color: activeColor }">{{
@@ -168,18 +145,7 @@
           通过对 <Avatar :src="avatar" /> {{ userInfo.name }}
           所在的岗位进行了胜任力分析，总结出岗位所需的前五项关键胜任力，分别为：
         </div>
-        <div v-for="i in 5" :key="i" class="indent-4 line-height-loose">
-          <Icon
-            icon="material-symbols-light:circle"
-            :size="20"
-            :color="activeColor"
-            class="relative top-0.5"
-          />
-          <span class="flex-shrink-0 mr-4" :style="{ color: activeColor }">{{
-            advantageMap[competencyObj[i][0]][0]
-          }}</span>
-          <span>{{ competencyDefinition[competencyObj[i][0]] }}</span>
-        </div>
+        <postCompetencyRequirements :data-source="postDataSource" />
         <div class="indent-4 font-bold">
           通过了解这些关键胜任力，TA可以更清晰地认识到岗位对TA的要求，有针对性地提升自身的能力和表现进一步推动TA的职业发展。
         </div>
@@ -190,16 +156,16 @@
 
 <script lang="ts" setup>
   import { ref, PropType, onMounted, nextTick } from 'vue';
-  import { Card, Avatar, Table } from 'ant-design-vue';
+  import { Card, Avatar } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
   import Leidatu from './components/leidatu.vue';
   import Icon from '@/components/Icon/Icon.vue';
-  import progressBar from './progress.vue';
   import CareerFieldPdf from './careerFieldPdf.vue';
+  import competencyAnalysis from './competencyAnalysis.vue';
+  import postCompetencyRequirements from './postCompetencyRequirements.vue';
   import headerImg from '@/assets/images/header.jpg';
   import {
     careerAdvantagesMap,
-    columns,
     advantageMap,
     coreAreas,
     competencyDefinition,
@@ -253,8 +219,10 @@
   ];
 
   const resultPdf = ref(null);
-  const dataSource = ref<any[]>([]);
   const managementAdvice = ref<any[]>([]);
+  const obvious = ref<any[]>([]);
+  const notObvious = ref<any[]>([]);
+  const postDataSource = ref<any[]>([]);
 
   const avatar = props.userInfo.avatar || headerImg;
   const careerFieldObj = props.careerFieldObj;
@@ -262,14 +230,25 @@
   const competencyObj = sort(props.competencyObj);
 
   onMounted(async () => {
-    competencyObj.forEach((item, index) => {
-      dataSource.value.push({
-        key: item[0],
-        index,
-        ability: item[0],
-        pronounced: parseFloat(item[1] as string),
+    for (let i = 0; i < 6; i++) {
+      obvious.value.push({
+        competency: advantageMap[competencyObj[i][0]][0],
+        describe: competencyDefinition[competencyObj[i][0]],
       });
-    });
+      if (i !== 6) {
+        postDataSource.value.push({
+          competency: advantageMap[competencyObj[i][0]][0],
+          definition: competencyDefinition[competencyObj[i][0]],
+          degreeTendency: competencyObj[i][1],
+        });
+      }
+    }
+    for (let i = competencyObj.length - 1; i > competencyObj.length - 7; i--) {
+      notObvious.value.push({
+        competency: advantageMap[competencyObj[i][0]][0],
+        describe: competencyDefinition[competencyObj[i][0]],
+      });
+    }
     for (let i = 0; i < 6; i++) {
       managementAdvice.value.push(competencyObj[i][0]);
     }

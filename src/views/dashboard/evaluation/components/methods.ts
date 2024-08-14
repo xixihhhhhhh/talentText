@@ -32,7 +32,7 @@ export function processDepartmentObj(obj: any): {
   const result: DepartmentInfos = {
     department: obj.department,
     position: positionObj.岗位名称,
-    corrFunc: positionObj.对应职能,
+    corrFunc: positionObj.岗位职能,
   };
   if (obj.subDepartment) {
     result.subDepartment = obj.subDepartment;
