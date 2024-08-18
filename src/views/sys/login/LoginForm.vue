@@ -8,11 +8,11 @@
     v-show="getShow"
     @keypress.enter="handleLogin"
   >
-    <FormItem name="email" class="enter-x">
+    <FormItem name="phone" class="enter-x">
       <Input
         size="large"
-        v-model:value="formData.email"
-        :placeholder="t('sys.login.email')"
+        v-model:value="formData.phone"
+        :placeholder="t('sys.login.mobile')"
         class="fix-auto-fill"
       />
     </FormItem>
@@ -119,8 +119,8 @@
   const rememberMe = ref(false);
 
   const formData = reactive({
-    email: '20478048816@qq.com',
-    password: '123',
+    phone: '19137789318',
+    password: 'Password',
   });
 
   const { validForm } = useFormValid(formRef);
@@ -136,7 +136,7 @@
       loading.value = true;
       const userInfo = await userStore.login({
         password: data.password,
-        email: data.email,
+        phone: data.phone,
         mode: 'none', //不要默认的错误提示
       });
       if (userInfo) {

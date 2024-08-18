@@ -2,13 +2,13 @@
  * @description: Login interface parameters
  */
 export interface LoginParams {
-  email: string;
+  phone: string;
   password: string;
 }
 
 export interface RegisterParams {
   name: string;
-  email: string;
+  phone: string;
   password: string;
 }
 
@@ -31,7 +31,7 @@ export interface LoginResultModel {
  * @description: Get user information return value
  */
 export interface GetUserInfoModel {
-  email: string;
+  phone: string;
   halfWenJuan: any;
   secondWenJuanQuestion: object[];
   firstWenJuanAnswer: any;

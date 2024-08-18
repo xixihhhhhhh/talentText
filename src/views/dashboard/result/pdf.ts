@@ -55,7 +55,7 @@ const htmlPdf = {
             for (i = position + a4HeightRef; i >= position; i--) {
               let isWrite = true; // 用于判断当前行是否可以写入
               for (let j = 0; j < canvas.width; j++) {
-                const c = canvas.getContext('2d')?.getImageData(j, i, 1, 1).data; // 获取当前像素点的颜色值
+                const c: any = canvas.getContext('2d')?.getImageData(j, i, 1, 1).data; // 获取当前像素点的颜色值
 
                 if (c[0] != 0xff || c[1] != 0xff || c[2] != 0xff) {
                   // 如果当前像素点不是白色，则表示当前行不能写入

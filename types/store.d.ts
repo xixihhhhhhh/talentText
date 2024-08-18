@@ -52,7 +52,7 @@ export interface UserInfo {
   name: string;
   realName: string;
   avatar: string;
-  email: string;
+  phone: string;
   desc?: string;
   homePath?: string;
   roles: [];

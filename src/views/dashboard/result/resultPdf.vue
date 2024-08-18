@@ -39,7 +39,7 @@
             <div class="w-120px flex justify-between mr-15px">
               <span>电</span><span>话:</span>
             </div>
-            {{ userInfo.email }}
+            {{ userInfo.phone }}
           </div>
           <div class="form">
             <div class="w-120px flex justify-between mr-15px">

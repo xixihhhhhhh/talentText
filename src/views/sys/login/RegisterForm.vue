@@ -10,11 +10,11 @@
           :placeholder="t('sys.login.userName')"
         />
       </FormItem>
-      <FormItem name="email" class="enter-x">
+      <FormItem name="phone" class="enter-x">
         <Input
           size="large"
-          v-model:value="formData.email"
-          :placeholder="t('sys.login.email')"
+          v-model:value="formData.phone"
+          :placeholder="t('sys.login.mobile')"
           class="fix-auto-fill"
         />
       </FormItem>
@@ -90,9 +90,9 @@
 
   const formData = reactive({
     name: 'user',
-    password: '123',
-    checkPassword: '123',
-    email: '20478048816@qq.com',
+    password: 'Password',
+    checkPassword: 'Password',
+    phone: '19137789318',
     // sms: '',
     policy: true,
   });
@@ -109,7 +109,7 @@
       loading.value = true;
       const userInfo = await userStore.register({
         name: data.name,
-        email: data.email,
+        phone: data.phone,
         password: data.password,
         mode: 'none', //不要默认的错误提示
       });

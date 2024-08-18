@@ -2,8 +2,8 @@
   <template v-if="getShow">
     <LoginFormTitle class="enter-x" />
     <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef">
-      <FormItem name="email" class="enter-x">
-        <Input size="large" v-model:value="formData.email" :placeholder="t('sys.login.email')" />
+      <FormItem name="phone" class="enter-x">
+        <Input size="large" v-model:value="formData.phone" :placeholder="t('sys.login.mobile')" />
       </FormItem>
 
       <FormItem name="password" class="enter-x">
@@ -65,7 +65,7 @@
   const loading = ref(false);
 
   const formData = reactive({
-    email: '',
+    phone: '',
     password: '',
     checkPassword: '',
     sms: '',
@@ -77,6 +77,7 @@
   const randonNumber = Math.floor(100000 + Math.random() * 900000) + '';
   const userStore = useUserStore();
   const { notification } = useMessage();
+  const { setLoginState } = useLoginState();
 
   async function handleReset() {
     const data = await validForm();
@@ -92,7 +93,7 @@
       loading.value = true;
       await userStore.resetPassword({
         password: data.password,
-        email: data.email,
+        phone: data.phone,
         mode: 'none', //不要默认的错误提示
       });
       notification.success({
@@ -100,6 +101,7 @@
         description: `重置密码成功`,
         duration: 3,
       });
+      setLoginState(LoginStateEnum.LOGIN);
     } finally {
       loading.value = false;
     }

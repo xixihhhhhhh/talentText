@@ -3,7 +3,7 @@ import type {
   RuleObject,
   NamePath,
   Rule as ValidationRule,
-  RuleType,
+  // RuleType,
 } from 'ant-design-vue/lib/form/interface';
 import { ref, computed, unref, Ref } from 'vue';
 import { useI18n } from '@/hooks/web/useI18n';
@@ -54,7 +54,7 @@ export function useFormValid<T extends Object = any>(formRef: Ref<FormInstance>)
 export function useFormRules(formData?: Recordable) {
   const { t } = useI18n();
 
-  const getEamilFormRule = computed(() => createTypeRule(t('sys.login.emailPlaceholder'), 'email'));
+  // const getEmailFormRule = computed(() => createTypeRule(t('sys.login.emailPlaceholder'), 'email'));
   const getnameFormRule = computed(() => createRule(t('sys.login.usernamePlaceholder')));
   const getPasswordFormRule = computed(() => createRule(t('sys.login.passwordPlaceholder')));
   const getSmsFormRule = computed(() => createRule(t('sys.login.smsPlaceholder')));
@@ -76,8 +76,30 @@ export function useFormRules(formData?: Recordable) {
     };
   };
 
+  const validateConfirmPhone = () => {
+    return async (_: RuleObject, value: string) => {
+      const regex = /^1[3-9]\d{9}$/;
+      const result = regex.test(value);
+      if (!result) {
+        return Promise.reject('手机格式不正确!');
+      }
+      return Promise.resolve();
+    };
+  };
+
+  const validateConfirmLoginPassword = () => {
+    return async (_: RuleObject, value: string) => {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+      const result = regex.test(value);
+      if (!result) {
+        return Promise.reject('密码格式不正确,至少8位，包含英文字母大小写!');
+      }
+      return Promise.resolve();
+    };
+  };
+
   const getFormRules = computed((): { [k: string]: ValidationRule | ValidationRule[] } => {
-    const emailFormRule = unref(getEamilFormRule);
+    // const emailFormRule = unref(getEmailFormRule);
     const nameFormRule = unref(getnameFormRule);
     const passwordFormRule = unref(getPasswordFormRule);
     const smsFormRule = unref(getSmsFormRule);
@@ -92,7 +114,7 @@ export function useFormRules(formData?: Recordable) {
       case LoginStateEnum.REGISTER:
         return {
           name: nameFormRule,
-          email: emailFormRule,
+          phone: mobileFormRule,
           password: passwordFormRule,
           checkPassword: [
             { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
@@ -104,8 +126,28 @@ export function useFormRules(formData?: Recordable) {
       // reset password form rules
       case LoginStateEnum.RESET_PASSWORD:
         return {
-          email: emailFormRule,
-          password: passwordFormRule,
+          phone: [
+            {
+              required: true,
+              message: '请输入手机号码',
+              trigger: ['change', 'blur'],
+              validator: validateConfirmPhone(),
+            },
+          ],
+          password: [
+            {
+              required: true,
+              message: '请输入密码',
+              trigger: 'blur',
+              validator: validateConfirmLoginPassword(),
+            },
+            {
+              required: true,
+              message: '密码格式不正确,至少8位，包含英文字母大小写!',
+              trigger: 'change',
+              validator: validateConfirmLoginPassword(),
+            },
+          ],
           checkPassword: [
             { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
           ],
@@ -119,8 +161,28 @@ export function useFormRules(formData?: Recordable) {
       // login form rules
       default:
         return {
-          email: emailFormRule,
-          userPassword: passwordFormRule,
+          phone: [
+            {
+              required: true,
+              message: '请输入手机号码',
+              trigger: ['change', 'blur'],
+              validator: validateConfirmPhone(),
+            },
+          ],
+          password: [
+            {
+              required: true,
+              message: '请输入密码',
+              trigger: 'blur',
+              validator: validateConfirmLoginPassword(),
+            },
+            {
+              required: true,
+              message: '密码格式不正确,至少8位，包含英文字母大小写!',
+              trigger: 'change',
+              validator: validateConfirmLoginPassword(),
+            },
+          ],
         };
     }
   });
@@ -137,13 +199,13 @@ function createRule(message: string): ValidationRule[] {
   ];
 }
 
-function createTypeRule(message: string, type: RuleType): ValidationRule[] {
-  return [
-    {
-      required: true,
-      message,
-      type,
-      trigger: 'change',
-    },
-  ];
-}
+// function createTypeRule(message: string, type: RuleType): ValidationRule[] {
+//   return [
+//     {
+//       required: true,
+//       message,
+//       type,
+//       trigger: 'change',
+//     },
+//   ];
+// }

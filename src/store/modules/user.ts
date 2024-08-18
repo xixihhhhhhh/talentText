@@ -127,7 +127,7 @@ export const useUserStore = defineStore({
      */
     async resetPassword(
       params: {
-        email: string;
+        phone: string;
         password: string;
       } & {
         goHome?: boolean;

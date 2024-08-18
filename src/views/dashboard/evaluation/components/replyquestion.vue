@@ -216,7 +216,7 @@
   const { start, getSpendTime } = useTime();
   const { openModal, startTimeKeeping, clearTimeKeeping, continueTimeKeeping } = useWarning();
   const userInfo = userStore.getUserInfo;
-  const email = ref(userInfo.email);
+  const phone = ref(userInfo.phone);
   const questionStore = useQuestionStore();
 
   let questionTypeOne: Question[] = [];
@@ -281,7 +281,7 @@
       submitButtonOptions: { text: '开始测评' },
     };
     setProps(schemasOption.value);
-    const secondWenJuan = await getSecondWenjuan({ email: email.value });
+    const secondWenJuan = await getSecondWenjuan({ phone: phone.value });
     hasUnFinished.value = secondWenJuan.hasUnFinish;
     if (hasUnFinished.value) {
       // 如果有未完成的问卷，那么拿到上一次答题的结果即可,并且拿到上一次未完成的题目
@@ -343,7 +343,7 @@
 
   // 继续答题
   async function resumeAssessment() {
-    await continueAnswer({ email: email.value, spendTime: getSpendTime() });
+    await continueAnswer({ phone: phone.value, spendTime: getSpendTime() });
     answerArr.value.push(...answerArrThree.value.flat(2));
     typeThreeAns.value[0] && answerArr.value.push(typeThreeAns.value[0]);
     isTypeThree.value = true;
@@ -365,7 +365,7 @@
   async function againAssessment() {
     clearTimeKeeping();
     // 清空用户信息先，调接口，传email
-    await clearSecondWenjuan({ email: email.value });
+    await clearSecondWenjuan({ phone: phone.value });
     curNum.value = 1;
     currentQuestionnaireIndex.value = 1;
     hasUnFinished.value = false;
@@ -380,7 +380,7 @@
     answerArr.value.push(typeThreeAns.value[0]);
     answerArr.value = answerArr.value.filter(Boolean);
     await setRelaxAssessment({
-      email: email.value,
+      phone: phone.value,
       firstWenJuanAnswer: answerArr.value,
       secondWenJuanQuestion: secondWenJuans.value,
       corrFunc: departmentForm.value!.corrFunc,
@@ -416,7 +416,7 @@
       questionStore.setLeidatu(echartOptions);
       showResult.value = true;
       departmentForm.value && questionStore.setCorrFunc(departmentForm.value.corrFunc);
-      clearSecondWenjuan({ email: email.value });
+      clearSecondWenjuan({ phone: phone.value });
       if (!departmentForm.value) return;
       addEvaluateListApi({
         user_id: +userInfo.userId,

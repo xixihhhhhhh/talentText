@@ -41,11 +41,7 @@
       v-if="showResultPdf"
       @close="close"
       :user-info="userInfo"
-      :career-advantages-obj="careerAdvantagesObj"
-      :career-field-obj="careerFieldObj"
-      :competency-obj="competencyObj"
-      :corr-func="corrFunc"
-      :echart-options="echartOptions"
+      :recordProps="recordProps"
     />
   </div>
 </template>
@@ -63,15 +59,11 @@
   const resultStore = useResultStore();
   const userStore = useUserStore();
   const userInfo = toRaw(userStore.getUserInfo);
+  const recordProps = ref({});
   const router = useRouter();
 
   const showResultPdf = ref(false);
   const dataSource = ref([]);
-  const careerAdvantagesObj = ref({});
-  const careerFieldObj = ref({});
-  const competencyObj = ref({});
-  const echartOptions = ref({});
-  const corrFunc = ref('');
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -90,11 +82,7 @@
 
   async function download(record: any) {
     // 先根据userId拿到userInfo
-    careerAdvantagesObj.value = record.careerAdvantagesObj;
-    careerFieldObj.value = record.careerFieldObj;
-    competencyObj.value = record.competencyObj;
-    echartOptions.value = record.echartOptions;
-    corrFunc.value = record.corrFunc;
+    recordProps.value = record;
     showResultPdf.value = true;
   }
 

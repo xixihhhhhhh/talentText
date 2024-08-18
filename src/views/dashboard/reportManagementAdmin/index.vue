@@ -187,8 +187,6 @@
   }
 
   async function download(record: any) {
-    console.log('🚀 ~ download ~ record:', record);
-    // 先根据userId拿到userInfo
     const { user_id } = record;
     const user = await getUserInfoById({ user_id });
     userInfo.value = { name: user.name, avatar: user.avatar };
