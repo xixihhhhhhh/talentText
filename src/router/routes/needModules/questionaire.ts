@@ -8,7 +8,7 @@ const questionnaire: AppRouteModule = {
   path: '/questionnaire',
   name: 'questionnaire',
   component: LAYOUT,
-  redirect: '/questionnaire/writequestionnaire',
+  redirect: '/questionnaire/evaluation',
   meta: {
     roles: [RoleEnum.SUPER, RoleEnum.User],
     orderNo: 10,

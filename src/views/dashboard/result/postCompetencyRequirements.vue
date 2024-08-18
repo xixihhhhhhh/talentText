@@ -6,11 +6,14 @@
     :pagination="false"
   >
     <template #headerCell="{ column, title }">
+      <template v-if="column.key === 'competency'">
+        <div class="flex justify-center" :class="isMobile ? '' : 'text-20px'">{{ title }}</div>
+      </template>
       <template v-if="column.key === 'definition'">
-        <div class="flex justify-center">{{ title }}</div>
+        <div class="flex justify-center" :class="isMobile ? '' : 'text-20px'">{{ title }}</div>
       </template>
       <template v-if="column.key === 'degreeTendency'">
-        <div class="flex justify-center">{{ title }}</div>
+        <div class="flex justify-center" :class="isMobile ? '' : 'text-20px'">{{ title }}</div>
       </template>
     </template>
     <template #bodyCell="{ column, record }">
@@ -36,6 +39,7 @@
   import { Table, Rate } from 'ant-design-vue';
   import Icon from '@/components/Icon/Icon.vue';
 
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const columns = [
     {
       title: '胜任力',

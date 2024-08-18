@@ -10,7 +10,7 @@ const dashboard: AppRouteModule = {
   component: LAYOUT,
   redirect: '/dashboard/index',
   meta: {
-    roles: [RoleEnum.SUPER, RoleEnum.User],
+    roles: [RoleEnum.SUPER],
     orderNo: 10,
     icon: 'ion:grid-outline',
     title: t('routes.dashboard.dashboard'),
@@ -22,7 +22,7 @@ const dashboard: AppRouteModule = {
       component: () => import('@/views/dashboard/workbench/index.vue'),
       meta: {
         title: t('routes.dashboard.workbench'),
-        roles: [RoleEnum.SUPER, RoleEnum.User],
+        roles: [RoleEnum.SUPER],
       },
     },
     {
@@ -32,7 +32,7 @@ const dashboard: AppRouteModule = {
       meta: {
         // affix: true,
         title: t('routes.dashboard.analysis'),
-        roles: [RoleEnum.SUPER, RoleEnum.User],
+        roles: [RoleEnum.SUPER],
       },
     },
   ],

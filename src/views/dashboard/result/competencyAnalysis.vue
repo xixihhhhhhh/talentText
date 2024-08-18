@@ -27,21 +27,21 @@
   </div>
   <div class="container" v-else>
     <div class="column">
-      <div class="title">优势明显的胜任力</div>
-      <div v-for="(item, index) in obvious" :key="index" class="h-20">
-        <span class="text-lg text-white font-bold bg-#28B8C5 px-2 border-rd-2">{{
+      <div class="title font-bold">优势明显的胜任力</div>
+      <div v-for="(item, index) in obvious" :key="index" class="h-27">
+        <span class="text-20px text-white font-bold bg-#28B8C5 px-2 border-rd-2">{{
           item.competency
         }}</span>
-        <div>{{ item.describe }}</div>
+        <div class="text-20px">{{ item.describe }}</div>
       </div>
     </div>
     <div class="column">
-      <div class="title-green">优势不明显的胜任力</div>
-      <div v-for="(item, index) in notObvious" :key="index" class="h-20">
-        <span class="text-lg text-white font-bold bg-#4874cb px-2 border-rd-2">{{
+      <div class="title-green font-bold">优势不明显的胜任力</div>
+      <div v-for="(item, index) in notObvious" :key="index" class="h-27">
+        <span class="text-20px text-white font-bold bg-#4874cb px-2 border-rd-2">{{
           item.competency
         }}</span>
-        <div>{{ item.describe }}</div>
+        <div class="text-20px">{{ item.describe }}</div>
       </div>
     </div>
   </div>
@@ -64,7 +64,7 @@
   }
 
   .column {
-    width: 45%;
+    width: 50%;
     padding: 20px;
     border-radius: 10px;
     background-color: #fff;

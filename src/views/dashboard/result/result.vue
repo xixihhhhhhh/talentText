@@ -6,13 +6,13 @@
       </div>
       <CareerField />
     </template>
-    <div class="flex" v-else>
+    <div class="flex justify-center" v-else>
       <leidatu :options="questionStore.leidatu" class="enter-y" />
       <CareerField class="enter-y" />
     </div>
     <Card class="w-full mt-2" :class="textSize">
       <div class="font-bold text-lg border-b-grey border-b-2">优势领域说明</div>
-      <div class="mt-4 text-4">
+      <div class="mt-4">
         <Avatar :src="avatar" /> {{ userInfo.name }} 在
         <span class="font-bold" :style="{ color: activeColor }"
           >{{ fieldMap[getMaxField()] }}
@@ -30,9 +30,9 @@
             {{ getTopThreeScores().topThree[index - 1].toFixed(2) }}</span
           >
         </div>
-        <p class="indent">
+        <div class="indent">
           {{ getTopThreeScores().shuoming[index - 1] }}
-        </p>
+        </div>
       </div>
     </Card>
     <Card class="w-full mt-2">

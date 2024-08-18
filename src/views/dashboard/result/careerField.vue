@@ -1,7 +1,24 @@
 <template>
-  <Card class="w-full">
+  <div class="pr-20 pt-2" v-if="!isMobile">
+    <div class="font-bold text-22px">职业领域</div>
+    <div class="flex flex-wrap" v-for="index in 4" :key="index">
+      <Icon
+        icon="wi-thermometer"
+        :size="100"
+        :color="getMaxField() === index ? activeColor : '#999'"
+      />
+      <div class="relative top-2 text-18px">
+        <div class="font-bold"
+          >{{ careerFieldName[index - 1] }} {{ careerFieldObj[fields[index - 1]] }}</div
+        >
+        <div>{{ explanation[index - 1][0] }}</div>
+        <div>{{ explanation[index - 1][1] }}</div>
+      </div>
+    </div>
+  </div>
+  <Card class="pr-20" v-else>
     <div class="font-bold text-lg">职业领域</div>
-    <div class="flex flex-wrap w-full" v-for="index in 4" :key="index">
+    <div class="flex flex-wrap" v-for="index in 4" :key="index">
       <Icon
         icon="wi-thermometer"
         :size="100"
@@ -15,7 +32,6 @@
         <div>{{ explanation[index - 1][1] }}</div>
       </div>
     </div>
-    <template #tabBarExtraContent></template>
   </Card>
 </template>
 
@@ -27,6 +43,7 @@
 
   const questionStore = useQuestionStore();
 
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const activeColor = '#28B8C5';
   const fields = ['pioneering', 'transaction', 'service', 'research'];
   const careerFieldName = ['开拓影响', '事务执行', '服务关系', '研发策划'];

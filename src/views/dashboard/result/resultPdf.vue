@@ -1,5 +1,64 @@
 <template>
   <PageWrapper :class="prefixCls" title="结果分析">
+    <div ref="cover">
+      <div class="py-200px">
+        <div class="flex">
+          <div
+            class="w-60% h-180px pt-10px pl-30px bg-#4773ca polygon flex-col justify-center items-center"
+          >
+            <div class="text-white text-75px mb-15px" :style="{ letterSpacing: '55px' }"
+              >测评报告</div
+            >
+            <div class="text-#29bccb text-40px">ASSESSMENT REPORT</div>
+          </div>
+          <div>
+            <div class="w-120px h-120px bg-#28B8C5 transform transformTop"> </div>
+            <div class="w-120px h-120px bg-#28B8C5 transform transformBottom"> </div>
+          </div>
+          <div class="w-120px h-120px bg-#28B8C5 transform transformRight"> </div>
+        </div>
+        <div class="text-24px font-bold ml-100px relative bottom-20px">
+          姓名: {{ userInfo.name }}
+        </div>
+        <div class="flex mt-8 h-60px">
+          <div class="form">
+            <div class="w-120px flex justify-between mr-15px">
+              <span>所</span><span>属</span><span>部</span><span>门:</span>
+            </div>
+            {{ department }}
+          </div>
+          <div class="form">
+            <div class="w-120px flex justify-between mr-15px">
+              <span>所</span><span>属</span><span>岗</span><span>位:</span>
+            </div>
+            {{ position }}
+          </div>
+        </div>
+        <div class="flex h-60px">
+          <div class="form">
+            <div class="w-120px flex justify-between mr-15px">
+              <span>电</span><span>话:</span>
+            </div>
+            {{ userInfo.email }}
+          </div>
+          <div class="form">
+            <div class="w-120px flex justify-between mr-15px">
+              <span>完</span><span>成</span><span>时</span><span>间:</span>
+            </div>
+            {{ finishTime }}
+          </div>
+        </div>
+        <div class="flex">
+          <div class="form">
+            <div class="w-120px flex justify-between mr-15px">
+              <span>报</span><span>告</span><span>可</span><span>信</span><span>度:</span>
+            </div>
+            {{ handleReportTruth(spendTime) }}
+          </div>
+        </div>
+        <div class="flex justify-center mt-400px">本报告涉及个人隐私，请注意保密</div>
+      </div>
+    </div>
     <div ref="resultPdf">
       <template v-if="isMobile">
         <div class="w-full">
@@ -7,13 +66,13 @@
         </div>
         <CareerFieldPdf :careerFieldObj="careerFieldObj" />
       </template>
-      <div class="flex" v-else>
+      <div class="flex justify-center bg-white" v-else>
         <leidatu :options="echartOptions" />
         <CareerFieldPdf :careerFieldObj="careerFieldObj" />
       </div>
-      <Card class="w-full mt-2" :class="textSize">
-        <div class="font-bold text-lg border-b-grey border-b-2">优势领域说明</div>
-        <div class="mt-4 text-4">
+      <Card class="mt-2" :class="textSize">
+        <div class="font-bold text-lg border-b-2">优势领域说明</div>
+        <div class="mt-4">
           <Avatar :src="avatar" /> {{ userInfo.name }} 在
           <span class="font-bold" :style="{ color: activeColor }"
             >{{ fieldMap[getMaxField()] }}
@@ -31,9 +90,9 @@
               {{ getTopThreeScores().topThree[index - 1].toFixed(2) }}</span
             >
           </div>
-          <p class="indent">
+          <div class="indent">
             {{ getTopThreeScores().shuoming[index - 1] }}
-          </p>
+          </div>
         </div>
       </Card>
       <Card class="w-full mt-2">
@@ -58,7 +117,7 @@
         </div>
       </Card>
       <Card class="w-full mt-2" :class="textSize">
-        <div class="font-bold text-lg border-b-grey border-b-2"
+        <div class="font-bold text-lg border-b-2"
           >职业推荐
           <span class="text-3 color-gray"
             >只为辅助您理解优势职业方向，并非作为判定胜任岗位与否的唯一标准</span
@@ -176,6 +235,7 @@
     guanlijianyi,
     fieldMap,
   } from './data';
+  import { handleReportTruth } from '../reportManagementAdmin/data';
   import { sort } from './methods';
   import htmlPdf from './pdf';
 
@@ -184,24 +244,8 @@
       type: Object as PropType<any>,
       required: true,
     },
-    echartOptions: {
+    recordProps: {
       type: Object as PropType<any>,
-      required: true,
-    },
-    competencyObj: {
-      type: Object as PropType<any>,
-      required: true,
-    },
-    careerAdvantagesObj: {
-      type: Object as PropType<any>,
-      required: true,
-    },
-    careerFieldObj: {
-      type: Object as PropType<any>,
-      required: true,
-    },
-    corrFunc: {
-      type: String,
       required: true,
     },
   });
@@ -218,16 +262,19 @@
     'twemoji:3rd-place-medal',
   ];
 
-  const resultPdf = ref(null);
+  const resultPdf = ref();
+  const cover = ref();
   const managementAdvice = ref<any[]>([]);
   const obvious = ref<any[]>([]);
   const notObvious = ref<any[]>([]);
   const postDataSource = ref<any[]>([]);
 
   const avatar = props.userInfo.avatar || headerImg;
-  const careerFieldObj = props.careerFieldObj;
-  const careerAdvantagesObj = sort(props.careerAdvantagesObj);
-  const competencyObj = sort(props.competencyObj);
+  const { recordProps } = props;
+  const { department, position, echartOptions, corrFunc, finishTime, spendTime } = recordProps;
+  const careerFieldObj = recordProps.careerFieldObj;
+  const careerAdvantagesObj = sort(recordProps.careerAdvantagesObj);
+  const competencyObj = sort(recordProps.competencyObj);
 
   onMounted(async () => {
     for (let i = 0; i < 6; i++) {
@@ -253,7 +300,7 @@
       managementAdvice.value.push(competencyObj[i][0]);
     }
     await nextTick();
-    htmlPdf.getPdf('测试', resultPdf.value);
+    htmlPdf.getPdf('测试', resultPdf.value, cover.value);
     setTimeout(() => emits('close'), 0);
   });
 
@@ -367,5 +414,49 @@
         vertical-align: top;
       }
     }
+  }
+
+  .polygon {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -178px;
+      width: 0;
+      height: 0;
+      border: 90px solid transparent;
+      border-left: 90px solid #4773ca;
+    }
+  }
+
+  .transform {
+    transform: rotate(45deg);
+  }
+
+  .transformTop {
+    position: relative;
+    top: -80px;
+    left: 40px;
+  }
+
+  .transformBottom {
+    position: relative;
+    top: 10px;
+    left: 40px;
+  }
+
+  .transformRight {
+    position: relative;
+    top: 30px;
+    left: 30px;
+  }
+
+  .form {
+    display: flex;
+    flex: 1;
+    margin-left: 100px;
+    font-size: 20px;
   }
 </style>
