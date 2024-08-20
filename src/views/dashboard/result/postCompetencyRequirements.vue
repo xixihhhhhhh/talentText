@@ -71,7 +71,7 @@
 </script>
 
 <style scoped>
-  ::v-deep .ant-rate {
+  :deep .ant-rate {
     color: #28b8c5;
   }
 </style>
