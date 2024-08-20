@@ -4,59 +4,59 @@
       <div class="py-200px">
         <div class="flex">
           <div
-            class="w-60% h-180px pt-10px pl-30px bg-#4773ca polygon flex-col justify-center items-center"
+            class="w-80% h-220px pt-10px pl-30px bg-#4773ca polygon flex-col justify-center items-center"
           >
-            <div class="text-white text-75px mb-15px" :style="{ letterSpacing: '55px' }"
+            <div class="text-white text-100px mb-15px" :style="{ letterSpacing: '55px' }"
               >测评报告</div
             >
-            <div class="text-#29bccb text-40px">ASSESSMENT REPORT</div>
+            <div class="text-#29bccb text-60px">ASSESSMENT REPORT</div>
           </div>
           <div>
-            <div class="w-120px h-120px bg-#28B8C5 transform transformTop"> </div>
-            <div class="w-120px h-120px bg-#28B8C5 transform transformBottom"> </div>
+            <div class="w-140px h-140px bg-#28B8C5 transform transformTop"> </div>
+            <div class="w-140px h-140px bg-#28B8C5 transform transformBottom"> </div>
           </div>
-          <div class="w-120px h-120px bg-#28B8C5 transform transformRight"> </div>
+          <div class="w-140px h-140px bg-#4773ca transform transformRight"> </div>
         </div>
-        <div class="text-24px font-bold ml-100px relative bottom-20px">
+        <div class="text-40px font-bold ml-100px relative bottom-20px">
           姓名: {{ userInfo.name }}
         </div>
-        <div class="flex mt-8 h-60px">
+        <div class="flex mt-8 h-60px text-25px">
           <div class="form">
-            <div class="w-120px flex justify-between mr-15px">
+            <div class="w-200px flex justify-between mr-15px">
               <span>所</span><span>属</span><span>部</span><span>门:</span>
             </div>
             {{ department }}
           </div>
           <div class="form">
-            <div class="w-120px flex justify-between mr-15px">
+            <div class="w-200px flex justify-between mr-15px">
               <span>所</span><span>属</span><span>岗</span><span>位:</span>
             </div>
             {{ position }}
           </div>
         </div>
-        <div class="flex h-60px">
+        <div class="flex h-60px text-25px">
           <div class="form">
-            <div class="w-120px flex justify-between mr-15px">
+            <div class="w-200px flex justify-between mr-15px">
               <span>电</span><span>话:</span>
             </div>
             {{ userInfo.phone }}
           </div>
           <div class="form">
-            <div class="w-120px flex justify-between mr-15px">
+            <div class="w-200px flex justify-between mr-15px">
               <span>完</span><span>成</span><span>时</span><span>间:</span>
             </div>
             {{ finishTime }}
           </div>
         </div>
-        <div class="flex">
+        <div class="flex text-25px">
           <div class="form">
-            <div class="w-120px flex justify-between mr-15px">
+            <div class="w-200px flex justify-between mr-15px">
               <span>报</span><span>告</span><span>可</span><span>信</span><span>度:</span>
             </div>
             {{ handleReportTruth(spendTime) }}
           </div>
         </div>
-        <div class="flex justify-center mt-400px">本报告涉及个人隐私，请注意保密</div>
+        <div class="flex justify-center mt-800px text-25px">本报告涉及个人隐私，请注意保密</div>
       </div>
     </div>
     <div ref="resultPdf">
@@ -423,11 +423,11 @@
       content: '';
       position: absolute;
       top: 0;
-      right: -178px;
+      right: -219px;
       width: 0;
       height: 0;
-      border: 90px solid transparent;
-      border-left: 90px solid #4773ca;
+      border: 110px solid transparent;
+      border-left: 110px solid #4773ca;
     }
   }
 
@@ -438,13 +438,13 @@
   .transformTop {
     position: relative;
     top: -80px;
-    left: 40px;
+    left: 50px;
   }
 
   .transformBottom {
     position: relative;
-    top: 10px;
-    left: 40px;
+    top: 20px;
+    left: 50px;
   }
 
   .transformRight {
@@ -457,6 +457,5 @@
     display: flex;
     flex: 1;
     margin-left: 100px;
-    font-size: 20px;
   }
 </style>

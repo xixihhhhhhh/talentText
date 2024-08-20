@@ -18,8 +18,13 @@
     </template>
     <template #bodyCell="{ column, record }">
       <template v-if="column.key === 'competency'">
-        <div class="text-#28B8C5">
+        <div class="text-#28B8C5 text-20px flex justify-center">
           {{ record.competency }}
+        </div>
+      </template>
+      <template v-if="column.key === 'definition'">
+        <div class="text-20px flex justify-center">
+          {{ record.definition }}
         </div>
       </template>
       <template v-if="column.key === 'degreeTendency'">

@@ -189,7 +189,7 @@
   async function download(record: any) {
     const { user_id } = record;
     const user = await getUserInfoById({ user_id });
-    userInfo.value = { name: user.name, avatar: user.avatar };
+    userInfo.value = { name: user.name, avatar: user.avatar, phone: user.phone };
     recordProps.value = record;
     showResultPdf.value = true;
   }

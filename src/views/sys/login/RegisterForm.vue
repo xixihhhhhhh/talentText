@@ -89,10 +89,10 @@
   const loading = ref(false);
 
   const formData = reactive({
-    name: 'user',
-    password: 'Password',
-    checkPassword: 'Password',
-    phone: '19137789318',
+    name: '',
+    password: '',
+    checkPassword: '',
+    phone: '',
     // sms: '',
     policy: true,
   });

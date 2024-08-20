@@ -56,7 +56,6 @@ export function useFormRules(formData?: Recordable) {
 
   // const getEmailFormRule = computed(() => createTypeRule(t('sys.login.emailPlaceholder'), 'email'));
   const getnameFormRule = computed(() => createRule(t('sys.login.usernamePlaceholder')));
-  const getPasswordFormRule = computed(() => createRule(t('sys.login.passwordPlaceholder')));
   const getSmsFormRule = computed(() => createRule(t('sys.login.smsPlaceholder')));
   const getMobileFormRule = computed(() => createRule(t('sys.login.mobilePlaceholder')));
 
@@ -99,9 +98,7 @@ export function useFormRules(formData?: Recordable) {
   };
 
   const getFormRules = computed((): { [k: string]: ValidationRule | ValidationRule[] } => {
-    // const emailFormRule = unref(getEmailFormRule);
     const nameFormRule = unref(getnameFormRule);
-    const passwordFormRule = unref(getPasswordFormRule);
     const smsFormRule = unref(getSmsFormRule);
     const mobileFormRule = unref(getMobileFormRule);
 
@@ -115,7 +112,20 @@ export function useFormRules(formData?: Recordable) {
         return {
           name: nameFormRule,
           phone: mobileFormRule,
-          password: passwordFormRule,
+          password: [
+            {
+              required: true,
+              message: '密码格式不正确,至少8位，包含英文字母大小写!',
+              trigger: 'blur',
+              validator: validateConfirmLoginPassword(),
+            },
+            {
+              required: true,
+              message: '密码格式不正确,至少8位，包含英文字母大小写!',
+              trigger: 'change',
+              validator: validateConfirmLoginPassword(),
+            },
+          ],
           checkPassword: [
             { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
           ],
@@ -137,7 +147,7 @@ export function useFormRules(formData?: Recordable) {
           password: [
             {
               required: true,
-              message: '请输入密码',
+              message: '密码格式不正确,至少8位，包含英文字母大小写!',
               trigger: 'blur',
               validator: validateConfirmLoginPassword(),
             },
@@ -170,12 +180,6 @@ export function useFormRules(formData?: Recordable) {
             },
           ],
           password: [
-            {
-              required: true,
-              message: '请输入密码',
-              trigger: 'blur',
-              validator: validateConfirmLoginPassword(),
-            },
             {
               required: true,
               message: '密码格式不正确,至少8位，包含英文字母大小写!',

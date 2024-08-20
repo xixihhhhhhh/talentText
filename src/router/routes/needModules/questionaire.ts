@@ -16,15 +16,15 @@ const questionnaire: AppRouteModule = {
     title: t('routes.dashboard.questionnaire'),
   },
   children: [
-    {
-      path: 'writequestionnaire',
-      name: 'writequestionnaire',
-      component: () => import('@/views/dashboard/writequestionnaire/index.vue'),
-      meta: {
-        title: t('routes.dashboard.writequestionnaire'),
-        roles: [RoleEnum.SUPER],
-      },
-    },
+    // {
+    //   path: 'writequestionnaire',
+    //   name: 'writequestionnaire',
+    //   component: () => import('@/views/dashboard/writequestionnaire/index.vue'),
+    //   meta: {
+    //     title: t('routes.dashboard.writequestionnaire'),
+    //     roles: [RoleEnum.SUPER],
+    //   },
+    // },
     {
       path: 'evaluation',
       name: 'evaluation',
