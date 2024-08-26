@@ -25,7 +25,7 @@
           </div>
         </template>
         <template v-if="column.key === 'spendTime'">
-          <div class="flex justify-center">
+          <div class="pl-20px">
             {{ handleReportTruth(text) }}
           </div>
         </template>

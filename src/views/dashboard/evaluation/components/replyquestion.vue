@@ -5,7 +5,7 @@
       :class="['py-5', 'px-2', { 'bg-blue': !showAnswerQuestion }]"
       style="min-height: 100vh"
     >
-      <div v-if="showAnswerQuestion" class="-enter-x rounded-2" style="min-height: 80vh">
+      <div v-show="showAnswerQuestion" class="-enter-x rounded-2" style="min-height: 80vh">
         <BasicForm
           v-show="!hasUnFinished"
           @register="register"
@@ -17,17 +17,17 @@
           <a-button type="primary" class="mr-4" @click="againAssessment">重新开始</a-button>
         </div>
       </div>
-      <div v-else class="px-2 rounded-2" style="border-radius: 10px">
+      <div v-if="!showAnswerQuestion" class="px-2 rounded-2" style="border-radius: 10px">
         <ProgressBar :percent="percent" />
         <div class="text-20px font-600" v-if="isTypeThree">
           <div v-for="(question, questionIndex) in curQuestionTypeThree" :key="questionIndex">
             <div class="bg-#fff my-4 pt-2">
               <div
                 v-if="questionTitleThree(question).title"
-                class="text-15px py-2 ml-4 user-select-none"
+                class="text-15px py-2 ml-4 user-select-none text-18px"
                 >{{ questionTitleThree(question).title }}</div
               >
-              <div :class="['parent', 'text-14px']">
+              <div :class="['parent', 'text-18px']">
                 <div :class="['trapezoid1', 'trapezoid']"
                   >{{ handleFenHang(questionTitleThree(question).option[0]) }}
                 </div>
@@ -95,7 +95,6 @@
           </div>
           <div class="text-lg ml-2 mt-4 pb-4">
             <div
-              :value="item.value"
               style="border-radius: 10px"
               :class="[
                 'mt-2',
@@ -106,6 +105,8 @@
                 {
                   'bg-#4c7cf6!': item.value === selectValue,
                   'text-white': item.value === selectValue,
+                  'text-54px!': isFenDuan(curQuestionTitle) && !isMobile,
+                  'text-27px!': isFenDuan(curQuestionTitle) && isMobile,
                 },
               ]"
               v-for="(item, index) in curQues"
@@ -219,6 +220,7 @@
   const phone = ref(userInfo.phone);
   const questionStore = useQuestionStore();
 
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   let questionTypeOne: Question[] = [];
   let questionTypeTwo: Question[] = [];
   const questionTypeThree = ref<Question[][]>([]);
@@ -243,7 +245,6 @@
   const isTypeThree = ref(false);
   const canTest = ref(true);
   const openDisable = ref(false);
-  const schemasOption = ref({});
 
   const percent = computed(() => {
     return Math.round(((curNum.value + (curIndexTypeThree.value - 1) * 3) / 74) * 100);
@@ -274,13 +275,13 @@
     const { departmentObj, subDepartmentObj, departmentObjArr, subPosition } =
       await getEvaluateFormDataApi();
     const schemas = getSchemas(departmentObjArr, departmentObj, subDepartmentObj, subPosition);
-    schemasOption.value = {
+    const schemasOption = {
       labelWidth: 120,
       schemas,
       actionColOptions: { span: 24, style: { textAlign: 'center' } },
       submitButtonOptions: { text: '开始测评' },
     };
-    setProps(schemasOption.value);
+    setProps(schemasOption);
     const secondWenJuan = await getSecondWenjuan({ phone: phone.value });
     hasUnFinished.value = secondWenJuan.hasUnFinish;
     if (hasUnFinished.value) {
@@ -487,6 +488,7 @@
     if (curIndexTypeThree.value === 1) {
       selectValue.value = answerArr.value[curNum.value - 1]?.value || '';
       isTypeThree.value = false;
+      stopRepeatClick = false;
     } else {
       curIndexTypeThree.value = curIndexTypeThree.value - 1;
       typeThreeAns.value = answerArrThree.value[curIndexTypeThree.value - 1];
@@ -570,7 +572,6 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    padding: 0 10px;
     background-color: #f2f2f2;
   }
 
@@ -580,15 +581,15 @@
   }
 
   .trapezoid1 {
-    padding: 10px 12.5% 10px 5px;
+    padding: 10px 5% 10px 10px;
     background-color: #dae5fb;
-    clip-path: polygon(0% 0, 100% 0, 75% 100%, 0% 100%);
+    clip-path: polygon(0% 0, 100% 0, 85% 100%, 0% 100%);
   }
 
   .trapezoid2 {
-    padding: 10px 5px 10px 12.5%;
+    padding: 10px 10px 10px 5.5%;
     background-color: #e6effe;
-    clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%);
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
   }
 
   .user-select-none {

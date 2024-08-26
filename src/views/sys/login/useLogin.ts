@@ -54,8 +54,6 @@ export function useFormValid<T extends Object = any>(formRef: Ref<FormInstance>)
 export function useFormRules(formData?: Recordable) {
   const { t } = useI18n();
 
-  // const getEmailFormRule = computed(() => createTypeRule(t('sys.login.emailPlaceholder'), 'email'));
-  const getnameFormRule = computed(() => createRule(t('sys.login.usernamePlaceholder')));
   const getSmsFormRule = computed(() => createRule(t('sys.login.smsPlaceholder')));
   const getMobileFormRule = computed(() => createRule(t('sys.login.mobilePlaceholder')));
 
@@ -97,8 +95,18 @@ export function useFormRules(formData?: Recordable) {
     };
   };
 
+  const validateName = () => {
+    return async (_: RuleObject, value: string) => {
+      const nameRegex = /^[\u4e00-\u9fa5]{2,6}$/;
+      const result = nameRegex.test(value);
+      if (!result) {
+        return Promise.reject('请输入真实姓名');
+      }
+      return Promise.resolve();
+    };
+  };
+
   const getFormRules = computed((): { [k: string]: ValidationRule | ValidationRule[] } => {
-    const nameFormRule = unref(getnameFormRule);
     const smsFormRule = unref(getSmsFormRule);
     const mobileFormRule = unref(getMobileFormRule);
 
@@ -110,19 +118,20 @@ export function useFormRules(formData?: Recordable) {
       // register form rules
       case LoginStateEnum.REGISTER:
         return {
-          name: nameFormRule,
+          name: [
+            {
+              required: true,
+              message: '请输入真实姓名!',
+              trigger: ['blur', 'change'],
+              validator: validateName(),
+            },
+          ],
           phone: mobileFormRule,
           password: [
             {
               required: true,
               message: '密码格式不正确,至少8位，包含英文字母大小写!',
-              trigger: 'blur',
-              validator: validateConfirmLoginPassword(),
-            },
-            {
-              required: true,
-              message: '密码格式不正确,至少8位，包含英文字母大小写!',
-              trigger: 'change',
+              trigger: ['blur', 'change'],
               validator: validateConfirmLoginPassword(),
             },
           ],

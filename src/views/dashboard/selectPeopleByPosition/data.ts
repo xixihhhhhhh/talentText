@@ -40,7 +40,7 @@ export const columns = [
     title: '报告可信度',
     key: 'spendTime',
     dataIndex: 'spendTime',
-    width: 100,
+    width: 80,
   },
   {
     title: '匹配度',

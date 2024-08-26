@@ -149,9 +149,9 @@
             >提供所在岗位所需的关键胜任力，提升个人岗位上的表现和职业发展</span
           >
         </div>
-        <div class="indent-4 font-bold">
+        <div class="indent-4 font-bold my-10px">
           通过对 <Avatar :src="avatar" /> {{ resultStore.name }}
-          所在的岗位进行了胜任力分析，总结出TA所在岗位所需的前五项关键胜任力及TA的倾向程度，如下所示:
+          所在的岗位进行了胜任力分析，总结出岗位所需的前五项关键胜任力及TA的匹配度，分别为：:
         </div>
         <postCompetencyRequirements :data-source="postDataSource" />
         <div class="indent-4 font-bold">

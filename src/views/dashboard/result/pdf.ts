@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import html2Canvas from 'html2Canvas';
 import JsPDF from 'jspdf';
 
@@ -5,20 +6,69 @@ const pdf = new JsPDF('p', 'pt', 'a4'); // 创建一个新的 JsPDF 对象，设
 const a4Width = 595.28; // A4 纸张宽度（单位：pt）
 const a4Height = 841.89; // A4 纸张高度（单位：pt）
 const htmlPdf = {
-  getPdf(title: string, html: HTMLElement, cover: HTMLElement) {
-    html2Canvas(cover, {
+  async getPdf(
+    title: string,
+    cover: HTMLElement,
+    secondPage: HTMLElement,
+    thirdPage: HTMLElement,
+    page: HTMLElement,
+  ) {
+    await nextTick();
+    const coverCanvas = await html2Canvas(cover, {
       allowTaint: true, // 允许跨域图像
       useCORS: true, // 使用 CORS 跨域请求
       dpi: window.devicePixelRatio * 4, // 将分辨率提高到特定的DPI 提高四倍
       background: '#FFFFFF', // 设置背景颜色为白色
       willReadFrequently: true, // 设置 willReadFrequently 属性为 true，用于优化性能
-    }).then((canvas) => {
-      const pageData = canvas.toDataURL('image/jpeg', 1.0); // 获取 canvas 的 base64 数据
-      const leftHeight = canvas.height;
-      pdf.addImage(pageData, 'JPEG', 0, 0, a4Width, (a4Width / canvas.width) * leftHeight); // 将 canvas 的内容绘制到 PDF 上
-      pdf.addPage(); // 添加新的一页
     });
-    html2Canvas(html, {
+    const coverPageData = coverCanvas.toDataURL('image/jpeg', 1.0);
+    const coverLeftHeight = coverCanvas.height;
+    pdf.addImage(
+      coverPageData,
+      'JPEG',
+      0,
+      0,
+      a4Width,
+      (a4Width / coverCanvas.width) * coverLeftHeight,
+    );
+    pdf.addPage();
+    const secondPageCanvas = await html2Canvas(secondPage, {
+      allowTaint: true,
+      useCORS: true,
+      dpi: window.devicePixelRatio * 4, // 将分辨率提高到特定的DPI 提高四倍
+      background: '#FFFFFF', // 设置背景颜色为白色
+      willReadFrequently: true, // 设置 willReadFrequently 属性为 true，用于优化性能
+    });
+    const secondPagePageData = secondPageCanvas.toDataURL('image/jpeg', 1.0);
+    const secondPageLeftHeight = secondPageCanvas.height;
+    pdf.addImage(
+      secondPagePageData,
+      'JPEG',
+      0,
+      0,
+      a4Width,
+      (a4Width / secondPageCanvas.width) * secondPageLeftHeight,
+    );
+    pdf.addPage();
+    const thirdPageCanvas = await html2Canvas(thirdPage, {
+      allowTaint: true,
+      useCORS: true,
+      dpi: window.devicePixelRatio * 4, // 将分辨率提高到特定的DPI 提高四倍
+      background: '#FFFFFF', // 设置背景颜色为白色
+      willReadFrequently: true, // 设置 willReadFrequently 属性为 true，用于优化性能
+    });
+    const thirdPagePageData = thirdPageCanvas.toDataURL('image/jpeg', 1.0);
+    const thirdPageLeftHeight = thirdPageCanvas.height;
+    pdf.addImage(
+      thirdPagePageData,
+      'JPEG',
+      0,
+      0,
+      a4Width,
+      (a4Width / thirdPageCanvas.width) * thirdPageLeftHeight,
+    );
+    pdf.addPage();
+    html2Canvas(page, {
       allowTaint: true, // 允许跨域图像
       useCORS: true, // 使用 CORS 跨域请求
       dpi: window.devicePixelRatio * 4, // 将分辨率提高到特定的DPI 提高四倍
@@ -35,7 +85,7 @@ const htmlPdf = {
 
       const pageData = canvas.toDataURL('image/jpeg', 1.0); // 获取 canvas 的 base64 数据
 
-      const canvas1 = document.createElement('canvas'); // 创建一个新的 canvas 元素
+      const canvas1 = document.createElement('canvas') as HTMLCanvasElement; // 创建一个新的 canvas 元素
       let height; // 当前页面的高度
       pdf.setDisplayMode('fullwidth', 'continuous', 'FullScreen'); // 设置 PDF 的显示模式
 
@@ -76,7 +126,6 @@ const htmlPdf = {
               }
             }
             height = Math.round(i - position) || Math.min(leftHeight, a4HeightRef); // 计算当前页面的高度
-            console.log('🚀 ~ createImpl ~ height:', height);
             if (height <= 0) {
               height = a4HeightRef; // 如果高度小于等于 0，则设置为每页高度
             }
