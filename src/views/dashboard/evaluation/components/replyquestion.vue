@@ -14,7 +14,9 @@
         />
         <div v-show="hasUnFinished" class="-enter-x h-100 flex items-center justify-center">
           <a-button type="primary" class="mr-4" @click="resumeAssessment">继续作答</a-button>
-          <a-button type="primary" class="mr-4" @click="againAssessment">重新开始</a-button>
+          <Popconfirm @confirm="againAssessment" title="确定后答题情况作废">
+            <a-button type="primary" class="mr-4">重新开始</a-button>
+          </Popconfirm>
         </div>
       </div>
       <div v-if="!showAnswerQuestion" class="px-2 rounded-2" style="border-radius: 10px">

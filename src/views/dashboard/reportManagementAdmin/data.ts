@@ -352,11 +352,11 @@ export function handleReportTruth(spendTime: number) {
   const spendTimeMinutes = spendTime / 60;
 
   // 根据时间区间返回可信度
-  if (spendTimeMinutes >= 16 && spendTimeMinutes <= 24) {
+  if (spendTimeMinutes >= 20 && spendTimeMinutes <= 30) {
     return '高';
   } else if (
-    (spendTimeMinutes >= 6 && spendTimeMinutes < 16) ||
-    (spendTimeMinutes > 24 && spendTimeMinutes <= 34)
+    (spendTimeMinutes >= 7.5 && spendTimeMinutes < 20) ||
+    (spendTimeMinutes > 30 && spendTimeMinutes <= 42.5)
   ) {
     return '正常';
   } else {

@@ -26,6 +26,15 @@ const questionnaire: AppRouteModule = {
     //   },
     // },
     {
+      path: 'index',
+      name: 'index',
+      component: () => import('@/views/dashboard/workbench/index.vue'),
+      meta: {
+        title: t('routes.dashboard.workbench'),
+        roles: [RoleEnum.SUPER],
+      },
+    },
+    {
       path: 'evaluation',
       name: 'evaluation',
       component: () => import('@/views/dashboard/evaluation/index.vue'),

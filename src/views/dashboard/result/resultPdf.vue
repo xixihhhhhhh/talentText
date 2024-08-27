@@ -1,229 +1,231 @@
 <template>
-  <PageWrapper :class="prefixCls">
-    <div ref="cover">
-      <div class="py-200px">
-        <div class="flex">
-          <div
-            class="w-80% h-220px pt-10px pl-30px bg-#4773ca polygon flex-col justify-center items-center"
-          >
-            <div class="text-white text-100px mb-15px" :style="{ letterSpacing: '55px' }"
-              >测评报告</div
+  <Spin size="large" :spinning="spinning">
+    <PageWrapper :class="prefixCls">
+      <div ref="cover">
+        <div class="py-200px">
+          <div class="flex">
+            <div
+              class="w-80% h-220px pt-10px pl-30px bg-#4773ca polygon flex-col justify-center items-center"
             >
-            <div class="text-#29bccb text-60px">ASSESSMENT REPORT</div>
-          </div>
-          <div>
-            <div class="w-140px h-140px bg-#28B8C5 transform transformTop"> </div>
-            <div class="w-140px h-140px bg-#28B8C5 transform transformBottom"> </div>
-          </div>
-          <div class="w-140px h-140px bg-#4773ca transform transformRight"> </div>
-        </div>
-        <div class="text-40px font-bold ml-100px relative bottom-20px">
-          姓名: {{ userInfo.name }}
-        </div>
-        <div class="flex mt-8 h-60px text-25px">
-          <div class="form">
-            <div class="w-200px flex justify-between mr-15px">
-              <span>所</span><span>属</span><span>部</span><span>门:</span>
+              <div class="text-white text-100px mb-15px" :style="{ letterSpacing: '55px' }"
+                >测评报告</div
+              >
+              <div class="text-#29bccb text-60px">ASSESSMENT REPORT</div>
             </div>
-            {{ department }}
-          </div>
-          <div class="form">
-            <div class="w-200px flex justify-between mr-15px">
-              <span>所</span><span>属</span><span>岗</span><span>位:</span>
+            <div>
+              <div class="w-140px h-140px bg-#28B8C5 transform transformTop"> </div>
+              <div class="w-140px h-140px bg-#28B8C5 transform transformBottom"> </div>
             </div>
-            {{ position }}
+            <div class="w-140px h-140px bg-#4773ca transform transformRight"> </div>
           </div>
+          <div class="text-40px font-bold ml-100px relative bottom-20px">
+            姓名: {{ userInfo.name }}
+          </div>
+          <div class="flex mt-8 h-60px text-25px">
+            <div class="form">
+              <div class="w-200px flex justify-between mr-15px">
+                <span>所</span><span>属</span><span>部</span><span>门:</span>
+              </div>
+              {{ department }}
+            </div>
+            <div class="form">
+              <div class="w-200px flex justify-between mr-15px">
+                <span>所</span><span>属</span><span>岗</span><span>位:</span>
+              </div>
+              {{ position }}
+            </div>
+          </div>
+          <div class="flex h-60px text-25px">
+            <div class="form">
+              <div class="w-200px flex justify-between mr-15px">
+                <span>电</span><span>话:</span>
+              </div>
+              {{ userInfo.phone }}
+            </div>
+            <div class="form">
+              <div class="w-200px flex justify-between mr-15px">
+                <span>完</span><span>成</span><span>时</span><span>间:</span>
+              </div>
+              {{ finishTime }}
+            </div>
+          </div>
+          <div class="flex text-25px">
+            <div class="form">
+              <div class="w-200px flex justify-between mr-15px">
+                <span>报</span><span>告</span><span>可</span><span>信</span><span>度:</span>
+              </div>
+              {{ handleReportTruth(spendTime) }}
+            </div>
+          </div>
+          <div class="flex justify-center mt-800px text-25px">本报告涉及个人隐私，请注意保密</div>
         </div>
-        <div class="flex h-60px text-25px">
-          <div class="form">
-            <div class="w-200px flex justify-between mr-15px">
-              <span>电</span><span>话:</span>
-            </div>
-            {{ userInfo.phone }}
-          </div>
-          <div class="form">
-            <div class="w-200px flex justify-between mr-15px">
-              <span>完</span><span>成</span><span>时</span><span>间:</span>
-            </div>
-            {{ finishTime }}
-          </div>
-        </div>
-        <div class="flex text-25px">
-          <div class="form">
-            <div class="w-200px flex justify-between mr-15px">
-              <span>报</span><span>告</span><span>可</span><span>信</span><span>度:</span>
-            </div>
-            {{ handleReportTruth(spendTime) }}
-          </div>
-        </div>
-        <div class="flex justify-center mt-800px text-25px">本报告涉及个人隐私，请注意保密</div>
       </div>
-    </div>
-    <div class="pt-100px" ref="secondPage">
-      <Card>
-        <div class="font-bold text-lg border-b-2 mb-100px">结果分析</div>
-      </Card>
-      <template v-if="isMobile">
-        <div class="w-full">
-          <Leidatu :options="echartOptions" class="w-full" />
-        </div>
-        <CareerFieldPdf :careerFieldObj="careerFieldObj" />
-      </template>
-      <div class="flex justify-center bg-white" v-else>
-        <leidatu :options="echartOptions" />
-        <CareerFieldPdf :careerFieldObj="careerFieldObj" />
-      </div>
-      <Card class="mt-2" :class="textSize">
-        <div class="font-bold text-lg border-b-2">优势领域说明</div>
-        <div class="mt-4">
-          <Avatar :src="avatar" /> {{ userInfo.name }} 在
-          <span class="font-bold" :style="{ color: activeColor }"
-            >{{ fieldMap[getMaxField()] }}
-          </span>
-          <span>&nbsp;{{ coreAreas[getMaxField()] }}</span>
-        </div>
-      </Card>
-      <Card class="w-full mt-2" :class="textSize">
-        <div class="font-bold text-lg border-b-2">职业优势前三</div>
-        <div v-for="index in 3" :key="index">
-          <div class="flex items-center mt-1">
-            <Icon :icon="careerAdvantagesIcons[index - 1]" :size="30" />
-            <span class="font-bold"
-              >{{ getTopThreeScores().topThreeKeys[index - 1] }}:
-              {{ getTopThreeScores().topThree[index - 1].toFixed(2) }}</span
-            >
+      <div class="pt-100px" ref="secondPage">
+        <Card>
+          <div class="font-bold text-lg border-b-2 mb-100px">结果分析</div>
+        </Card>
+        <template v-if="isMobile">
+          <div class="w-full">
+            <Leidatu :options="echartOptions" class="w-full" />
           </div>
-          <div class="indent">
-            {{ getTopThreeScores().shuoming[index - 1] }}
-          </div>
+          <CareerFieldPdf :careerFieldObj="careerFieldObj" />
+        </template>
+        <div class="flex justify-center bg-white" v-else>
+          <leidatu :options="echartOptions" />
+          <CareerFieldPdf :careerFieldObj="careerFieldObj" />
         </div>
-      </Card>
-    </div>
-    <div class="pt-100px" ref="thirdPage">
-      <Card class="w-full mt-2">
-        <div class="font-bold text-lg border-b-2">胜任力分析</div>
-        <competencyAnalysis :obvious="obvious" :notObvious="notObvious" />
-      </Card>
-      <Card class="w-full mt-2" :class="textSize">
-        <div class="font-bold text-lg border-b-grey border-b-2"
-          >管理建议
-          <span class="text-3 color-gray"
-            >通过以下建议可以发挥受测者的优势，有助于大大地提升其工作成效</span
-          >
-        </div>
-        <div v-for="i in 6" :key="i" :style="{ padding: '1rem 0  0 0' }">
-          <Icon
-            icon="material-symbols-light:circle"
-            :size="20"
-            :color="activeColor"
-            class="relative top-0.5"
-          />
-          <span class="line-height-loose">{{ guanlijianyi[managementAdvice[i - 1]] }}</span>
-        </div>
-      </Card>
-    </div>
-    <div ref="page">
-      <div class="pt-200px border-t-2px">
-        <Card class="w-full mt-2" :class="textSize">
-          <div class="font-bold text-lg border-b-2"
-            >职业推荐
-            <span class="text-3 color-gray"
-              >只为辅助您理解优势职业方向，并非作为判定胜任岗位与否的唯一标准</span
-            >
-          </div>
-          <div class="w-full border-t-#67759d border-t-2">
-            <div class="flex border-b-#e6e6e6 border-b-2 items-center">
-              <div class="w-40% bg-#f7f7f7 border-r-#e6e6e6 border-r-2 flex-shrink-0">
-                <div class="flex flex-col py-3 px-1">
-                  <div
-                    class="chat-bubble relative px-2 rounded-md flex justify-center items-center color-white"
-                    :style="{ backgroundColor: activeColor }"
-                    >优势明显</div
-                  >
-                  <div class="text-center">的职业方向</div>
-                </div>
-              </div>
-              <div class="flex flex-col">
-                <div class="font-bold whitespace-nowrap"
-                  >{{ gongzuofangmian[getTopTwo()[0]] }}方面</div
-                >
-                <div class="indent-2">例如:{{ gongzuogangwei[getTopTwo()[0]][corrFunc] }}等</div>
-                <div class="font-bold whitespace-nowrap"
-                  >{{ gongzuofangmian[getTopTwo()[1]] }}方面</div
-                >
-                <div class="indent-2">例如:{{ gongzuogangwei[getTopTwo()[1]][corrFunc] }}等</div>
-              </div>
-            </div>
-          </div>
-          <div class="w-full border-t-#67759d border-t-2">
-            <div class="flex border-b-#e6e6e6 border-b-2 items-center">
-              <div class="w-40% bg-#f7f7f7 border-r-#e6e6e6 border-r-2 flex-shrink-0">
-                <div class="flex flex-col py-3 px-1">
-                  <div
-                    class="chat-bubble relative px-2 bg-gray rounded-md flex justify-center items-center color-white"
-                  >
-                    优势不明显
-                  </div>
-                  <div class="text-center">的职业方向</div>
-                </div>
-              </div>
-              <div class="flex flex-col">
-                <div class="font-bold whitespace-nowrap"
-                  >{{ gongzuofangmian[getEndTwo()[0]] }}方面</div
-                >
-                <div class="indent-2">例如:{{ gongzuogangwei[getEndTwo()[1]][corrFunc] }}等</div>
-                <div class="font-bold whitespace-nowrap"
-                  >{{ gongzuofangmian[getEndTwo()[1]] }}方面</div
-                >
-                <div class="indent-2">例如:{{ gongzuogangwei[getEndTwo()[1]][corrFunc] }}等</div>
-              </div>
-            </div>
+        <Card class="mt-2" :class="textSize">
+          <div class="font-bold text-lg border-b-2">优势领域说明</div>
+          <div class="mt-4">
+            <Avatar :src="avatar" /> {{ userInfo.name }} 在
+            <span class="font-bold" :style="{ color: activeColor }"
+              >{{ fieldMap[getMaxField()] }}
+            </span>
+            <span>&nbsp;{{ coreAreas[getMaxField()] }}</span>
           </div>
         </Card>
         <Card class="w-full mt-2" :class="textSize">
+          <div class="font-bold text-lg border-b-2">职业优势前三</div>
+          <div v-for="index in 3" :key="index">
+            <div class="flex items-center mt-1">
+              <Icon :icon="careerAdvantagesIcons[index - 1]" :size="30" />
+              <span class="font-bold"
+                >{{ getTopThreeScores().topThreeKeys[index - 1] }}:
+                {{ getTopThreeScores().topThree[index - 1].toFixed(2) }}</span
+              >
+            </div>
+            <div class="indent">
+              {{ getTopThreeScores().shuoming[index - 1] }}
+            </div>
+          </div>
+        </Card>
+      </div>
+      <div class="pt-50px" ref="thirdPage">
+        <Card class="w-full mt-2">
+          <div class="font-bold text-lg border-b-2">胜任力分析</div>
+          <competencyAnalysis :obvious="obvious" :notObvious="notObvious" />
+        </Card>
+        <Card class="w-full mt-2 relative bottom-50px" :class="textSize">
           <div class="font-bold text-lg border-b-grey border-b-2"
-            >搭配建议
+            >管理建议
             <span class="text-3 color-gray"
-              >通过以下搭配建议可以管控受测者的劣势，有助于搭建合作互补的完美团队</span
+              >通过以下建议可以发挥受测者的优势，有助于大大地提升其工作成效</span
             >
           </div>
-          <div class="indent-4">
-            <Avatar :src="avatar" /> {{ userInfo.name }}
-            的弱势在于
-            <span :style="{ color: activeColor }">{{
-              dapeijianyi[getEndThree()[0]] +
-              '、' +
-              dapeijianyi[getEndThree()[1]] +
-              '、' +
-              dapeijianyi[getEndThree()[2]]
-            }}</span>
-            方面，如果TA的工作职责范围涉及到这些方面相关的内容，就需要和这些方面比较强的工作搭档进行优势互补，以便相应提高工作成效。
-          </div>
-        </Card>
-        <Card class="w-full mt-2" :class="textSize">
-          <div class="font-bold text-lg border-b-2"
-            >岗位胜任力需求
-            <span class="text-3 color-gray"
-              >提供所在岗位所需的关键胜任力，提升个人岗位上的表现和职业发展</span
-            >
-          </div>
-          <div class="indent-4 font-bold my-10px">
-            通过对 <Avatar :src="avatar" /> {{ userInfo.name }}
-            所在的岗位进行了胜任力分析，总结出岗位所需的前五项关键胜任力及TA的匹配度，分别为：
-          </div>
-          <postCompetencyRequirements :data-source="postDataSource" />
-          <div class="indent-4 font-bold">
-            通过了解这些关键胜任力，TA可以更清晰地认识到岗位对TA的要求，有针对性地提升自身的能力和表现进一步推动TA的职业发展。
+          <div v-for="i in 6" :key="i" :style="{ padding: '1rem 0  0 0' }">
+            <Icon
+              icon="material-symbols-light:circle"
+              :size="20"
+              :color="activeColor"
+              class="relative top-0.5"
+            />
+            <span class="line-height-loose">{{ guanlijianyi[managementAdvice[i - 1]] }}</span>
           </div>
         </Card>
       </div>
-    </div>
-  </PageWrapper>
+      <div ref="page">
+        <div class="pt-100px border-t-2px">
+          <Card class="w-full mt-2" :class="textSize">
+            <div class="font-bold text-lg border-b-2"
+              >职业推荐
+              <span class="text-3 color-gray"
+                >只为辅助您理解优势职业方向，并非作为判定胜任岗位与否的唯一标准</span
+              >
+            </div>
+            <div class="w-full border-t-#67759d border-t-2">
+              <div class="flex border-b-#e6e6e6 border-b-2 items-center">
+                <div class="w-40% bg-#f7f7f7 border-r-#e6e6e6 border-r-2 flex-shrink-0">
+                  <div class="flex flex-col py-3 px-1">
+                    <div
+                      class="chat-bubble relative px-2 rounded-md flex justify-center items-center color-white"
+                      :style="{ backgroundColor: activeColor }"
+                      >优势明显</div
+                    >
+                    <div class="text-center">的职业方向</div>
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <div class="font-bold whitespace-nowrap"
+                    >{{ gongzuofangmian[getTopTwo()[0]] }}方面</div
+                  >
+                  <div class="indent-2">例如:{{ gongzuogangwei[getTopTwo()[0]][corrFunc] }}等</div>
+                  <div class="font-bold whitespace-nowrap"
+                    >{{ gongzuofangmian[getTopTwo()[1]] }}方面</div
+                  >
+                  <div class="indent-2">例如:{{ gongzuogangwei[getTopTwo()[1]][corrFunc] }}等</div>
+                </div>
+              </div>
+            </div>
+            <div class="w-full border-t-#67759d border-t-2">
+              <div class="flex border-b-#e6e6e6 border-b-2 items-center">
+                <div class="w-40% bg-#f7f7f7 border-r-#e6e6e6 border-r-2 flex-shrink-0">
+                  <div class="flex flex-col py-3 px-1">
+                    <div
+                      class="chat-bubble relative px-2 bg-gray rounded-md flex justify-center items-center color-white"
+                    >
+                      优势不明显
+                    </div>
+                    <div class="text-center">的职业方向</div>
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <div class="font-bold whitespace-nowrap"
+                    >{{ gongzuofangmian[getEndTwo()[0]] }}方面</div
+                  >
+                  <div class="indent-2">例如:{{ gongzuogangwei[getEndTwo()[1]][corrFunc] }}等</div>
+                  <div class="font-bold whitespace-nowrap"
+                    >{{ gongzuofangmian[getEndTwo()[1]] }}方面</div
+                  >
+                  <div class="indent-2">例如:{{ gongzuogangwei[getEndTwo()[1]][corrFunc] }}等</div>
+                </div>
+              </div>
+            </div>
+          </Card>
+          <Card class="w-full mt-2" :class="textSize">
+            <div class="font-bold text-lg border-b-grey border-b-2"
+              >搭配建议
+              <span class="text-3 color-gray"
+                >通过以下搭配建议可以管控受测者的劣势，有助于搭建合作互补的完美团队</span
+              >
+            </div>
+            <div class="indent-4">
+              <Avatar :src="avatar" /> {{ userInfo.name }}
+              的弱势在于
+              <span :style="{ color: activeColor }">{{
+                dapeijianyi[getEndThree()[0]] +
+                '、' +
+                dapeijianyi[getEndThree()[1]] +
+                '、' +
+                dapeijianyi[getEndThree()[2]]
+              }}</span>
+              方面，如果TA的工作职责范围涉及到这些方面相关的内容，就需要和这些方面比较强的工作搭档进行优势互补，以便相应提高工作成效。
+            </div>
+          </Card>
+          <Card class="w-full mt-2" :class="textSize">
+            <div class="font-bold text-lg border-b-2"
+              >岗位胜任力需求
+              <span class="text-3 color-gray"
+                >提供所在岗位所需的关键胜任力，提升个人岗位上的表现和职业发展</span
+              >
+            </div>
+            <div class="indent-4 font-bold my-10px">
+              通过对 <Avatar :src="avatar" /> {{ userInfo.name }}
+              所在的岗位进行了胜任力分析，总结出岗位所需的前五项关键胜任力及TA的匹配度，分别为：
+            </div>
+            <postCompetencyRequirements :data-source="postDataSource" />
+            <div class="indent-4 font-bold">
+              通过了解这些关键胜任力，TA可以更清晰地认识到岗位对TA的要求，有针对性地提升自身的能力和表现进一步推动TA的职业发展。
+            </div>
+          </Card>
+        </div>
+      </div>
+    </PageWrapper>
+  </Spin>
 </template>
 
 <script lang="ts" setup>
   import { ref, PropType, onMounted, nextTick } from 'vue';
-  import { Card, Avatar } from 'ant-design-vue';
+  import { Card, Avatar, Spin } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
   import Leidatu from './components/leidatu.vue';
   import Icon from '@/components/Icon/Icon.vue';
@@ -278,6 +280,7 @@
   const obvious = ref<any[]>([]);
   const notObvious = ref<any[]>([]);
   const postDataSource = ref<any[]>([]);
+  const spinning = ref(true);
 
   const avatar = props.userInfo.avatar || headerImg;
   const { recordProps } = props;
@@ -310,8 +313,9 @@
       managementAdvice.value.push(competencyObj[i][0]);
     }
     await nextTick();
-    htmlPdf.getPdf('测试', cover.value, secondPage.value, thirdPage.value, page.value);
+    await htmlPdf.getPdf('测试', cover.value, secondPage.value, thirdPage.value, page.value);
     setTimeout(() => emits('close'), 0);
+    spinning.value = false;
   });
 
   function getTopTwo() {
