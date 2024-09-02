@@ -208,7 +208,7 @@
         competency: advantageMap[competencyObj.value[i][0]][0],
         describe: competencyDefinition[competencyObj.value[i][0]],
       });
-      if (i !== 6) {
+      if (i !== 5) {
         postDataSource.value.push({
           competency: advantageMap[competencyObj.value[i][0]][0],
           definition: competencyDefinition[competencyObj.value[i][0]],

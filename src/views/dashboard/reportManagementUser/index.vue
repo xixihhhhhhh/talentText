@@ -29,9 +29,6 @@
         </template>
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">
-            <a-button v-if="!isMobile" type="primary" class="mr-4" @click="download(record)"
-              >下载</a-button
-            >
             <a-button type="primary" @click="detail(record)">详情</a-button>
           </div>
         </template>
@@ -65,8 +62,6 @@
   const showResultPdf = ref(false);
   const dataSource = ref([]);
 
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
   onMounted(async () => {
     GetAllEvaluateListApi({});
   });
@@ -78,12 +73,6 @@
       item.index = index + 1;
       return item;
     });
-  }
-
-  async function download(record: any) {
-    // 先根据userId拿到userInfo
-    recordProps.value = record;
-    showResultPdf.value = true;
   }
 
   async function detail(record: any) {

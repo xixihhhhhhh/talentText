@@ -32,6 +32,7 @@
         <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
           >搜索</a-button
         >
+        <a-button :icon="h(ReloadOutlined)" class="my-2" @click="reset">重置</a-button>
       </div>
     </div>
     <div class="pt-5 flex items-center" v-else>
@@ -56,9 +57,10 @@
         class="w-20% mr-2"
         allowClear
       />
-      <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
+      <a-button type="primary" :icon="h(SearchOutlined)" class="my-2 mr-4" @click="search"
         >搜索</a-button
       >
+      <a-button :icon="h(ReloadOutlined)" class="my-2" @click="reset">重置</a-button>
     </div>
     <Table
       :dataSource="dataSource"
@@ -114,7 +116,7 @@
   import { useRouter } from 'vue-router';
   import { Table, Select, message, Popconfirm } from 'ant-design-vue';
   import { columns, handleReportTruth } from './data';
-  import { SearchOutlined } from '@ant-design/icons-vue';
+  import { SearchOutlined, ReloadOutlined } from '@ant-design/icons-vue';
   import { getAllEvaluateListApi } from '@/api/sys/evaluateHistory';
   import { getUserInfoById, setCanTextApi } from '@/api/sys/user';
   import { getAllDepartmentAndPositionApi } from '@/api/sys/duty';
@@ -152,6 +154,20 @@
       subDepartment: selectedSubDepartment.value,
       position: selectedPosition.value,
       sortOrder: sortOrder.value,
+    };
+    GetAllEvaluateListApi(filter);
+  }
+
+  function reset() {
+    selectedDepartment.value = '';
+    selectedSubDepartment.value = '';
+    selectedPosition.value = '';
+    sortOrder.value = '';
+    const filter = {
+      department: '',
+      selectedSubDepartment: '',
+      selectedPosition: '',
+      sortOrder: '',
     };
     GetAllEvaluateListApi(filter);
   }
