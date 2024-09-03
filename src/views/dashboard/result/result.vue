@@ -10,35 +10,13 @@
       <leidatu :options="questionStore.leidatu" class="enter-y" />
       <CareerField class="enter-y" />
     </div>
-    <Card class="w-full mt-2" :class="textSize">
-      <div class="font-bold text-lg border-b-grey border-b-2">优势领域说明</div>
-      <div class="mt-4">
-        <Avatar :src="avatar" /> {{ userInfo.name }} 在
-        <span class="font-bold" :style="{ color: activeColor }"
-          >{{ fieldMap[getMaxField()] }}
-        </span>
-        <span>&nbsp;{{ coreAreas[getMaxField()] }}</span>
-      </div>
-    </Card>
-    <Card class="w-full mt-2" :class="textSize">
-      <div class="font-bold text-lg border-b-2">职业优势前三</div>
-      <div v-for="index in 3" :key="index">
-        <div class="flex items-center mt-1">
-          <Icon :icon="careerAdvantagesIcons[index - 1]" :size="30" />
-          <span class="font-bold"
-            >{{ getTopThreeScores().topThreeKeys[index - 1] }}:
-            {{ getTopThreeScores().topThree[index - 1].toFixed(2) }}</span
-          >
-        </div>
-        <div class="indent">
-          {{ getTopThreeScores().shuoming[index - 1] }}
-        </div>
-      </div>
-    </Card>
-    <Card class="w-full mt-2">
-      <div class="font-bold text-lg border-b-2">胜任力分析</div>
-      <competencyAnalysis :obvious="obvious" :notObvious="notObvious" />
-    </Card>
+    <advantageousFieldsExplanation
+      :avatar="avatar"
+      :name="userInfo.name"
+      :max-field-index="getMaxField()"
+    />
+    <topThreeAdvantages :options="getTopThreeScores()" />
+    <competencyAnalysis :obvious="obvious" :notObvious="notObvious" />
     <Card class="w-full mt-2" :class="textSize">
       <div class="font-bold text-lg border-b-grey border-b-2"
         >管理建议
@@ -148,6 +126,8 @@
   import { Card, Avatar } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
   import Leidatu from './components/leidatu.vue';
+  import advantageousFieldsExplanation from './components/advantageousFieldsExplanation.vue';
+  import topThreeAdvantages from './components/topThreeAdvantages.vue';
   import Icon from '@/components/Icon/Icon.vue';
   import competencyAnalysis from './competencyAnalysis.vue';
   import CareerField from './careerField.vue';
@@ -158,14 +138,12 @@
   import {
     careerAdvantagesMap,
     advantageMap,
-    coreAreas,
     competencyDefinition,
     careerAdvantageMap,
     gongzuofangmian,
     gongzuogangwei,
     dapeijianyi,
     guanlijianyi,
-    fieldMap,
   } from './data';
 
   const questionStore = useQuestionStore();
@@ -176,11 +154,6 @@
   const textSize = isMobile ? 'text-3' : 'text-5';
   const prefixCls = 'result';
   const activeColor = '#28B8C5';
-  const careerAdvantagesIcons = [
-    'twemoji:1st-place-medal',
-    'twemoji:2nd-place-medal',
-    'twemoji:3rd-place-medal',
-  ];
 
   const managementAdvice = ref<any[]>([]);
   const obvious = ref<any[]>([]);

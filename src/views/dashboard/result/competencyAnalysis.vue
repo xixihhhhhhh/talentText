@@ -1,53 +1,58 @@
 <template>
-  <div v-if="isMobile">
-    <div class="flex">
-      <div class="flex-1 mr-4">
-        <div class="title">优势明显的胜任力</div>
-        <div v-for="(item, index) in obvious" :key="index" class="h-35">
-          <div class="text-center mt-1">
-            <span class="text-lg text-white font-bold bg-#28B8C5 px-2 border-rd-2">{{
-              item.competency
-            }}</span>
+  <Card class="w-full mt-2">
+    <div class="font-bold text-lg border-b-2">胜任力分析</div>
+    <div v-if="isMobile">
+      <div class="flex">
+        <div class="flex-1 mr-4">
+          <div class="title">优势明显的胜任力</div>
+          <div v-for="(item, index) in obvious" :key="index" class="h-35">
+            <div class="text-center mt-1">
+              <span class="text-lg text-white font-bold bg-#28B8C5 px-2 border-rd-2">{{
+                item.competency
+              }}</span>
+            </div>
+            <div>{{ item.describe }}</div>
           </div>
-          <div>{{ item.describe }}</div>
+        </div>
+        <div class="flex-1">
+          <div class="title-green">优势不明显的胜任力</div>
+          <div v-for="(item, index) in notObvious" :key="index" class="h-35">
+            <div class="text-center mt-1">
+              <span class="text-lg text-white font-bold bg-#4874cb px-2 border-rd-2">{{
+                item.competency
+              }}</span>
+            </div>
+            <div>{{ item.describe }}</div>
+          </div>
         </div>
       </div>
-      <div class="flex-1">
-        <div class="title-green">优势不明显的胜任力</div>
-        <div v-for="(item, index) in notObvious" :key="index" class="h-35">
-          <div class="text-center mt-1">
-            <span class="text-lg text-white font-bold bg-#4874cb px-2 border-rd-2">{{
-              item.competency
-            }}</span>
-          </div>
-          <div>{{ item.describe }}</div>
+    </div>
+    <div class="container" v-else>
+      <div class="column">
+        <div class="title font-bold">优势明显的胜任力</div>
+        <div v-for="(item, index) in obvious" :key="index" class="h-27">
+          <span class="text-20px text-white font-bold bg-#28B8C5 px-2 border-rd-2">{{
+            item.competency
+          }}</span>
+          <div class="text-20px">{{ item.describe }}</div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="title-green font-bold">优势不明显的胜任力</div>
+        <div v-for="(item, index) in notObvious" :key="index" class="h-27">
+          <span class="text-20px text-white font-bold bg-#4874cb px-2 border-rd-2">{{
+            item.competency
+          }}</span>
+          <div class="text-20px">{{ item.describe }}</div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="container" v-else>
-    <div class="column">
-      <div class="title font-bold">优势明显的胜任力</div>
-      <div v-for="(item, index) in obvious" :key="index" class="h-27">
-        <span class="text-20px text-white font-bold bg-#28B8C5 px-2 border-rd-2">{{
-          item.competency
-        }}</span>
-        <div class="text-20px">{{ item.describe }}</div>
-      </div>
-    </div>
-    <div class="column">
-      <div class="title-green font-bold">优势不明显的胜任力</div>
-      <div v-for="(item, index) in notObvious" :key="index" class="h-27">
-        <span class="text-20px text-white font-bold bg-#4874cb px-2 border-rd-2">{{
-          item.competency
-        }}</span>
-        <div class="text-20px">{{ item.describe }}</div>
-      </div>
-    </div>
-  </div>
+  </Card>
 </template>
 
 <script lang="ts" setup>
+  import { Card } from 'ant-design-vue';
+
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   defineProps<{
