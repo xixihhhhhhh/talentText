@@ -16,7 +16,7 @@
       </div>
     </div>
   </div>
-  <Card class="pr-20" v-else>
+  <Card class="pr-10" v-else>
     <div class="font-bold text-lg">职业领域</div>
     <div class="flex flex-wrap" v-for="index in 4" :key="index">
       <Icon
@@ -24,7 +24,7 @@
         :size="100"
         :color="getMaxField() === index ? activeColor : '#999'"
       />
-      <div>
+      <div class="pt-2">
         <div class="font-bold"
           >{{ careerFieldName[index - 1] }} {{ careerFieldObj[fields[index - 1]] }}</div
         >

@@ -17,6 +17,7 @@
 
 <script lang="ts" setup>
   import { Card } from 'ant-design-vue';
+  import Icon from '@/components/Icon/Icon.vue';
 
   defineProps({
     options: {

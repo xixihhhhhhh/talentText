@@ -20,6 +20,7 @@ enum Api {
   GetSecondWenjuan = baseUrl + '/getSecondWenjuan',
   ContinueAnswer = baseUrl + '/continueAnswer',
   ClearSecondWenjuan = baseUrl + '/clearSecondWenjuan',
+  getIsProfileCompleted = baseUrl + '/getIsProfileCompleted',
   GetUserNumber = baseUrl + '/getAllUsers',
   getCanText = baseUrl + '/getCanText',
   setCanText = baseUrl + '/setCanText',
@@ -103,6 +104,13 @@ export function getCanTextApi(params: any) {
 
 export function setCanTextApi(params: any) {
   return defHttp.post<any>({ url: Api.setCanText, params }, { errorMessageMode: 'none' });
+}
+
+export function getIsProfileCompletedApi(params: any) {
+  return defHttp.post<any>(
+    { url: Api.getIsProfileCompleted, params },
+    { errorMessageMode: 'none' },
+  );
 }
 
 export function getPermCode() {

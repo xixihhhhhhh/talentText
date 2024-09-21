@@ -29,12 +29,14 @@
       :avatar="avatar"
       :post-data-source="postDataSource"
     />
+    <trainingSupport :competency-obj="supportCompetencyObj" :corr-func="corrFunc" />
   </PageWrapper>
 </template>
 
 <script lang="ts" setup>
   import { ref, computed, onMounted } from 'vue';
   import { PageWrapper } from '@/components/Page';
+  import cloneDeep from 'lodash-es/cloneDeep';
   import Leidatu from './components/leidatu.vue';
   import advantageousFieldsExplanation from './components/advantageousFieldsExplanation.vue';
   import topThreeAdvantages from './components/topThreeAdvantages.vue';
@@ -42,6 +44,7 @@
   import occupationalRecommendation from './components/occupationalRecommendation.vue';
   import matchingSuggestions from './components/matchingSuggestions.vue';
   import jobCompetencyRequirements from './components/jobCompetencyRequirements.vue';
+  import trainingSupport from './components/trainingSupport.vue';
   import competencyAnalysis from './competencyAnalysis.vue';
   import CareerField from './careerField.vue';
   import { useUserStore } from '@/store/modules/user';
@@ -53,6 +56,7 @@
     competencyDefinition,
     careerAdvantageMap,
   } from './data';
+  import { sort } from './methods';
 
   const questionStore = useQuestionStore();
   const corrFunc = questionStore.corrFunc;
@@ -80,6 +84,7 @@
   const competencyObj = computed(() => {
     return questionStore.competencyObj;
   });
+  const supportCompetencyObj = sort(cloneDeep(questionStore.competencyObj));
 
   onMounted(() => {
     for (let i = 0; i < 6; i++) {

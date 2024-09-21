@@ -10,10 +10,11 @@ const questionnaire: AppRouteModule = {
   component: LAYOUT,
   redirect: '/questionnaire/evaluation',
   meta: {
-    roles: [RoleEnum.SUPER, RoleEnum.User],
-    orderNo: 10,
-    icon: 'ant-design:android-filled',
-    title: t('routes.dashboard.questionnaire'),
+    roles: [RoleEnum.User],
+    orderNo: 11,
+    icon: 'ion:git-compare-outline',
+    title: t('routes.dashboard.evaluation'),
+    hideChildrenInMenu: true,
   },
   children: [
     // {
@@ -26,57 +27,12 @@ const questionnaire: AppRouteModule = {
     //   },
     // },
     {
-      path: 'index',
-      name: 'index',
-      component: () => import('@/views/dashboard/workbench/index.vue'),
-      meta: {
-        title: t('routes.dashboard.workbench'),
-        roles: [RoleEnum.SUPER],
-      },
-    },
-    {
       path: 'evaluation',
       name: 'evaluation',
       component: () => import('@/views/dashboard/evaluation/index.vue'),
       meta: {
         title: t('routes.dashboard.evaluation'),
         roles: [RoleEnum.SUPER, RoleEnum.User],
-      },
-    },
-    {
-      path: 'reportManagementUser',
-      name: 'reportManagement',
-      component: () => import('@/views/dashboard/reportManagementUser/index.vue'),
-      meta: {
-        title: '报告管理',
-        roles: [RoleEnum.User],
-      },
-    },
-    {
-      path: 'reportManagementAdmin',
-      name: 'reportManagement',
-      component: () => import('@/views/dashboard/reportManagementAdmin/index.vue'),
-      meta: {
-        title: '报告管理',
-        roles: [RoleEnum.SUPER],
-      },
-    },
-    {
-      path: 'positionSetting',
-      name: 'positionSetting',
-      component: () => import('@/views/dashboard/positionSetting/index.vue'),
-      meta: {
-        title: '岗位设置',
-        roles: [RoleEnum.SUPER],
-      },
-    },
-    {
-      path: 'selectPeopleByPosition',
-      name: 'selectPeopleByPosition',
-      component: () => import('@/views/dashboard/selectPeopleByPosition/index.vue'),
-      meta: {
-        title: '以岗选人',
-        roles: [RoleEnum.SUPER],
       },
     },
     {

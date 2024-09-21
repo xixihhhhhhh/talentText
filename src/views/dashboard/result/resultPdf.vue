@@ -98,6 +98,7 @@
             :avatar="avatar"
             :post-data-source="postDataSource"
           />
+          <trainingSupport :competency-obj="supportCompetencyObj" :corr-func="corrFunc" />
         </div>
       </div>
     </PageWrapper>
@@ -115,6 +116,7 @@
   import occupationalRecommendation from './components/occupationalRecommendation.vue';
   import matchingSuggestions from './components/matchingSuggestions.vue';
   import jobCompetencyRequirements from './components/jobCompetencyRequirements.vue';
+  import trainingSupport from './components/trainingSupport.vue';
   import CareerFieldPdf from './careerFieldPdf.vue';
   import competencyAnalysis from './competencyAnalysis.vue';
   import headerImg from '@/assets/images/header.jpg';
@@ -160,6 +162,7 @@
   const careerFieldObj = recordProps.careerFieldObj;
   const careerAdvantagesObj = sort(recordProps.careerAdvantagesObj);
   const competencyObj = sort(recordProps.competencyObj);
+  const supportCompetencyObj = sort(recordProps.competencyObj);
 
   onMounted(async () => {
     for (let i = 0; i < 6; i++) {

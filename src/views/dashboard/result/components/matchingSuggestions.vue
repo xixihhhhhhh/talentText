@@ -12,7 +12,8 @@
       <span :style="{ color: activeColor }">{{
         dapeijianyi[endThree[0]] + '、' + dapeijianyi[endThree[1]] + '、' + dapeijianyi[endThree[2]]
       }}</span>
-      方面，如果TA的工作职责范围涉及到这些方面相关的内容，就需要和这些方面比较强的工作搭档进行优势互补，以便相应提高工作成效。
+      方面，如果TA的工作职责范围涉及到这些方面相关的内容，
+      就需要和这些方面比较强的工作搭档进行优势互补，以便相应提高工作成效。
     </div>
   </Card>
 </template>
@@ -23,7 +24,7 @@
 
   defineProps({
     name: {
-      type: Array as PropType<any>,
+      type: String as PropType<any>,
       required: true,
     },
     endThree: {

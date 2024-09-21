@@ -1,67 +1,6 @@
 <template>
   <div class="bg-white px-2">
-    <div class="pt-5" v-if="isMobile">
-      <div class="my-2 ml-4 flex items-center justify-center w-80%">
-        <span class="mr-2">部门：</span>
-        <Select
-          v-model:value="selectedDepartment"
-          :options="departmentOptions"
-          class="flex-1"
-          allowClear
-        />
-      </div>
-      <div class="my-2 ml-4 flex items-center justify-center w-80%">
-        <span class="mr-2">细分部门：</span>
-        <Select
-          allowClear
-          v-model:value="selectedSubDepartment"
-          :options="subDepartmentOptions"
-          class="flex-1"
-        />
-      </div>
-      <div class="my-2 ml-4 flex items-center justify-center w-80%">
-        <span class="mr-2">岗位：</span>
-        <Select
-          allowClear
-          v-model:value="selectedPosition"
-          :options="positionOptions"
-          class="flex-1"
-        />
-      </div>
-      <div class="flex justify-center">
-        <a-button type="primary" :icon="h(SearchOutlined)" class="my-2" @click="search"
-          >搜索</a-button
-        >
-        <a-button :icon="h(ReloadOutlined)" class="my-2" @click="reset">重置</a-button>
-      </div>
-    </div>
-    <div class="pt-5 flex items-center" v-else>
-      <span class="mr-2">部门：</span>
-      <Select
-        v-model:value="selectedDepartment"
-        :options="departmentOptions"
-        class="w-20% mr-2"
-        allowClear
-      />
-      <span class="mr-2">细分部门：</span>
-      <Select
-        v-model:value="selectedSubDepartment"
-        :options="subDepartmentOptions"
-        class="w-20% mr-2"
-        allowClear
-      />
-      <span class="mr-2">岗位：</span>
-      <Select
-        v-model:value="selectedPosition"
-        :options="positionOptions"
-        class="w-20% mr-2"
-        allowClear
-      />
-      <a-button type="primary" :icon="h(SearchOutlined)" class="my-2 mr-4" @click="search"
-        >搜索</a-button
-      >
-      <a-button :icon="h(ReloadOutlined)" class="my-2" @click="reset">重置</a-button>
-    </div>
+    <BasicForm @register="register" @submit="search" class="pt-10" />
     <Table
       :dataSource="dataSource"
       :columns="columns"
@@ -91,9 +30,7 @@
         </template>
         <template v-if="column.key === 'action'">
           <div class="flex justify-center">
-            <a-button v-if="!isMobile" type="primary" class="mr-4" @click="download(record)"
-              >下载</a-button
-            >
+            <a-button type="primary" class="mr-4" @click="download(record)">下载</a-button>
             <a-button type="primary" class="mr-4" @click="detail(record)">详情</a-button>
             <Popconfirm @confirm="reinviteForEvaluation(record)" title="确定重新邀评吗">
               <a-button type="primary">重新邀评</a-button>
@@ -112,11 +49,11 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, h, onMounted } from 'vue';
+  import { ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
-  import { Table, Select, message, Popconfirm } from 'ant-design-vue';
-  import { columns, handleReportTruth } from './data';
-  import { SearchOutlined, ReloadOutlined } from '@ant-design/icons-vue';
+  import { Table, message, Popconfirm } from 'ant-design-vue';
+  import { BasicForm, useForm } from '@/components/Form';
+  import { columns, handleReportTruth, getSchema } from './data';
   import { getAllEvaluateListApi } from '@/api/sys/evaluateHistory';
   import { getUserInfoById, setCanTextApi } from '@/api/sys/user';
   import { getAllDepartmentAndPositionApi } from '@/api/sys/duty';
@@ -124,13 +61,8 @@
   import { useResultStore } from '@/store/modules/result';
   import type { TableProps } from 'ant-design-vue';
 
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
   const resultStore = useResultStore();
   const router = useRouter();
-  const selectedDepartment = ref('');
-  const selectedPosition = ref('');
-  const selectedSubDepartment = ref('');
   const sortOrder = ref('');
   const showResultPdf = ref(false);
   const dataSource = ref([]);
@@ -140,28 +72,33 @@
   const positionOptions = ref([]);
   const subDepartmentOptions = ref([]);
 
+  const [register, { setProps }] = useForm({});
+
   onMounted(async () => {
     GetAllEvaluateListApi({});
     const { allDepartment, allPosition, allSubDepartment } = await getAllDepartmentAndPositionApi();
+    const schemas = getSchema(allDepartment, allPosition, allSubDepartment);
     departmentOptions.value = allDepartment;
     subDepartmentOptions.value = allSubDepartment;
     positionOptions.value = allPosition;
+    setProps({
+      labelWidth: 120,
+      schemas,
+      actionColOptions: { span: 24, style: { textAlign: 'center' } },
+      resetFunc: reset,
+    });
   });
 
-  function search() {
+  function search(values: any) {
+    console.log('🚀 ~ search ~ values:', values);
     const filter = {
-      department: selectedDepartment.value,
-      subDepartment: selectedSubDepartment.value,
-      position: selectedPosition.value,
       sortOrder: sortOrder.value,
+      ...values,
     };
     GetAllEvaluateListApi(filter);
   }
 
-  function reset() {
-    selectedDepartment.value = '';
-    selectedSubDepartment.value = '';
-    selectedPosition.value = '';
+  async function reset() {
     sortOrder.value = '';
     const filter = {
       department: '',
@@ -169,7 +106,7 @@
       selectedPosition: '',
       sortOrder: '',
     };
-    GetAllEvaluateListApi(filter);
+    await GetAllEvaluateListApi(filter);
   }
 
   // @ts-ignore

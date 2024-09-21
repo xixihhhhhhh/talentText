@@ -30,6 +30,7 @@
         :avatar="avatar"
         :post-data-source="postDataSource"
       />
+      <trainingSupport :competency-obj="supportCompetencyObj" :corr-func="resultStore.corrFunc" />
     </div>
   </PageWrapper>
 </template>
@@ -45,6 +46,7 @@
   import managementSuggestions from './components/managementSuggestions.vue';
   import matchingSuggestions from './components/matchingSuggestions.vue';
   import jobCompetencyRequirements from './components/jobCompetencyRequirements.vue';
+  import trainingSupport from './components/trainingSupport.vue';
   import CareerFieldPdf from './careerFieldPdf.vue';
   import competencyAnalysis from './competencyAnalysis.vue';
   import headerImg from '@/assets/images/header.jpg';
@@ -70,6 +72,7 @@
   const careerFieldObj = resultStore.careerFieldObj;
   const careerAdvantagesObj = sort(resultStore.careerAdvantagesObj);
   const competencyObj = sort(resultStore.competencyObj);
+  const supportCompetencyObj = sort(resultStore.competencyObj);
 
   onMounted(async () => {
     for (let i = 0; i < 6; i++) {
@@ -85,6 +88,7 @@
         });
       }
     }
+    console.log(postDataSource.value);
     for (let i = competencyObj.length - 1; i > competencyObj.length - 7; i--) {
       notObvious.value.push({
         competency: advantageMap[competencyObj[i][0]][0],

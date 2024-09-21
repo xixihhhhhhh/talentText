@@ -5,7 +5,7 @@
       :class="['py-5', 'px-2', { 'bg-blue': !showAnswerQuestion }]"
       style="min-height: 100vh"
     >
-      <div v-show="showAnswerQuestion" class="-enter-x rounded-2" style="min-height: 80vh">
+      <div v-show="showAnswerQuestion" class="pt-10px rounded-2" style="min-height: 80vh">
         <BasicForm
           v-show="!hasUnFinished"
           @register="register"
@@ -165,8 +165,24 @@
       @ok="continueTimeKeeping"
       @cancel="back"
     >
-      <div class="flex justify-center items-center font-bold text-lg"
+      <div class="flex justify-center items-center font-bold text-lg px-20px"
         >您在当前页面停留时间过长，请您选择：</div
+      >
+    </Modal>
+    <Modal
+      centered
+      title="提示"
+      v-model:open="openIsProfileCompleted"
+      cancelText="取消"
+      okText="确定"
+      @ok="router.push({ name: 'personalInfo' })"
+      @cancel="router.push({ name: 'personalInfo' })"
+    >
+      <div class="flex justify-center items-center font-bold text-lg"
+        >抱歉，您还未填写个人信息。</div
+      >
+      <div class="flex justify-center items-center font-bold text-lg"
+        >可以到个人信息菜单处填写。</div
       >
     </Modal>
   </PageWrapper>
@@ -174,6 +190,7 @@
 
 <script lang="ts" setup>
   import { ref, computed, onMounted, h } from 'vue';
+  import { useRouter } from 'vue-router';
   import { BasicForm, useForm } from '@/components/Form';
   import { LeftSquareOutlined, PauseCircleOutlined } from '@ant-design/icons-vue';
   import { Popconfirm, Modal } from 'ant-design-vue';
@@ -185,6 +202,7 @@
     clearSecondWenjuan,
     getCanTextApi,
     continueAnswer,
+    getIsProfileCompletedApi,
   } from '@/api/sys/user';
   import { getEvaluateFormDataApi } from '@/api/sys/duty';
   import { useMessage } from '@/hooks/web/useMessage';
@@ -211,6 +229,8 @@
 
   const { createMessage } = useMessage();
   const userStore = useUserStore();
+  const router = useRouter();
+
   const [register, { setProps }] = useForm({
     labelWidth: 120,
     actionColOptions: { span: 24, style: { textAlign: 'center' } },
@@ -245,8 +265,9 @@
   const selectValueTypeThree = ref<string[]>([]);
   const fourArray = ref<Answer[]>([]);
   const isTypeThree = ref(false);
-  const canTest = ref(true);
   const openDisable = ref(false);
+  const openIsProfileCompleted = ref(false);
+  const isProfileCompletedFlag = ref(true);
 
   const percent = computed(() => {
     return Math.round(((curNum.value + (curIndexTypeThree.value - 1) * 3) / 74) * 100);
@@ -261,19 +282,20 @@
   });
 
   const curQuestionTitle = computed(() => {
-    // @ts-ignore
-    const questionName = curQuestion.value.quesData.questionName;
-    return questionName;
+    return curQuestion.value.quesData.questionName;
   });
 
   const curQues = computed(() => {
-    // @ts-ignore
     return convertToOptionArray(curQuestion.value.quesData);
   });
 
   onMounted(async () => {
-    const res = await getCanTextApi({ user_id: userInfo.userId });
-    canTest.value = res.canTest;
+    const { isProfileCompleted } = await getIsProfileCompletedApi({ user_id: userInfo.userId });
+    if (!isProfileCompleted) {
+      openIsProfileCompleted.value = true;
+      isProfileCompletedFlag.value = false;
+    }
+
     const { departmentObj, subDepartmentObj, departmentObjArr, subPosition } =
       await getEvaluateFormDataApi();
     const schemas = getSchemas(departmentObjArr, departmentObj, subDepartmentObj, subPosition);
@@ -302,7 +324,12 @@
   });
 
   async function handleSubmit(values: any) {
-    if (!canTest.value) {
+    if (!isProfileCompletedFlag.value) {
+      openIsProfileCompleted.value = true;
+      return;
+    }
+    const { canTest } = await getCanTextApi({ user_id: userInfo.userId });
+    if (!canTest) {
       openDisable.value = true;
       return;
     }
@@ -596,5 +623,9 @@
 
   .user-select-none {
     user-select: none;
+  }
+
+  :deep(.vben-page-wrapper-content) {
+    margin: 0;
   }
 </style>

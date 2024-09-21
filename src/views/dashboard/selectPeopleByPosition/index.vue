@@ -1,6 +1,6 @@
 <template>
   <PageWrapper>
-    <BasicForm @register="register" @submit="handleSubmit" class="-enter-x mt-10" />
+    <BasicForm @register="register" @submit="handleSubmit" class="mt-10" />
     <Table
       :dataSource="dataSource"
       :columns="columns"

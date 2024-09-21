@@ -40,7 +40,7 @@
     </template>
   </Table>
   <template v-else>
-    <div class="flex h-40px">
+    <div class="flex h-40px bg-#eee">
       <div class="w-15% flex justify-center font-bold text-20px">胜任力</div>
       <div class="flex-1 flex justify-center font-bold text-20px">定义</div>
       <div class="w-20% font-bold text-20px">匹配度 </div>

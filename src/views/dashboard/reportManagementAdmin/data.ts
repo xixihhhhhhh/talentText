@@ -1,3 +1,5 @@
+import { FormSchema } from '@/components/Form';
+
 export const departmentOptions = [
   {
     value: '营销管理中心',
@@ -315,6 +317,36 @@ export const columns = [
     width: 200,
   },
   {
+    title: '资格证书级别',
+    dataIndex: 'professional',
+    key: 'professional',
+    width: 200,
+  },
+  {
+    title: '近三年考核情况',
+    dataIndex: 'annual',
+    key: 'annual',
+    width: 200,
+  },
+  {
+    title: '任职层级',
+    dataIndex: 'positionLevel',
+    key: 'positionLevel',
+    width: 100,
+  },
+  {
+    title: '在该层级任职时长',
+    dataIndex: 'tenure',
+    key: 'tenure',
+    width: 200,
+  },
+  {
+    title: '学历',
+    dataIndex: 'educationalBackground',
+    key: 'educationalBackground',
+    width: 200,
+  },
+  {
     title: '细分部门',
     dataIndex: 'subDepartment',
     key: 'subDepartment',
@@ -346,6 +378,232 @@ export const columns = [
     width: 200,
   },
 ];
+
+const colProps = {
+  span: 8,
+};
+
+const options = [
+  {
+    label: '0次',
+    value: 0,
+    key: '0次',
+  },
+  {
+    label: '1次',
+    value: 1,
+    key: '1次',
+  },
+  {
+    label: '2次',
+    value: 2,
+    key: '2次',
+  },
+  {
+    label: '3次',
+    value: 3,
+    key: '3次',
+  },
+];
+
+const schemas: FormSchema[] = [
+  {
+    field: 'positionLevel',
+    component: 'InputNumber',
+    label: '任职层级',
+    colProps,
+    componentProps: {
+      placeholder: '请输入你的任职层级',
+      min: 1,
+      max: 19,
+    },
+  },
+  {
+    field: 'tenure',
+    component: 'InputNumber',
+    label: '在该层级任职时长',
+    itemProps: {
+      labelCol: {
+        span: 8,
+      },
+      labelAlign: 'right',
+    },
+    colProps,
+    componentProps: {
+      placeholder: '请输入你的任职时长',
+      min: 1,
+      max: 100,
+    },
+  },
+  {
+    field: 'educationalBackground',
+    component: 'Select',
+    label: '学历',
+    colProps,
+    componentProps: {
+      placeholder: '请选择学历',
+      options: [
+        {
+          label: '研究生',
+          value: '研究生',
+          key: '研究生',
+        },
+        {
+          label: '大学本科',
+          value: '大学本科',
+          key: '大学本科',
+        },
+        {
+          label: '大专',
+          value: '大专',
+          key: '大专',
+        },
+        {
+          label: '大专以下',
+          value: '大专以下',
+          key: '大专以下',
+        },
+      ],
+    },
+  },
+  {
+    field: 'professional',
+    component: 'Select',
+    label: '资格证书级别',
+    colProps,
+    componentProps: {
+      placeholder: '请选择资格证书级别',
+      options: [
+        {
+          label: '一级',
+          value: '一级',
+          key: '一级',
+        },
+        {
+          label: '二级',
+          value: '二级',
+          key: '二级',
+        },
+        {
+          label: '三级',
+          value: '三级',
+          key: '三级',
+        },
+        {
+          label: '四级',
+          value: '四级',
+          key: '四级',
+        },
+        {
+          label: '五级',
+          value: '五级',
+          key: '五级',
+        },
+      ],
+    },
+  },
+  {
+    field: 'excellentTimes',
+    component: 'Select',
+    label: '近三年考核优秀次数',
+    colProps,
+    itemProps: {
+      labelCol: {
+        span: 8,
+      },
+      labelAlign: 'right',
+    },
+    componentProps: {
+      placeholder: '请选择近三年考核优秀次数',
+      options,
+    },
+  },
+  {
+    field: 'beingCompetentTimes',
+    component: 'Select',
+    label: '近三年考核称职次数',
+    colProps,
+    itemProps: {
+      labelCol: {
+        span: 8,
+      },
+      labelAlign: 'right',
+    },
+    componentProps: {
+      placeholder: '请选择近三年考核称职次数',
+      options,
+    },
+  },
+  {
+    field: 'basicBeingCompetentTimes',
+    component: 'Select',
+    label: '近三年考核基本称职次数',
+    colProps,
+    itemProps: {
+      labelCol: {
+        span: 10,
+      },
+      labelAlign: 'right',
+    },
+    componentProps: {
+      placeholder: '请选择近三年考核基本称职次数',
+      options,
+    },
+  },
+  {
+    field: 'incompetentTimes',
+    component: 'Select',
+    label: '近三年考核不称职次数',
+    colProps,
+    itemProps: {
+      labelCol: {
+        span: 8,
+      },
+      labelAlign: 'right',
+    },
+    componentProps: {
+      placeholder: '请选择近三年考核不称职次数',
+      options,
+    },
+  },
+];
+
+export function getSchema(department: any, position: any, subDepartment: any) {
+  const selectSchema: FormSchema[] = [
+    {
+      field: 'department',
+      component: 'Select',
+      label: '部门',
+      colProps,
+      componentProps: {
+        placeholder: '请选择部门',
+        options: department,
+      },
+    },
+    {
+      field: 'subDepartment',
+      component: 'Select',
+      label: '细分部门',
+      colProps,
+      componentProps: {
+        placeholder: '请选择细分部门',
+        options: subDepartment,
+      },
+    },
+    {
+      field: 'position',
+      component: 'Select',
+      label: '岗位',
+      colProps,
+      componentProps: {
+        placeholder: '请选择细分岗位',
+        options: position,
+      },
+    },
+  ];
+
+  return selectSchema.concat(schemas);
+}
 
 export function handleReportTruth(spendTime: number) {
   // 将秒转换为分钟

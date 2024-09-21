@@ -18,12 +18,12 @@
 </template>
 
 <script setup lang="ts">
-  import { Card } from 'ant-design-vue';
+  import { Card, Avatar } from 'ant-design-vue';
   import postCompetencyRequirements from './postCompetencyRequirements.vue';
 
   defineProps({
     name: {
-      type: Array as PropType<any>,
+      type: String as PropType<any>,
       required: true,
     },
     postDataSource: {

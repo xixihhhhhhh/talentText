@@ -181,7 +181,7 @@
     position: relative;
 
     .@{prefix-cls}-content {
-      margin: 0;
+      margin: 16px;
     }
 
     .ant-page-header {
