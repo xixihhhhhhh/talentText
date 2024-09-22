@@ -647,7 +647,7 @@ export const professionalSchemas: FormSchema[] = [
     },
     itemProps: {
       labelCol: {
-        span: 6,
+        span: 8,
       },
       labelAlign: 'right',
     },
@@ -661,7 +661,7 @@ export const professionalSchemas: FormSchema[] = [
   {
     field: 'positionType',
     component: 'Cascader',
-    label: '岗位类型',
+    label: '资格证书名称、级别',
     colProps: { span: 24 },
     componentProps: {
       options: [
@@ -870,7 +870,7 @@ export const professionalSchemas: FormSchema[] = [
     },
     itemProps: {
       labelCol: {
-        span: 6,
+        span: 8,
       },
       labelAlign: 'right',
     },

@@ -369,7 +369,7 @@ export const columns = [
     title: '报告可信度',
     key: 'spendTime',
     dataIndex: 'spendTime',
-    width: 130,
+    width: 120,
   },
   {
     title: '操作',
