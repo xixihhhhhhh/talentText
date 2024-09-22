@@ -205,6 +205,7 @@ export const careerSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
+      picker: 'month',
     },
     required: true,
   },
@@ -225,6 +226,7 @@ export const careerSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
+      picker: 'month',
     },
     required: true,
   },
@@ -268,6 +270,7 @@ export const workSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
+      picker: 'month',
     },
     required: true,
   },
@@ -288,6 +291,7 @@ export const workSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
+      picker: 'month',
     },
     required: true,
   },
@@ -351,6 +355,7 @@ export const borrowSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
+      picker: 'month',
     },
     required: true,
   },
@@ -371,6 +376,7 @@ export const borrowSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
+      picker: 'month',
     },
     required: true,
   },
@@ -477,6 +483,7 @@ export const rewardsSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
+      picker: 'month',
     },
     required: true,
   },
@@ -655,6 +662,7 @@ export const professionalSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
+      picker: 'month',
     },
     required: true,
   },
