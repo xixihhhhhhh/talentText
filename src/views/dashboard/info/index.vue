@@ -91,7 +91,7 @@
       <template #title>
         <div class="font-bold text-20px mr-10px">年度考核情况</div>
       </template>
-      <div class="text-18px">近三年年度考核情况 (年度考核情况所有次数加起来需要等于四) :</div>
+      <div class="text-18px">近三年年度考核情况 (年度考核情况所有次数加起来需要等于三) :</div>
       <BasicForm @register="annualRegister" class="m-16px" />
     </CollapseContainer>
     <div class="flex justify-center">
@@ -366,8 +366,8 @@
       const annualTimes = Object.values(annualValues)
         .map(Number)
         .reduce((acc, cur) => acc + cur, 0);
-      if (annualTimes !== 4) {
-        modelText.value = '您好，年度考核情况所有次数加起来需要等于四。';
+      if (annualTimes !== 3) {
+        modelText.value = '您好，年度考核情况所有次数加起来需要等于三。';
         annualOpen.value = true;
       }
       personInfo.value.annual = annualValues;
