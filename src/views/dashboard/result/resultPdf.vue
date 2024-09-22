@@ -127,7 +127,7 @@
     careerAdvantageMap,
   } from './data';
   import { handleReportTruth } from '../reportManagementAdmin/data';
-  import { sort } from './methods';
+  import { sortPdf } from './methods';
   import htmlPdf from './pdf';
 
   const props = defineProps({
@@ -160,9 +160,9 @@
   const { recordProps } = props;
   const { department, position, echartOptions, corrFunc, finishTime, spendTime } = recordProps;
   const careerFieldObj = recordProps.careerFieldObj;
-  const careerAdvantagesObj = sort(recordProps.careerAdvantagesObj);
-  const competencyObj = sort(recordProps.competencyObj);
-  const supportCompetencyObj = sort(recordProps.competencyObj);
+  const careerAdvantagesObj = sortPdf(recordProps.careerAdvantagesObj);
+  const competencyObj = sortPdf(recordProps.competencyObj);
+  const supportCompetencyObj = sortPdf(recordProps.competencyObj);
 
   onMounted(async () => {
     for (let i = 0; i < 6; i++) {

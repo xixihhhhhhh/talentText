@@ -56,7 +56,7 @@
     competencyDefinition,
     careerAdvantageMap,
   } from './data';
-  import { sort } from './methods';
+  import { sortPdf } from './methods';
 
   const resultStore = useResultStore();
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -70,9 +70,9 @@
 
   const avatar = resultStore.avatar || headerImg;
   const careerFieldObj = resultStore.careerFieldObj;
-  const careerAdvantagesObj = sort(resultStore.careerAdvantagesObj);
-  const competencyObj = sort(resultStore.competencyObj);
-  const supportCompetencyObj = sort(resultStore.competencyObj);
+  const careerAdvantagesObj = sortPdf(resultStore.careerAdvantagesObj);
+  const competencyObj = sortPdf(resultStore.competencyObj);
+  const supportCompetencyObj = sortPdf(resultStore.competencyObj);
 
   onMounted(async () => {
     for (let i = 0; i < 6; i++) {
