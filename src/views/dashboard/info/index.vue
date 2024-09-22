@@ -369,6 +369,8 @@
       if (annualTimes !== 3) {
         modelText.value = '您好，年度考核情况所有次数加起来需要等于三。';
         annualOpen.value = true;
+        loading.value = false;
+        return;
       }
       personInfo.value.annual = annualValues;
     } catch (error) {
