@@ -1,42 +1,27 @@
 <template>
-  <Card title="最新动态" v-bind="$attrs">
+  <Card title="最新报告" v-bind="$attrs">
     <template #extra>
-      <a-button type="link" size="small">更多</a-button>
+      <a-button type="link" size="small" @click="routerGo">更多</a-button>
     </template>
-    <List item-layout="horizontal" :data-source="dynamicInfoItems">
-      <template #renderItem="{ item }">
-        <ListItem>
-          <ListItemMeta>
-            <template #description>
-              {{ item.date }}
-            </template>
-            <!-- eslint-disable-next-line -->
-            <template #title>
-              {{ item.name }} <span>{{ item.content }} </span>
-            </template>
-            <template #avatar>
-              <!-- <Icon :icon="item.avatar" :size="30" /> -->
-              <Avatar :src="item.avatar || headerImg" :size="50" />
-            </template>
-          </ListItemMeta>
-        </ListItem>
-      </template>
-    </List>
+    <Table :dataSource="dataSource" :columns="columns" :scroll="{ x: 0, y: 400 }" />
   </Card>
 </template>
 <script lang="ts" setup>
-  import { onMounted, ref } from 'vue';
-  import { Card, List, Avatar } from 'ant-design-vue';
-  import { DynamicInfoItem } from './data';
-  // import Icon from '@/components/Icon/Icon.vue';
-  import { getCommentApi } from '@/api/sys/comment';
-  import headerImg from '@/assets/images/header.jpg';
+  import { ref, onMounted } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { columns } from './data';
+  import { Card, Table } from 'ant-design-vue';
+  import { getAllEvaluateListApi } from '@/api/sys/evaluateHistory';
 
-  const dynamicInfoItems = ref<DynamicInfoItem[]>([]);
+  const router = useRouter();
+
+  const dataSource = ref([]);
+
   onMounted(async () => {
-    const res = await getCommentApi();
-    dynamicInfoItems.value = res;
+    const res = await getAllEvaluateListApi({});
+    dataSource.value = res.slice(0, 5);
   });
-  const ListItem = List.Item;
-  const ListItemMeta = List.Item.Meta;
+  function routerGo() {
+    router.push({ name: 'reportAdmin' });
+  }
 </script>

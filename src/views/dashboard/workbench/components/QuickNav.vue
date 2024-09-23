@@ -3,7 +3,7 @@
     <CardGrid
       v-for="item in navItems"
       :key="item.title"
-      class="cursor-pointer"
+      class="cursor-pointer !w-50%"
       @click="routerGo(item.route)"
     >
       <span class="flex flex-col items-center">

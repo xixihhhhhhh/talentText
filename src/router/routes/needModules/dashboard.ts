@@ -26,6 +26,15 @@ const dashboard: AppRouteModule = {
         roles: [RoleEnum.SUPER],
       },
     },
+    {
+      path: 'resultRoute',
+      name: 'resultRoute',
+      component: () => import('@/views/dashboard/result/resultRoute.vue'),
+      meta: {
+        title: t('routes.basic.result'),
+        hideMenu: true,
+      },
+    },
   ],
 };
 

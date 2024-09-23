@@ -88,7 +88,6 @@
   });
 
   function search(values: any) {
-    console.log('🚀 ~ search ~ values:', values);
     const filter = {
       sortOrder: sortOrder.value,
       ...values,

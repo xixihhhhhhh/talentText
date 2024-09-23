@@ -12,8 +12,6 @@
         <Card class="!my-4 enter-y" :loading="loading">
           <img class="xl:h-50 h-30 mx-auto" src="../../../assets/svg/illustration.svg" />
         </Card>
-
-        <SaleRadar :loading="loading" class="enter-y" />
       </div>
     </div>
   </PageWrapper>
@@ -26,7 +24,6 @@
   import ProjectCard from './components/ProjectCard.vue';
   import QuickNav from './components/QuickNav.vue';
   import DynamicInfo from './components/DynamicInfo.vue';
-  import SaleRadar from './components/SaleRadar.vue';
 
   const loading = ref(true);
 

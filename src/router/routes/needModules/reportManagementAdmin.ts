@@ -4,10 +4,10 @@ import { LAYOUT } from '@/router/constant';
 import { RoleEnum } from '@/enums/roleEnum';
 
 const reportManagementAdmin: AppRouteModule = {
-  path: '/reportUser',
-  name: 'reportUser',
+  path: '/reportAdmin',
+  name: 'reportAdmin',
   component: LAYOUT,
-  redirect: '/reportUser/reportManagementAdmin',
+  redirect: '/reportAdmin/reportManagementAdmin',
   meta: {
     roles: [RoleEnum.SUPER],
     orderNo: 12,

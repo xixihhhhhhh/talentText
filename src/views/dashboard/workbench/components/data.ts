@@ -1,12 +1,3 @@
-interface GroupItem {
-  title: string;
-  icon: string;
-  color: string;
-  desc: string;
-  date: string;
-  group: string;
-}
-
 interface NavItem {
   title: string;
   icon: string;
@@ -29,34 +20,22 @@ export const navItems: NavItem[] = [
     route: '/dashboard/index',
   },
   {
-    title: '分析页',
-    icon: 'ion:grid-outline',
-    color: '#bf0c2c',
-    route: '/dashboard/analysis',
-  },
-  {
-    title: '填报问卷',
+    title: '报告管理',
     icon: 'ion:layers-outline',
     color: '#e18525',
-    route: '/questionnaire/writequestionnaire',
+    route: '/reportUser/reportManagementAdmin',
   },
   {
-    title: '评测页',
+    title: '岗位设置',
     icon: 'ion:settings-outline',
     color: '#3fb27f',
-    route: '/questionnaire/evaluation',
+    route: '/position/positionSetting',
   },
   {
-    title: '权限管理',
+    title: '以岗选人',
     icon: 'ion:key-outline',
     color: '#4daf1bc9',
-    route: '/questionnaire/quesList',
-  },
-  {
-    title: '个人页',
-    icon: 'ion:bar-chart-outline',
-    color: '#00d8ff',
-    route: '/questionnaire/quesList',
+    route: '/select/selectPeopleByPosition',
   },
 ];
 
@@ -111,53 +90,41 @@ export const dynamicInfoItems = [
   },
 ];
 
-export const groupItems: GroupItem[] = [
+export const columns = [
   {
-    title: '营销管理',
-    icon: 'nimbus:marketing',
-    color: '',
-    desc: '不要等待机会，而要创造机会。',
-    group: '营销管理',
-    date: '2024-04-01',
+    title: '姓名',
+    dataIndex: 'name',
+    key: 'name',
+    width: 70,
   },
   {
-    title: '物流管理',
-    icon: 'la:car-side',
-    color: '#3fb27f',
-    desc: '现在的你决定将来的你。',
-    group: '物流管理',
-    date: '2024-04-01',
+    title: '部门',
+    dataIndex: 'department',
+    key: 'department',
+    width: 200,
   },
   {
-    title: '整顿规范',
-    icon: 'icon-park:ruler',
-    color: '#e18525',
-    desc: '没有什么才能比努力更重要。',
-    group: '整顿规范',
-    date: '2024-04-01',
+    title: '细分部门',
+    dataIndex: 'subDepartment',
+    key: 'subDepartment',
+    width: 200,
   },
   {
-    title: 'Angular',
-    icon: 'ion:logo-angular',
-    color: '#bf0c2c',
-    desc: '热情和欲望可以突破一切难关。',
-    group: 'UI',
-    date: '2024-04-01',
+    title: '岗位',
+    dataIndex: 'position',
+    key: 'position',
+    width: 140,
   },
   {
-    title: 'React',
-    icon: 'bx:bxl-react',
-    color: '#00d8ff',
-    desc: '健康的身体是实现目标的基石。',
-    group: '技术牛',
-    date: '2024-04-01',
+    title: '报告完成时间',
+    key: 'finishTime',
+    dataIndex: 'finishTime',
+    width: 150,
   },
   {
-    title: 'Js',
-    icon: 'ion:logo-javascript',
-    color: '#EBD94E',
-    desc: '路是走出来的，而不是空想出来的。',
-    group: '架构组',
-    date: '2024-04-01',
+    title: '报告可信度',
+    key: 'spendTime',
+    dataIndex: 'spendTime',
+    width: 120,
   },
 ];
