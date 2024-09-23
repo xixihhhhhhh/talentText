@@ -23,7 +23,7 @@ export const navItems: NavItem[] = [
     title: '报告管理',
     icon: 'ion:layers-outline',
     color: '#e18525',
-    route: '/reportUser/reportManagementAdmin',
+    route: '/reportAdmin/reportManagementAdmin',
   },
   {
     title: '岗位设置',

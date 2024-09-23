@@ -421,7 +421,7 @@ const schemas: FormSchema[] = [
   {
     field: 'tenure',
     component: 'InputNumber',
-    label: '在该层级任职时长',
+    label: '在该层级任职时长(年)',
     itemProps: {
       labelCol: {
         span: 8,
