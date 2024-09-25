@@ -31,6 +31,7 @@ export interface LoginResultModel {
  * @description: Get user information return value
  */
 export interface GetUserInfoModel {
+  id: number;
   phone: string;
   halfWenJuan: any;
   secondWenJuanQuestion: object[];

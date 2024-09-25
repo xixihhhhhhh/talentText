@@ -3,8 +3,12 @@ import { useMessage } from '@/hooks/web/useMessage';
 
 const { createMessage } = useMessage();
 
+function validateTime(timeStr) {
+  const regex = /^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/;
+  return regex.test(timeStr);
+}
+
 function transformValues(values: any) {
-  console.log('🚀 ~ transformValues ~ values:', values);
   let name = values.positionType.map((item) => {
     if (item.includes(';')) {
       values.level = item.split(';')[1];
@@ -20,6 +24,11 @@ function transformValues(values: any) {
   values.name = name;
   Reflect.deleteProperty(values, 'specificName');
   Reflect.deleteProperty(values, 'positionType');
+  for (const key in values) {
+    if (validateTime(values[key])) {
+      values[key] = values[key].slice(0, 7);
+    }
+  }
   return values;
 }
 

@@ -386,22 +386,22 @@ const colProps = {
 const options = [
   {
     label: '0次',
-    value: 0,
+    value: '0',
     key: '0次',
   },
   {
     label: '1次',
-    value: 1,
+    value: '1',
     key: '1次',
   },
   {
     label: '2次',
-    value: 2,
+    value: '2',
     key: '2次',
   },
   {
     label: '3次',
-    value: 3,
+    value: '3',
     key: '3次',
   },
 ];

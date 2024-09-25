@@ -60,7 +60,55 @@
           <div class="flex justify-center mt-800px text-25px">本报告涉及个人隐私，请注意保密</div>
         </div>
       </div>
-      <div class="pt-100px" ref="secondPage">
+      <div class="p-100px" ref="secondPage">
+        <CollapseContainer>
+          <template #title>
+            <div ref="personMsgRef" class="font-bold text-20px">个人信息</div>
+          </template>
+          <BasicForm @register="personMsgRegister" class="m-16px" />
+        </CollapseContainer>
+        <CollapseContainer>
+          <template #title>
+            <div ref="careerRef" class="font-bold text-20px mr-10px">职业成长履历</div>
+          </template>
+          <div class="text-18px">教育（培训）经历（学历为大专以下的可填写高中/中专教育经历） :</div>
+          <Table :dataSource="careerArr" :columns="careerColumns.slice(0, -1)" />
+        </CollapseContainer>
+        <CollapseContainer>
+          <template #title>
+            <div ref="workRef" class="font-bold text-20px mr-10px">工作经历</div>
+          </template>
+          <Table :dataSource="workArr" :columns="workColumns.slice(0, -1)" />
+        </CollapseContainer>
+        <CollapseContainer>
+          <template #title>
+            <div class="font-bold text-20px mr-10px">借用、交流锻炼经历</div>
+          </template>
+          <Table :dataSource="borrowArr" :columns="borrowColumns.slice(0, -1)" />
+        </CollapseContainer>
+      </div>
+      <div class="p-100px" ref="otherPage">
+        <CollapseContainer>
+          <template #title>
+            <div class="font-bold text-20px mr-10px">奖惩情况</div>
+          </template>
+          <Table :dataSource="rewardsArr" :columns="rewardsColumns.slice(0, -1)" />
+        </CollapseContainer>
+        <CollapseContainer>
+          <template #title>
+            <div class="font-bold text-20px mr-10px">职业资格情况</div>
+          </template>
+          <Table :dataSource="professionalArr" :columns="professionalColumns.slice(0, -1)" />
+        </CollapseContainer>
+        <CollapseContainer>
+          <template #title>
+            <div class="font-bold text-20px mr-10px">年度考核情况</div>
+          </template>
+          <div class="text-18px">近三年年度考核情况 (年度考核情况所有次数加起来需要等于三) :</div>
+          <BasicForm @register="annualRegister" class="m-16px" />
+        </CollapseContainer>
+      </div>
+      <div class="pt-100px" ref="thirdPage">
         <Card>
           <div class="font-bold text-lg border-b-2 mb-100px">结果分析</div>
         </Card>
@@ -81,7 +129,7 @@
         />
         <topThreeAdvantages :options="getTopThreeScores()" />
       </div>
-      <div class="pt-50px" ref="thirdPage">
+      <div class="pt-50px" ref="fourthPage">
         <competencyAnalysis :obvious="obvious" :notObvious="notObvious" />
         <managementSuggestions :management-advice="managementAdvice" />
       </div>
@@ -107,7 +155,7 @@
 
 <script lang="ts" setup>
   import { ref, PropType, onMounted, nextTick } from 'vue';
-  import { Card, Spin } from 'ant-design-vue';
+  import { Card, Spin, Table } from 'ant-design-vue';
   import { PageWrapper } from '@/components/Page';
   import Leidatu from './components/leidatu.vue';
   import advantageousFieldsExplanation from './components/advantageousFieldsExplanation.vue';
@@ -126,9 +174,21 @@
     competencyDefinition,
     careerAdvantageMap,
   } from './data';
+  import { getPersonMsgApi } from '@/api/sys/personMsg';
   import { handleReportTruth } from '../reportManagementAdmin/data';
+  import { BasicForm, useForm } from '@/components/Form';
   import { sortPdf } from './methods';
   import htmlPdf from './pdf';
+  import { CollapseContainer } from '@/components/Container';
+  import {
+    schemas,
+    annualSchemas,
+    careerColumns,
+    workColumns,
+    borrowColumns,
+    rewardsColumns,
+    professionalColumns,
+  } from '../info/data';
 
   const props = defineProps({
     userInfo: {
@@ -149,12 +209,52 @@
   const cover = ref();
   const secondPage = ref();
   const thirdPage = ref();
+  const fourthPage = ref();
+  const otherPage = ref();
   const page = ref();
   const managementAdvice = ref<any[]>([]);
   const obvious = ref<any[]>([]);
   const notObvious = ref<any[]>([]);
   const postDataSource = ref<any[]>([]);
   const spinning = ref(true);
+
+  const [personMsgRegister, { setFieldsValue: msgSetFieldsValue }] = useForm({
+    labelCol: {
+      span: 8,
+    },
+    wrapperCol: {
+      span: 15,
+    },
+    schemas,
+    actionColOptions: {
+      offset: 8,
+      span: 23,
+    },
+    showResetButton: false,
+    showSubmitButton: false,
+  });
+
+  const [annualRegister, { setFieldsValue: annualSetFieldsValue }] = useForm({
+    labelCol: {
+      span: 8,
+    },
+    wrapperCol: {
+      span: 15,
+    },
+    schemas: annualSchemas,
+    actionColOptions: {
+      offset: 8,
+      span: 23,
+    },
+    showResetButton: false,
+    showSubmitButton: false,
+  });
+
+  const careerArr = ref<any>([]);
+  const workArr = ref<any>([]);
+  const borrowArr = ref<any>([]);
+  const rewardsArr = ref<any>([]);
+  const professionalArr = ref<any>([]);
 
   const avatar = props.userInfo.avatar || headerImg;
   const { recordProps } = props;
@@ -165,6 +265,15 @@
   const supportCompetencyObj = sortPdf(recordProps.competencyObj);
 
   onMounted(async () => {
+    const res = await getPersonMsgApi({ userId: props.userInfo.userId });
+    const { personMsg, career, work, borrow, rewards, professional, annual } = res;
+    msgSetFieldsValue(personMsg);
+    careerArr.value = career;
+    workArr.value = work;
+    borrowArr.value = borrow;
+    rewardsArr.value = rewards;
+    professionalArr.value = professional;
+    annualSetFieldsValue(annual);
     for (let i = 0; i < 6; i++) {
       obvious.value.push({
         competency: advantageMap[competencyObj[i][0]][0],
@@ -188,7 +297,15 @@
       managementAdvice.value.push(competencyObj[i][0]);
     }
     await nextTick();
-    await htmlPdf.getPdf('测试', cover.value, secondPage.value, thirdPage.value, page.value);
+    await htmlPdf.getPdf(
+      '测试',
+      cover.value,
+      secondPage.value,
+      thirdPage.value,
+      fourthPage.value,
+      page.value,
+      otherPage.value,
+    );
     setTimeout(() => emits('close'), 0);
     spinning.value = false;
   });

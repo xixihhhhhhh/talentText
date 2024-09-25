@@ -190,7 +190,7 @@ export const schemas: FormSchema[] = [
 export const careerSchemas: FormSchema[] = [
   {
     field: 'startTime',
-    component: 'DatePicker',
+    component: 'MonthPicker',
     label: '开始时间',
     colProps: {
       span: 24,
@@ -205,13 +205,12 @@ export const careerSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
-      picker: 'month',
     },
     required: true,
   },
   {
     field: 'endTime',
-    component: 'DatePicker',
+    component: 'MonthPicker',
     label: '结束时间',
     colProps: {
       span: 24,
@@ -226,7 +225,6 @@ export const careerSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
-      picker: 'month',
     },
     required: true,
   },
@@ -255,7 +253,7 @@ export const careerSchemas: FormSchema[] = [
 export const workSchemas: FormSchema[] = [
   {
     field: 'startTime',
-    component: 'DatePicker',
+    component: 'MonthPicker',
     label: '开始时间',
     colProps: {
       span: 24,
@@ -270,13 +268,12 @@ export const workSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
-      picker: 'month',
     },
     required: true,
   },
   {
     field: 'endTime',
-    component: 'DatePicker',
+    component: 'MonthPicker',
     label: '结束时间',
     colProps: {
       span: 24,
@@ -291,7 +288,6 @@ export const workSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
-      picker: 'month',
     },
     required: true,
   },
@@ -340,7 +336,7 @@ export const workSchemas: FormSchema[] = [
 export const borrowSchemas: FormSchema[] = [
   {
     field: 'startTime',
-    component: 'DatePicker',
+    component: 'MonthPicker',
     label: '开始时间',
     colProps: {
       span: 24,
@@ -355,13 +351,12 @@ export const borrowSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
-      picker: 'month',
     },
     required: true,
   },
   {
     field: 'endTime',
-    component: 'DatePicker',
+    component: 'MonthPicker',
     label: '结束时间',
     colProps: {
       span: 24,
@@ -376,7 +371,6 @@ export const borrowSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
-      picker: 'month',
     },
     required: true,
   },
@@ -468,7 +462,7 @@ export const borrowSchemas: FormSchema[] = [
 export const rewardsSchemas: FormSchema[] = [
   {
     field: 'time',
-    component: 'DatePicker',
+    component: 'MonthPicker',
     label: '时间',
     colProps: {
       span: 24,
@@ -483,7 +477,6 @@ export const rewardsSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
-      picker: 'month',
     },
     required: true,
   },
@@ -639,15 +632,13 @@ const levelOptions = [
   { label: '五级', value: '五级;五级' },
 ];
 
-const levelOptionsArray = [
-  { label: '初级', value: '初级;二级' },
-  { label: '中级', value: '中级;三级' },
-];
+const levelOptionsArray = [{ label: '中级', value: '中级;二级' }];
+const threeOptionsArray = [{ label: '初级', value: '初级;三级' }];
 
 export const professionalSchemas: FormSchema[] = [
   {
     field: 'date',
-    component: 'DatePicker',
+    component: 'MonthPicker',
     label: '日期',
     colProps: {
       span: 24,
@@ -662,7 +653,6 @@ export const professionalSchemas: FormSchema[] = [
       style: {
         width: '100%',
       },
-      picker: 'month',
     },
     required: true,
   },
@@ -699,9 +689,8 @@ export const professionalSchemas: FormSchema[] = [
           children: levelOptions,
         },
         {
-          value: '法律职业资格',
+          value: '法律职业资格;二级',
           label: '法律职业资格',
-          children: levelOptions,
         },
         {
           value: '经济系列',
@@ -778,27 +767,27 @@ export const professionalSchemas: FormSchema[] = [
           label: '其他',
           children: [
             {
-              value: '信息系统项目管理师;一级',
+              value: '信息系统项目管理师;高级',
               label: '信息系统项目管理师',
             },
             {
-              value: '系统分析师;一级',
+              value: '系统分析师;高级',
               label: '系统分析师',
             },
             {
-              value: '系统架构设计师;一级',
+              value: '系统架构设计师;高级',
               label: '系统架构设计师',
             },
             {
-              value: '网络规划设计师;一级',
+              value: '网络规划设计师;高级',
               label: '网络规划设计师',
             },
             {
-              value: '系统规划与管理师;一级',
+              value: '系统规划与管理师;高级',
               label: '系统规划与管理师',
             },
             {
-              value: '高级计算机硬件工程师;一级',
+              value: '高级计算机硬件工程师;高级',
               label: '高级计算机硬件工程师',
             },
             {
@@ -862,8 +851,34 @@ export const professionalSchemas: FormSchema[] = [
               children: levelOptionsArray,
             },
             {
-              value: '法律职业资格;三级',
-              label: '法律职业资格',
+              value: '助理计算机硬件工程师',
+              label: '助理计算机硬件工程师',
+              children: threeOptionsArray,
+            },
+            {
+              value: '程序员',
+              label: '程序员',
+              children: threeOptionsArray,
+            },
+            {
+              value: '网络管理员',
+              label: '网络管理员',
+              children: threeOptionsArray,
+            },
+            {
+              value: '信息系统运行管理员',
+              label: '信息系统运行管理员',
+              children: threeOptionsArray,
+            },
+            {
+              value: '网页制作员',
+              label: '网页制作员',
+              children: threeOptionsArray,
+            },
+            {
+              value: '信息处理技术员',
+              label: '信息处理技术员',
+              children: threeOptionsArray,
             },
             {
               value: '其他',
