@@ -317,6 +317,18 @@ export const columns = [
     width: 200,
   },
   {
+    title: '细分部门',
+    dataIndex: 'subDepartment',
+    key: 'subDepartment',
+    width: 100,
+  },
+  {
+    title: '岗位',
+    dataIndex: 'position',
+    key: 'position',
+    width: 140,
+  },
+  {
     title: '资格证书级别',
     dataIndex: 'professional',
     key: 'professional',
@@ -345,18 +357,6 @@ export const columns = [
     dataIndex: 'educationalBackground',
     key: 'educationalBackground',
     width: 200,
-  },
-  {
-    title: '细分部门',
-    dataIndex: 'subDepartment',
-    key: 'subDepartment',
-    width: 100,
-  },
-  {
-    title: '岗位',
-    dataIndex: 'position',
-    key: 'position',
-    width: 140,
   },
   {
     title: '报告完成时间',

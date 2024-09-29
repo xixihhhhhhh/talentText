@@ -767,27 +767,27 @@ export const professionalSchemas: FormSchema[] = [
           label: '其他',
           children: [
             {
-              value: '信息系统项目管理师;高级',
+              value: '信息系统项目管理师;一级',
               label: '信息系统项目管理师',
             },
             {
-              value: '系统分析师;高级',
+              value: '系统分析师;一级',
               label: '系统分析师',
             },
             {
-              value: '系统架构设计师;高级',
+              value: '系统架构设计师;一级',
               label: '系统架构设计师',
             },
             {
-              value: '网络规划设计师;高级',
+              value: '网络规划设计师;一级',
               label: '网络规划设计师',
             },
             {
-              value: '系统规划与管理师;高级',
+              value: '系统规划与管理师;一级',
               label: '系统规划与管理师',
             },
             {
-              value: '高级计算机硬件工程师;高级',
+              value: '高级计算机硬件工程师;一级',
               label: '高级计算机硬件工程师',
             },
             {

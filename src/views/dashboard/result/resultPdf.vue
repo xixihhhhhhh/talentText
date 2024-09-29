@@ -298,7 +298,7 @@
     }
     await nextTick();
     await htmlPdf.getPdf(
-      '测试',
+      props.userInfo.name + '_测评报告',
       cover.value,
       secondPage.value,
       thirdPage.value,
