@@ -26,6 +26,7 @@ enum Api {
   setCanText = baseUrl + '/setCanText',
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
+  updatePassword = baseUrl + '/updatePassword',
 }
 
 export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
@@ -111,6 +112,9 @@ export function getIsProfileCompletedApi(params: any) {
     { url: Api.getIsProfileCompleted, params },
     { errorMessageMode: 'none' },
   );
+}
+export function updatePasswordApi(params: any) {
+  return defHttp.post<any>({ url: Api.updatePassword, params }, { errorMessageMode: 'none' });
 }
 
 export function getPermCode() {

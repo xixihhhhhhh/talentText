@@ -43,6 +43,7 @@ export interface ErrorLogInfo {
 }
 
 export interface UserInfo {
+  id: number;
   secondWenJuanQuestion: object[];
   firstWenJuanAnswer: answer[];
   halfWenJuan: any;

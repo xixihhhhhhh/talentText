@@ -32,6 +32,7 @@ const dashboard: AppRouteModule = {
       component: () => import('@/views/dashboard/result/resultRoute.vue'),
       meta: {
         title: t('routes.basic.result'),
+        roles: [RoleEnum.SUPER],
         hideMenu: true,
       },
     },
