@@ -146,7 +146,12 @@
             :avatar="avatar"
             :post-data-source="postDataSource"
           />
-          <trainingSupport :competency-obj="supportCompetencyObj" :corr-func="corrFunc" />
+          <trainingSupport
+            :competency-obj="supportCompetencyObj"
+            :corr-func="corrFunc"
+            :name="userInfo.name"
+            :avatar="avatar"
+          />
         </div>
       </div>
     </PageWrapper>

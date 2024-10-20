@@ -87,6 +87,7 @@ const htmlPdf = {
       a4Width,
       (a4Width / thirdPageCanvas.width) * thirdPageCanvas.height,
     );
+    pdf.addPage();
     const fourthPageCanvas = await html2Canvas(fourthPage, {
       allowTaint: true,
       useCORS: true,
