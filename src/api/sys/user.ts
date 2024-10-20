@@ -24,6 +24,8 @@ enum Api {
   GetUserNumber = baseUrl + '/getAllUsers',
   getCanText = baseUrl + '/getCanText',
   setCanText = baseUrl + '/setCanText',
+  getAnswer = baseUrl + '/getSecurityQuestions',
+  setSecurityQuestions = baseUrl + '/setSecurityQuestions',
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
   updatePassword = baseUrl + '/updatePassword',
@@ -97,6 +99,14 @@ export function getUsersNumber() {
     { url: Api.GetUserNumber },
     { errorMessageMode: 'none' },
   );
+}
+
+export function getSecurityQuestionsApi(params: any) {
+  return defHttp.post<any>({ url: Api.getAnswer, params }, { errorMessageMode: 'none' });
+}
+
+export function setSecurityQuestionsApi(params: any) {
+  return defHttp.post<any>({ url: Api.setSecurityQuestions, params }, { errorMessageMode: 'none' });
 }
 
 export function getCanTextApi(params: any) {

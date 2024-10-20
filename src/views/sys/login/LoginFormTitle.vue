@@ -17,6 +17,7 @@
       [LoginStateEnum.RESET_PASSWORD]: t('sys.login.forgetFormTitle'),
       [LoginStateEnum.LOGIN]: t('sys.login.signInFormTitle'),
       [LoginStateEnum.REGISTER]: t('sys.login.signUpFormTitle'),
+      [LoginStateEnum.Answer]: '回答问题',
     };
     return titleObj[unref(getLoginState)];
   });

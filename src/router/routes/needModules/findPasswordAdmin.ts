@@ -3,11 +3,11 @@ import type { AppRouteModule } from '@/router/types';
 import { LAYOUT } from '@/router/constant';
 import { RoleEnum } from '@/enums/roleEnum';
 
-const reportManagementAdmin: AppRouteModule = {
-  path: '/findPassword',
-  name: 'findPassword',
+const findPasswordAdmin: AppRouteModule = {
+  path: '/findPasswordAdmin',
+  name: 'findPasswordAdmin',
   component: LAYOUT,
-  redirect: '/findPassword/index',
+  redirect: '/findPasswordAdmin/findPasswordAdmin',
   meta: {
     roles: [RoleEnum.SUPER],
     orderNo: 30,
@@ -17,9 +17,9 @@ const reportManagementAdmin: AppRouteModule = {
   },
   children: [
     {
-      path: 'index',
-      name: 'findPassword',
-      component: () => import('@/views/dashboard/findPassword/index.vue'),
+      path: 'findPasswordAdmin',
+      name: 'findPasswordAdmin',
+      component: () => import('@/views/dashboard/findPasswordAdmin/index.vue'),
       meta: {
         title: '找回密码',
         roles: [RoleEnum.SUPER],
@@ -28,4 +28,4 @@ const reportManagementAdmin: AppRouteModule = {
   ],
 };
 
-export default reportManagementAdmin;
+export default findPasswordAdmin;

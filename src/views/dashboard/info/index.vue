@@ -186,6 +186,9 @@
 
   onMounted(async () => {
     const res = await getPersonMsgApi({ userId });
+    if (!res) {
+      return;
+    }
     const { personMsg, career, work, borrow, rewards, professional, annual } = res;
     msgSetFieldsValue(personMsg);
     careerArr.value = career;

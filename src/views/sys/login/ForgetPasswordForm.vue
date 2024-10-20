@@ -23,18 +23,9 @@
         />
       </FormItem>
 
-      <FormItem name="sms" class="enter-x">
-        <CountdownInput
-          size="large"
-          v-model:value="formData.sms"
-          :placeholder="t('sys.login.smsCode')"
-          :sendCodeApi="sendCode"
-        />
-      </FormItem>
-
       <FormItem class="enter-x">
-        <Button type="primary" size="large" block @click="handleReset" :loading="loading">
-          {{ t('common.resetText') }}
+        <Button type="primary" size="large" block @click="handleAnswer" :loading="loading">
+          回答问题
         </Button>
         <Button size="large" block class="mt-4" @click="handleBackLogin">
           {{ t('sys.login.backSignIn') }}
@@ -47,13 +38,10 @@
   import { reactive, ref, computed, unref } from 'vue';
   import LoginFormTitle from './LoginFormTitle.vue';
   import { Form, Input, Button } from 'ant-design-vue';
-  import { CountdownInput } from '@/components/CountDown';
   import { useI18n } from '@/hooks/web/useI18n';
   import { useLoginState, useFormRules, LoginStateEnum, useFormValid } from './useLogin';
   import { StrengthMeter } from '@/components/StrengthMeter';
-  import { useUserStore } from '@/store/modules/user';
-
-  import { useMessage } from '@/hooks/web/useMessage';
+  import { usePassword } from './useForgetPassword';
 
   const FormItem = Form.Item;
   const { t } = useI18n();
@@ -68,50 +56,24 @@
     phone: '',
     password: '',
     checkPassword: '',
-    sms: '',
   });
   const { getFormRules } = useFormRules(formData);
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.RESET_PASSWORD);
   const { validForm } = useFormValid(formRef);
-  const randonNumber = Math.floor(100000 + Math.random() * 900000) + '';
-  const userStore = useUserStore();
-  const { notification } = useMessage();
   const { setLoginState } = useLoginState();
+  const { setPhone, setNewPassword } = usePassword();
 
-  async function handleReset() {
+  async function handleAnswer() {
     const data = await validForm();
     if (!data) return;
-    if (randonNumber !== formData.sms) {
-      notification.error({
-        message: t('sys.login.verfiyCodeErrot'),
-        description: `${randonNumber}`,
-        duration: 5,
-      });
-    }
     try {
       loading.value = true;
-      await userStore.resetPassword({
-        password: data.password,
-        phone: data.phone,
-        mode: 'none', //不要默认的错误提示
-      });
-      notification.success({
-        message: t('sys.api.successTip'),
-        description: `重置密码成功`,
-        duration: 3,
-      });
-      setLoginState(LoginStateEnum.LOGIN);
+      setPhone(data.phone);
+      setNewPassword(data.password);
+      setLoginState(LoginStateEnum.Answer);
     } finally {
       loading.value = false;
     }
-  }
-  async function sendCode(): Promise<boolean> {
-    notification.success({
-      message: t('sys.login.randonNumber'),
-      description: `${randonNumber}`,
-      duration: 5,
-    });
-    return true; // or false based on your logic
   }
 </script>
