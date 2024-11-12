@@ -347,12 +347,6 @@ export const columns = [
     width: 100,
   },
   {
-    title: '在该层级任职时长',
-    dataIndex: 'tenure',
-    key: 'tenure',
-    width: 200,
-  },
-  {
     title: '学历',
     dataIndex: 'educationalBackground',
     key: 'educationalBackground',
@@ -416,23 +410,6 @@ const schemas: FormSchema[] = [
       placeholder: '请输入你的任职层级',
       min: 1,
       max: 19,
-    },
-  },
-  {
-    field: 'tenure',
-    component: 'InputNumber',
-    label: '在该层级任职时长(年)',
-    itemProps: {
-      labelCol: {
-        span: 8,
-      },
-      labelAlign: 'right',
-    },
-    colProps,
-    componentProps: {
-      placeholder: '请输入你的任职时长',
-      min: 1,
-      max: 100,
     },
   },
   {

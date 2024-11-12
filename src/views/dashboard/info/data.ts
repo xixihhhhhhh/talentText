@@ -37,18 +37,6 @@ export const schemas: FormSchema[] = [
     required: true,
   },
   {
-    field: 'serviceLength',
-    component: 'InputNumber',
-    label: '工龄( 年 )',
-    colProps,
-    componentProps: {
-      placeholder: '请输入你的工龄',
-      min: 0,
-      max: 100,
-    },
-    required: true,
-  },
-  {
     field: 'unitServiceLength',
     component: 'InputNumber',
     label: '在本单位任职年限( 年 )',
@@ -75,23 +63,6 @@ export const schemas: FormSchema[] = [
       min: 1,
       max: 19,
     },
-    required: true,
-  },
-  {
-    field: 'tenure',
-    component: 'InputNumber',
-    label: '在该层级任职时长( 年 )',
-    itemProps: {
-      labelCol: {
-        span: 10,
-      },
-    },
-    componentProps: {
-      placeholder: '请输入在该层级任职时长( 年 )',
-      min: 1,
-      max: 100,
-    },
-    colProps,
     required: true,
   },
   {
@@ -147,44 +118,6 @@ export const schemas: FormSchema[] = [
     },
     required: true,
   },
-  {
-    field: 'universities985',
-    component: 'RadioGroup',
-    label: '985高校',
-    colProps,
-    componentProps: {
-      options: [
-        {
-          label: '是',
-          value: '1',
-        },
-        {
-          label: '否',
-          value: '2',
-        },
-      ],
-    },
-    required: true,
-  },
-  {
-    field: 'universities211',
-    component: 'RadioGroup',
-    label: '211高校',
-    colProps,
-    componentProps: {
-      options: [
-        {
-          label: '是',
-          value: '1',
-        },
-        {
-          label: '否',
-          value: '2',
-        },
-      ],
-    },
-    required: true,
-  },
 ];
 
 export const careerSchemas: FormSchema[] = [
@@ -226,6 +159,75 @@ export const careerSchemas: FormSchema[] = [
         width: '100%',
       },
     },
+  },
+  {
+    field: 'studyWay',
+    component: 'Select',
+    label: '学习形式',
+    colProps: {
+      span: 24,
+    },
+    itemProps: {
+      labelCol: {
+        span: 8,
+      },
+      labelAlign: 'right',
+    },
+    componentProps: {
+      placeholder: '请选择学习形式',
+      options: [
+        {
+          label: '全日制',
+          value: '全日制',
+          key: '全日制',
+        },
+        {
+          label: '非全日制',
+          value: '非全日制',
+          key: '非全日制',
+        },
+      ],
+    },
+    required: true,
+  },
+  {
+    field: 'educationalBackgroundLevel',
+    component: 'Select',
+    label: '学历层次',
+    colProps: {
+      span: 24,
+    },
+    itemProps: {
+      labelCol: {
+        span: 8,
+      },
+      labelAlign: 'right',
+    },
+    componentProps: {
+      placeholder: '请选择学历层次',
+      options: [
+        {
+          label: '研究生',
+          value: '研究生',
+          key: '研究生',
+        },
+        {
+          label: '大学本科',
+          value: '大学本科',
+          key: '大学本科',
+        },
+        {
+          label: '大专',
+          value: '大专',
+          key: '大专',
+        },
+        {
+          label: '大专以下',
+          value: '大专以下',
+          key: '大专以下',
+        },
+      ],
+    },
     required: true,
   },
   {
@@ -242,11 +244,52 @@ export const careerSchemas: FormSchema[] = [
       labelAlign: 'right',
     },
     componentProps: {
+      placeholder: '请输入学校（培训单位）名称',
       style: {
         width: '100%',
       },
     },
     required: true,
+  },
+  {
+    field: 'major',
+    component: 'Input',
+    label: '专业',
+    colProps: {
+      span: 24,
+    },
+    itemProps: {
+      labelCol: {
+        span: 8,
+      },
+      labelAlign: 'right',
+    },
+    componentProps: {
+      placeholder: '请输入专业',
+      style: {
+        width: '100%',
+      },
+    },
+  },
+  {
+    field: 'remark',
+    component: 'Input',
+    label: '备注',
+    colProps: {
+      span: 24,
+    },
+    itemProps: {
+      labelCol: {
+        span: 8,
+      },
+      labelAlign: 'right',
+    },
+    componentProps: {
+      placeholder: '请输入备注',
+      style: {
+        width: '100%',
+      },
+    },
   },
 ];
 
@@ -289,7 +332,6 @@ export const workSchemas: FormSchema[] = [
         width: '100%',
       },
     },
-    required: true,
   },
   {
     field: 'unitName',
@@ -372,7 +414,6 @@ export const borrowSchemas: FormSchema[] = [
         width: '100%',
       },
     },
-    required: true,
   },
   {
     field: 'unitName',
@@ -1005,11 +1046,27 @@ export const careerColumns = getColumns(
     dataIndex: 'endTime',
   },
   {
+    title: '学习形式',
+    dataIndex: 'studyWay',
+  },
+  {
+    title: '学历层次',
+    dataIndex: 'educationalBackgroundLevel',
+  },
+  {
     title: '学校（培训单位）名称',
     dataIndex: 'schoolName',
   },
   {
-    title: '操作',
+    title: '专业',
+    dataIndex: 'major',
+  },
+  {
+    title: '学习形式',
+    dataIndex: 'remark',
+  },
+  {
+    title: '备注',
     dataIndex: 'action',
     width: 200,
   },

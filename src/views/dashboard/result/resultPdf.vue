@@ -69,7 +69,7 @@
         </CollapseContainer>
         <CollapseContainer>
           <template #title>
-            <div ref="careerRef" class="font-bold text-20px mr-10px">职业成长履历</div>
+            <div ref="careerRef" class="font-bold text-20px mr-10px">学习培训履历</div>
           </template>
           <div class="text-18px">教育（培训）经历（学历为大专以下的可填写高中/中专教育经历） :</div>
           <Table :dataSource="careerArr" :columns="careerColumns.slice(0, -1)" />
@@ -96,7 +96,7 @@
         </CollapseContainer>
         <CollapseContainer>
           <template #title>
-            <div class="font-bold text-20px mr-10px">职业资格情况</div>
+            <div class="font-bold text-20px mr-10px">专业技术（技能）资格</div>
           </template>
           <Table :dataSource="professionalArr" :columns="professionalColumns.slice(0, -1)" />
         </CollapseContainer>

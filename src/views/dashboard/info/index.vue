@@ -13,7 +13,7 @@
     </CollapseContainer>
     <CollapseContainer>
       <template #title>
-        <div ref="careerRef" class="font-bold text-20px mr-10px">职业成长履历</div>
+        <div ref="careerRef" class="font-bold text-20px mr-10px">学习培训履历</div>
         <a-button size="small" type="primary" @click="careerOpen = true">新增</a-button>
       </template>
       <div class="text-18px">教育（培训）经历（学历为大专以下的可填写高中/中专教育经历） :</div>
@@ -74,7 +74,7 @@
     </CollapseContainer>
     <CollapseContainer>
       <template #title>
-        <div class="font-bold text-20px mr-10px">职业资格情况</div>
+        <div class="font-bold text-20px mr-10px">专业技术（技能）资格</div>
         <a-button size="small" type="primary" @click="professionalOpen = true">新增</a-button>
       </template>
       <Table :dataSource="professionalArr" :columns="professionalColumns">
@@ -97,7 +97,7 @@
     <div class="flex justify-center">
       <a-button type="primary" @click="submit" :loading="loading">提交</a-button>
     </div>
-    <Modal centered title="职业成长履历新增" v-model:open="careerOpen" :footer="null">
+    <Modal centered title="学习培训履历新增" v-model:open="careerOpen" :footer="null">
       <div class="px-20px">
         <BasicForm @register="careerRegister" />
       </div>
@@ -117,12 +117,17 @@
         <BasicForm @register="rewardsRegister" />
       </div>
     </Modal>
-    <Modal centered title="职业资格情况新增" v-model:open="professionalOpen" :footer="null">
+    <Modal centered title="专业技术（技能）资格新增" v-model:open="professionalOpen" :footer="null">
       <div class="px-20px">
         <BasicForm @register="professionalRegister" />
       </div>
     </Modal>
-    <Modal centered title="职业资格情况新增" v-model:open="annualOpen" @ok="annualOpen = false">
+    <Modal
+      centered
+      title="专业技术（技能）资格新增"
+      v-model:open="annualOpen"
+      @ok="annualOpen = false"
+    >
       <div class="px-20px"> {{ modelText }} </div>
     </Modal>
   </PageWrapper>
@@ -381,20 +386,13 @@
       console.error(error);
       return;
     }
-    if (!careerArr.value.length) {
-      modelText.value = '请您填写职业成长履历';
-      careerRef.value.scrollIntoView({ behavior: 'smooth' });
-      annualOpen.value = true;
-      loading.value = false;
-      return;
-    }
-    if (!workArr.value.length) {
-      modelText.value = '请您填写工作经历';
-      workRef.value.scrollIntoView({ behavior: 'smooth' });
-      annualOpen.value = true;
-      loading.value = false;
-      return;
-    }
+    // if (!workArr.value.length) {
+    //   modelText.value = '请您填写工作经历';
+    //   workRef.value.scrollIntoView({ behavior: 'smooth' });
+    //   annualOpen.value = true;
+    //   loading.value = false;
+    //   return;
+    // }
     personInfo.value.userId = userId;
     personInfo.value.career = careerArr.value;
     personInfo.value.work = workArr.value;
