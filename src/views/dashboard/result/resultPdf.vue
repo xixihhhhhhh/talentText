@@ -122,11 +122,7 @@
           <leidatu :options="echartOptions" />
           <CareerFieldPdf :careerFieldObj="careerFieldObj" />
         </div>
-        <advantageousFieldsExplanation
-          :avatar="avatar"
-          :name="userInfo.name"
-          :max-field-index="getMaxField()"
-        />
+        <advantageousFieldsExplanation :name="userInfo.name" :max-field-index="getMaxField()" />
         <topThreeAdvantages :options="getTopThreeScores()" />
       </div>
       <div class="pt-50px" ref="fourthPage">
@@ -140,17 +136,12 @@
             :end-two="getEndTwo()"
             :corr-func="corrFunc"
           />
-          <matchingSuggestions :avatar="avatar" :name="userInfo.name" :end-three="getEndThree()" />
-          <jobCompetencyRequirements
-            :name="userInfo.name"
-            :avatar="avatar"
-            :post-data-source="postDataSource"
-          />
+          <matchingSuggestions :name="userInfo.name" :end-three="getEndThree()" />
+          <jobCompetencyRequirements :name="userInfo.name" :post-data-source="postDataSource" />
           <trainingSupport
             :competency-obj="supportCompetencyObj"
             :corr-func="corrFunc"
             :name="userInfo.name"
-            :avatar="avatar"
           />
         </div>
       </div>
@@ -172,7 +163,6 @@
   import trainingSupport from './components/trainingSupport.vue';
   import CareerFieldPdf from './careerFieldPdf.vue';
   import competencyAnalysis from './competencyAnalysis.vue';
-  import headerImg from '@/assets/images/header.jpg';
   import {
     careerAdvantagesMap,
     advantageMap,
@@ -261,7 +251,6 @@
   const rewardsArr = ref<any>([]);
   const professionalArr = ref<any>([]);
 
-  const avatar = props.userInfo.avatar || headerImg;
   const { recordProps } = props;
   const { department, position, echartOptions, corrFunc, finishTime, spendTime } = recordProps;
   const careerFieldObj = recordProps.careerFieldObj;

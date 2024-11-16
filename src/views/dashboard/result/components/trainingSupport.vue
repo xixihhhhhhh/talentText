@@ -5,7 +5,7 @@
       <span class="text-3 color-gray">建立能力培养课程地图，帮助制定个性化的职业提升计划 </span>
     </div>
     <div>
-      通过将<Avatar :src="avatar" /> {{ name }}的测评结果与TA所在岗位胜任力需求进行对比分析，
+      通过将 {{ name }}的测评结果与TA所在岗位胜任力需求进行对比分析，
       得出TA与现有岗位差距相对较大的六项胜任力，并针对性给出推荐课程或学习网站，如下所示：
     </div>
     <div class="flex h-40px bg-#eee">
@@ -37,7 +37,6 @@
     competencyObj: any;
     corrFunc: string;
     name: string;
-    avatar: string;
   }>();
 
   const dataSource = ref<{ competency: string; definition: string }[]>([]);

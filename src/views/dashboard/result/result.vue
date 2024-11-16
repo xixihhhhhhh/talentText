@@ -10,11 +10,7 @@
       <leidatu :options="questionStore.leidatu" class="enter-y" />
       <CareerField class="enter-y" />
     </div>
-    <advantageousFieldsExplanation
-      :avatar="avatar"
-      :name="userInfo.name"
-      :max-field-index="getMaxField()"
-    />
+    <advantageousFieldsExplanation :name="userInfo.name" :max-field-index="getMaxField()" />
     <topThreeAdvantages :options="getTopThreeScores()" />
     <competencyAnalysis :obvious="obvious" :notObvious="notObvious" />
     <managementSuggestions :management-advice="managementAdvice" />
@@ -23,13 +19,13 @@
       :end-two="getEndTwo()"
       :corr-func="corrFunc"
     />
-    <matchingSuggestions :avatar="avatar" :name="userInfo.name" :end-three="getEndThree()" />
-    <jobCompetencyRequirements
+    <matchingSuggestions :name="userInfo.name" :end-three="getEndThree()" />
+    <jobCompetencyRequirements :name="userInfo.name" :post-data-source="postDataSource" />
+    <trainingSupport
+      :competency-obj="supportCompetencyObj"
+      :corr-func="corrFunc"
       :name="userInfo.name"
-      :avatar="avatar"
-      :post-data-source="postDataSource"
     />
-    <trainingSupport :competency-obj="supportCompetencyObj" :corr-func="corrFunc" />
   </PageWrapper>
 </template>
 
@@ -49,7 +45,6 @@
   import CareerField from './careerField.vue';
   import { useUserStore } from '@/store/modules/user';
   import { useQuestionStore } from '@/store/modules/question';
-  import headerImg from '@/assets/images/header.jpg';
   import {
     careerAdvantagesMap,
     advantageMap,
@@ -72,7 +67,6 @@
 
   const userInfo = computed(() => userStore.getUserInfo);
 
-  const avatar = computed(() => userStore.getUserInfo.avatar || headerImg);
   const careerFieldObj = computed(() => {
     return questionStore.careerFieldObj;
   });

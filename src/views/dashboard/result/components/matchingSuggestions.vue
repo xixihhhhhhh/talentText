@@ -7,7 +7,7 @@
       >
     </div>
     <div class="indent-4">
-      <Avatar :src="avatar" /> {{ name }}
+      {{ name }}
       的弱势在于
       <span :style="{ color: activeColor }">{{
         dapeijianyi[endThree[0]] + '、' + dapeijianyi[endThree[1]] + '、' + dapeijianyi[endThree[2]]
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { Card, Avatar } from 'ant-design-vue';
+  import { Card } from 'ant-design-vue';
   import { dapeijianyi } from '../data';
 
   defineProps({
@@ -29,10 +29,6 @@
     },
     endThree: {
       type: Array as PropType<any>,
-      required: true,
-    },
-    avatar: {
-      type: String as PropType<any>,
       required: true,
     },
   });

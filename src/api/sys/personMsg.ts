@@ -5,6 +5,7 @@ const baseUrl = '/personInfo';
 enum Api {
   setPersonMsg = baseUrl + '/setPersonMsg',
   getPersonMsg = baseUrl + '/getPersonMsg',
+  getPersonHasSetPassQues = baseUrl + '/getPersonHasSetPassQues',
 }
 
 export const setPersonMsgApi = (params: any) => {
@@ -13,4 +14,8 @@ export const setPersonMsgApi = (params: any) => {
 
 export const getPersonMsgApi = (params: any) => {
   return defHttp.post<any>({ url: Api.getPersonMsg, params });
+};
+
+export const getPersonHasSetPassQuesApi = (params: any) => {
+  return defHttp.post<any>({ url: Api.getPersonHasSetPassQues, params });
 };

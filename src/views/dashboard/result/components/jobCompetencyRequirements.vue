@@ -7,7 +7,7 @@
       >
     </div>
     <div class="indent-4 font-bold my-10px">
-      通过对 <Avatar :src="avatar" /> {{ name }}
+      通过对 {{ name }}
       所在的岗位进行了胜任力分析，总结出岗位所需的前五项关键胜任力及TA的匹配度，分别为：
     </div>
     <postCompetencyRequirements :data-source="postDataSource" />
@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-  import { Card, Avatar } from 'ant-design-vue';
+  import { Card } from 'ant-design-vue';
   import postCompetencyRequirements from './postCompetencyRequirements.vue';
 
   defineProps({
@@ -28,10 +28,6 @@
     },
     postDataSource: {
       type: Array as PropType<any>,
-      required: true,
-    },
-    avatar: {
-      type: String as PropType<any>,
       required: true,
     },
   });

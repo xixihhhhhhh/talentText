@@ -73,7 +73,7 @@
   const [register, { setProps }] = useForm({});
 
   onMounted(async () => {
-    GetAllEvaluateListApi({});
+    await GetAllEvaluateListApi({});
     const { allDepartment, allPosition, allSubDepartment } = await getAllDepartmentAndPositionApi();
     const schemas = getSchema(allDepartment, allPosition, allSubDepartment);
     departmentOptions.value = allDepartment;

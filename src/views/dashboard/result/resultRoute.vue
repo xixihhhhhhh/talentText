@@ -11,11 +11,7 @@
         <leidatu :options="resultStore.echartOptions" />
         <CareerFieldPdf :careerFieldObj="careerFieldObj" />
       </div>
-      <advantageousFieldsExplanation
-        :avatar="avatar"
-        :name="resultStore.name"
-        :max-field-index="getMaxField()"
-      />
+      <advantageousFieldsExplanation :name="resultStore.name" :max-field-index="getMaxField()" />
       <topThreeAdvantages :options="getTopThreeScores()" />
       <competencyAnalysis :obvious="obvious" :notObvious="notObvious" />
       <managementSuggestions :management-advice="managementAdvice" />
@@ -24,13 +20,13 @@
         :end-two="getEndTwo()"
         :corr-func="resultStore.corrFunc"
       />
-      <matchingSuggestions :avatar="avatar" :name="resultStore.name" :end-three="getEndThree()" />
-      <jobCompetencyRequirements
+      <matchingSuggestions :name="resultStore.name" :end-three="getEndThree()" />
+      <jobCompetencyRequirements :name="resultStore.name" :post-data-source="postDataSource" />
+      <trainingSupport
+        :competency-obj="supportCompetencyObj"
+        :corr-func="resultStore.corrFunc"
         :name="resultStore.name"
-        :avatar="avatar"
-        :post-data-source="postDataSource"
       />
-      <trainingSupport :competency-obj="supportCompetencyObj" :corr-func="resultStore.corrFunc" />
     </div>
   </PageWrapper>
 </template>
@@ -49,7 +45,6 @@
   import trainingSupport from './components/trainingSupport.vue';
   import CareerFieldPdf from './careerFieldPdf.vue';
   import competencyAnalysis from './competencyAnalysis.vue';
-  import headerImg from '@/assets/images/header.jpg';
   import {
     careerAdvantagesMap,
     advantageMap,
@@ -68,7 +63,6 @@
   const notObvious = ref<any[]>([]);
   const postDataSource = ref<any[]>([]);
 
-  const avatar = resultStore.avatar || headerImg;
   const careerFieldObj = resultStore.careerFieldObj;
   const careerAdvantagesObj = sortPdf(resultStore.careerAdvantagesObj);
   const competencyObj = sortPdf(resultStore.competencyObj);

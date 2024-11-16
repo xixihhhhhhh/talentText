@@ -89,13 +89,14 @@
       question1.value = res.question1;
       question2.value = res.question2;
       question3.value = res.question3;
-      console.log('🚀 ~ res:', res);
     }
   });
 
+  const maxErrorCount = 5;
+  let errorCount = 0;
+
   async function handleUpdatePassword() {
     const data = await validForm();
-    console.log('🚀 ~ handleUpdatePassword ~ data:', data);
     if (!data) return;
     try {
       const { answerOne, answerTwo, answerThree } = data;
@@ -106,9 +107,13 @@
         answer3.value === answerThree
       ) {
         const res = await updatePasswordApi({ phone: getPhone(), newPassword: getNewPassword() });
-        console.log('🚀 ~ handleUpdatePassword ~ res:', res);
         createMessage.success(res.msg);
       } else {
+        errorCount++;
+        if (errorCount >= maxErrorCount) {
+          createMessage.error('回答错误！您可以联系管理员,找回密码');
+          return;
+        }
         createMessage.error('回答错误！');
       }
       setLoginState(LoginStateEnum.Answer);

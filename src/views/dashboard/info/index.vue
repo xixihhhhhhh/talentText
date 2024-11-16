@@ -130,6 +130,20 @@
     >
       <div class="px-20px"> {{ modelText }} </div>
     </Modal>
+    <Modal
+      centered
+      title="提示"
+      v-model:open="isSetPassQuesOpen"
+      cancelText="取消"
+      okText="确定"
+      @ok="router.push({ name: 'findPasswordUser' })"
+      @cancel="router.push({ name: 'findPasswordUser' })"
+    >
+      <div class="flex justify-center items-center font-bold text-lg"
+        >抱歉，您还未填写找回密码。</div
+      >
+      <div class="flex justify-center items-center font-bold text-lg">可以到找回密码处填写。</div>
+    </Modal>
   </PageWrapper>
 </template>
 <script lang="ts" setup>
@@ -137,7 +151,11 @@
   import { CollapseContainer } from '@/components/Container';
   import { BasicForm, useForm } from '@/components/Form';
   import { useRouter } from 'vue-router';
-  import { setPersonMsgApi, getPersonMsgApi } from '@/api/sys/personMsg';
+  import {
+    setPersonMsgApi,
+    getPersonMsgApi,
+    getPersonHasSetPassQuesApi,
+  } from '@/api/sys/personMsg';
   import {
     schemas,
     careerSchemas,
@@ -178,6 +196,7 @@
   const rewardsOpen = ref(false);
   const professionalOpen = ref(false);
   const annualOpen = ref(false);
+  const isSetPassQuesOpen = ref(false);
 
   const loading = ref(false);
 
@@ -190,6 +209,11 @@
   const personInfo = ref<any>({});
 
   onMounted(async () => {
+    const { success } = await getPersonHasSetPassQuesApi({ userId });
+    if (!success) {
+      isSetPassQuesOpen.value = true;
+    }
+
     const res = await getPersonMsgApi({ userId });
     if (!res) {
       return;
